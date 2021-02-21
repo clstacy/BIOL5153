@@ -27,33 +27,64 @@ Employment
 __Since 2020__
 :   *Graduate Research Assistant for the [Ceballos Research Lab](https://ceballoslab.uark.edu/)*
     (Fayetteville, AR. United States).
+* Researching novel approaches for quantifying host-virus interactions of non-lytic viruses. 
 
-Researching novel approaches for quantifying host-virus interactions of non-lytic viruses. I analyze virus-induced temporal phenotypic changes of the host to quantify virulence. I have co-authored two papers introducing and applying techniques for differentiation virus-induced growth changes. I work with Gaussian process modeling techniques, MLP Classifiers, convolutional and recurrent neural networks, dynamic flux-balance analysis of stressed systems and agent-based simulation techniques
+* I analyze virus-induced temporal phenotypic changes of the host to quantify virulence. 
+
+* Co-authored two papers introducing and applying techniques for differentiation virus-induced growth changes. 
+
+* Gaussian process modeling techniques, MLP Classifiers, convolutional and recurrent neural networks, dynamic flux-balance analysis of stressed systems and agent-based simulation techniques
 
 __2019-2020__
 :   *Laboratory Technician for the [Ceballos Research Lab](https://ceballoslab.uark.edu/)*
     (Fayetteville, AR. United States).
 
-Operated state-of-the-art Fast Protein Liquid Chromatography (FPLC) machine, created a SOP for use and maintainence of device including automated buffer making, ion exchange, and size exclusion best-practices. I also maintained lab supplies and handled ordering for the lab. I implemented a proof-of-concept neuron tracing and counting algorithm to be used by a PhD student. I used the software Geneious for primer design, phylogenetic analysis of novel genomes to assist graduate and undergradute research projects in the lab. I used protein databank tools and molecular dynamics protein modeling tools to predict subunit interactions of engineered protein complex.
+* Operated state-of-the-art Fast Protein Liquid Chromatography (FPLC) machine 
+
+* Created a SOP for use and maintenance of device including automated buffer making, ion exchange, and size exclusion best-practices. 
+
+* Maintained lab supplies and handled ordering for the lab. I implemented a proof-of-concept neuron tracing and counting algorithm to be used by a PhD student. 
+
+* Used the software Geneious for primer design, phylogenetic analysis of novel genomes to assist graduate and undergraduate research projects in the lab. 
+
+* Used protein databank tools and molecular dynamics protein modeling tools to predict sub-unit interactions of engineered protein complex.
 
 __2019 (6 months)__
 :   *Athletic Tutor for University of Arkansas Athletics Program*
     (Fayetteville, AR. United States).
     
-Lead individual and small group tutoring sessions for General and Organic Chemistry I and II, Biochemistry I, Biochemistry II, Introduction to Biochemistry, Principles of Biology,  Anatomy and Physiology, Calculus I, and Principles of Statistics.
+* Lead individual and small group tutoring sessions for General and Organic Chemistry I and II, Biochemistry I, Biochemistry II, Introduction to Biochemistry, Principles of Biology,  Anatomy and Physiology, Calculus I, and Principles of Statistics.
 
 
 __2017-2019__
 :   *Peace Corps Volunteer High School Chemistry Teacher*
     (Kolahun, Lofa County. Liberia).
 
-Worked as first and only chemistry teacher in only high school in Kolahun district of Liberia since 2004. Designed and led interactive lesson plans for over 1200 students for 2 years (grades 10-12). Created exam questions for each grade and compiled a question generator for future use. Engaged in capacity building by training other interested science teachers in fundamental chemistry concepts and ways to teach them. Provided resources and practice teaching chemistry courses to student teacher in order to continue after my depature. Co-lead Girls Club of Kolahun in promotion of gender equity. Introduced indigenous language component to malaria education program at local health clinic. Grassroots soccer volunteer and mentor. Collaborated with local NGO to train local students to lead age-appropriate critical thinking workshops for children identified as disadvantaged.
+* Worked as first and only chemistry teacher in only high school in Kolahun district of Liberia since 2004. Designed and led interactive lesson plans for over 1200 students for 2 years (grades 10-12). 
+
+* Created exam questions for each grade and compiled a question generator for future use.
+
+* Engaged in capacity building by training other interested science teachers in fundamental chemistry concepts and ways to teach them. 
+
+* Provided resources and practice teaching chemistry courses to student teacher in order to continue after my departure. 
+
+* Co-lead Girls Club of Kolahun in promotion of gender equity. Introduced indigenous language component to malaria education program at local health clinic. 
+
+* Grassroots soccer volunteer and mentor. 
+
+* Collaborated with local NGO to train local students to lead age-appropriate critical thinking workshops for children identified as disadvantaged.
 
 __2014-2017__
 :   *Supplemental Instruction Leader (Chemistry) for CLASS+ at University of Arkansas* 
     (Fayetteville, AR. United States).
 
-Lead small group drill sessions to promote student success in first year chemistry courses ranging from Fundamentals of Chemistry to Honors Chemistry II. Designed and facilitated interactive lesson plans. Served as an SI leader mentor advising and co-leading yearly trainings for SI leaders on campus. Focused on increasing interactivity in lessons and promoting gender equitable teaching approaches.
+* Lead small group drill sessions to promote student success in first year chemistry courses ranging from Fundamentals of Chemistry to Honors Chemistry II. 
+
+* Designed and facilitated interactive lesson plans. 
+
+* Served as an SI leader mentor advising and co-leading yearly trainings for SI leaders on campus. 
+
+* Focused on increasing interactivity in lessons and promoting gender equitable teaching approaches.
 
 
 Education
@@ -63,22 +94,23 @@ __Since 2020__
 :   *PhD in Cell and Molecular Biology at the University of Arkansas*
     (Fayetteville, AR. United States).
     
-Distinguished Doctoral Fellow
+* Distinguished Doctoral Fellow
 
 
 __Since 2020__
 :   *MS in Statistics and Analytics at the University of Arkansas*
     (Fayetteville, AR. United States).
 
-Concentration in Statistics
+* Concentration in Statistics
 
 
 __2013-2017__
 :   *BS in Anthropology at the University of Arkansas*
     (Fayetteville, AR. United States).
     
-Honors College Graduate
-GPA: 4.0
+* Honors College Graduate
+
+* GPA: 4.0
 
 
 Publications
