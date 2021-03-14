@@ -5,4 +5,12 @@
 
 This is a repository that I use for this course. My assignments are submitted here. 
 
+## File Descriptions:
+
+* CV.md
+
+This file is my curriculum vitae written in markdown format.
+
+* assn03.tgz
+
 The assn03.tgz file is a zipped tape archive containing the bash scripts that I used to create BLAST databases and complete BLAST searches, as well as their outputs and answers to all questions in completion of assignment 3 questions in this course.
