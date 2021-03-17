@@ -133,6 +133,10 @@ __2015__
 :    Effect of Lifestyle Physical Activity and Western Diet on Genes Controlling Mitochondrial Translation. __Carson L. Stacy__, David E. Lee, Jacob L. Brown, Megan E. Rosa, Jordyn N. Henry, Lemuel A. Brown, Richard A. Perry, Jr., Tyrone A. Washington, Nicholas P. Greene. Central States ACSM Regional Meeting 2015, International Journal of Exercise Science Conference Proceedings.
 
 
+Open Source Contributions
+------------------------
+* R package for Weighted Spectral Difference calculation on Far UV Circular Dichroism data across temperature gradients
+    * https://github.com/clstacy/WeightedSpectralDifference
 
 Technical Skills
 ------------------------
