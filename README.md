@@ -17,4 +17,8 @@ This is a repository that I use for this course. My assignments are submitted he
 
 **Supplemental_files** : A folder that contains README images, and other "clutter" in this repo.
 
-![Output of python script that generates PBS bash scripts for submission on the razor cluster](https://github.com/clstacy/BIOL5153/blob/main/Supplemental_files/stacy_assn04_BIOL5143_PBS_screenshot.png.png?raw=true)
+
+
+Here is an example output of python script that generates PBS bash scripts for submission on the razor cluster:
+![Output of python script that generates PBS bash scripts for submission on the razor cluster](https://raw.githubusercontent.com/clstacy/BIOL5153/main/Supplemental_Files/stacy_assn04_BIOL5143_PBS_screenshot.png.png)]
+
