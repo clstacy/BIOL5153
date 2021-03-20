@@ -14,9 +14,12 @@ This is a repository that I use for this course. My assignments are submitted he
 
 * **write_razor_pbs.py** : This python script generates an output which can be saved as a bash (.sh) script for submitting jobs to the Razor cluster on the Uark AHPCC using PBS scheduling syntax.
 
-* **write_pinnacle_slurm.py** : This is a python script that generates an output which can be saved as a bash (.sh) script for submitting jobs to the Pinnacle cluster on the Uark AHPCC using SLURM scheduling syntax.
+* **write_pinnacle_slurm.py** : This python script generates an output which can be saved as a bash (.sh) script for submitting jobs to the Pinnacle cluster on the Uark AHPCC using SLURM scheduling syntax.
+
+* **nucleotide_composition.py** : This python script calculates the frequency of nucleotides of a string of characters of a nucleotide sequence (requires removal of header prior to entering into script, as written). Created in completion of Assignment 5 of this course, not written to be practical for everyday use as is.
 
 * **Supplemental_files** : A folder that contains README images, and other "clutter" in this repo.
+
 
 
 
