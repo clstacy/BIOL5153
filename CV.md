@@ -113,6 +113,17 @@ __2013-2017__
 * GPA: 4.0
 
 
+Honors and Awards
+------------------------
+2019 - **Distinguished Doctoral Fellow** at the University of Arkansas
+
+2021 - **Ford Foundation Predoctoral Fellow Honorable Mention**
+
+2017 - **Phi Beta Kappa Honor Society Member**
+
+2015 - **Alpha Epsilon Delta Honor Society Volunteer Coordinator**
+
+
 Publications
 ------------------------
 
