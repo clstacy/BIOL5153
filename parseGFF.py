@@ -23,6 +23,17 @@ genome = SeqIO.read(args.fasta,'fasta')
 # print(len(genome.seq))
 # print(genome.id)
 
+# create a function that reverse complements sequences of gff file that are on the - strand:
+def rev_comp(gene_seq, strand):
+  # determine whether to reverse complement
+  #if strand == "-": # if -, need to reverse and complement the strand
+  if strand == "-":
+    # print the reverse complement of nucleotides in the sequence 
+    return(print(gene_seq.reverse_complement()))
+  else:
+    # print the sequence of the gene
+    return(print(gene_seq))
+
 # open and read in GFF file
 with open(args.gff, 'r') as gff_in:
   # create a csv reader object
@@ -34,16 +45,13 @@ with open(args.gff, 'r') as gff_in:
     end = int(line[4]) # which column corresponds to end location of gene in genome
     strand = line[6] # which strand is the gene on
     header_info = line[-1] #last column of gff is information about the entry
+    
     # print header line for each fasta sequence:
     print(">" + genome.id, header_info)#, ";", "STRAND", strand)
-    # determine whether to reverse complement
-    if strand == "-": # if -, need to reverse and complement the strand
-      # print the reverse complement of nucleotides in the sequence 
-      print(genome.seq[start-1:end].reverse_complement())
-      #note that the -1 is due to 0 indexing of python vs 1 indexing of gff format. not on 'end' b/c of normal py indexing rules excludes last value
-    else:
-      # print the sequence of the gene
-      print(genome.seq[start-1:end])
-      #note that the -1 is due to 0 indexing of python vs 1 indexing of gff format. not on 'end' b/c of normal py indexing rules excludes last value
+
+    # call rev_comp function to print starnds including rev comp if on - strand
+    rev_comp(genome.seq[start-1:end], strand)
+#note that the -1 is due to 0 indexing of python vs 1 indexing of gff format. not on 'end' b/c of normal py indexing rules excludes last value
+
     # add empty space between each entry
     print()
