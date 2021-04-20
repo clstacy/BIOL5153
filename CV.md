@@ -18,7 +18,7 @@ email:
 
 Currently
 --------------------
-I'm studying at the intersection of Cell and Molecular Biology and Computational Statistics at the [University of Arkansas](http://www.uark.edu/). I'm currently developing quantitative techniques and an integrative workflow for quantifying virulence of host-virus interactions across domains of life. My work involves a synergy of techniques including agent and constraint based modeling of infection, Bayesian (Gaussian Process Regression) and Machine Learning techniques to quantify, classify, and predict effects of virus-host interactions.
+I'm studying at the intersection of Cell and Molecular Biology and Statistics at the [University of Arkansas](http://www.uark.edu/). I'm currently developing quantitative techniques and an integrative workflow for quantifying virulence of host-virus interactions across domains of life. My work involves a synergy of techniques including agent and constraint based modeling of infection, Bayesian (Gaussian Process Regression) and Machine Learning techniques to quantify, classify, and predict effects of virus-host interactions.
 
 
 Employment
@@ -115,9 +115,9 @@ __2013-2017__
 
 Honors and Awards
 ------------------------
-2019 - **Distinguished Doctoral Fellow** at the University of Arkansas
-
 2021 - **Ford Foundation Predoctoral Fellow Honorable Mention**
+
+2019 - **Distinguished Doctoral Fellow** at the University of Arkansas
 
 2017 - **Phi Beta Kappa Honor Society Member**
 
@@ -159,6 +159,7 @@ Technical Skills
 * sklearn
 * MATLAB
 * Stan
+* RegEx
 * COBRA (Flux Balance Analysis package, not the discontinued programming language)
 
 Areas of Expertise
