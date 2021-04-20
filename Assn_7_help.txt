@@ -1,0 +1,30 @@
+# go to watermelon_files folder and run below code to create database:
+cat nt/*.fasta | makeblastdb -dbtype nucl -out mt_gene_db -title mt_gene_db
+
+# save the output of your script into a file, example:
+./parseGFF.py watermelon.gff watermelon.fsa > combined_exons.fsa
+
+# now blast the output of your parseGFF script to the database of known sequences:
+blastn -query combined_exons.fsa -db mt_gene_db -outfmt "6 qseqid sseqid length pident qcovs" -perc_identity 90 -max_target_seqs 1 > testing_parseGFF.blastn
+
+# cat the file to examine the output
+cat testing_parseGFF.blastn
+# each best match should be the corresponding gene
+# exception: sdh3-1 and sdh3-2 are identical, so if wrong match no problem :)
+# otherwise all should be perfect matches with perfect query cover.
+
+# Check number of matches found:
+wc -l testing_praseGFF.blastn
+# If only returning "CDS" features from gff should equal 39
+
+
+
+#NOTE: Are your results not turning out the way you'd want? I had that experience... 
+
+# to resolve it: I looked at the files in the nt folder. Try running the following command:
+# from the watermelon_files folder, run:
+cat nt/*.fasta | grep ">"
+# This is where I had my problem..
+# nad4, nad7, and nad9 need an empty line at the end of their file, and then rerun the code from above
+# this resulted in exactly what I wanted to see
+# if you are still having issues, the issue might be with your parseGFF.py file.
