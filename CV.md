@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 Carson Stacy
 =========================
 
@@ -56,7 +61,7 @@ __2019 (6 months)__
 * Lead individual and small group tutoring sessions for General and Organic Chemistry I and II, Biochemistry I, Biochemistry II, Introduction to Biochemistry, Principles of Biology,  Anatomy and Physiology, Calculus I, and Principles of Statistics.
 
 
-__2017-2019__
+__2017-2018__
 :   *Peace Corps Volunteer High School Chemistry Teacher*
     (Kolahun, Lofa County. Liberia).
 
@@ -128,7 +133,7 @@ Publications
 ------------------------
 
 __2021__
-:    Ceballos, R. M., & __Stacy, C. L.__ (2021). Quantifying relative virulence: when μmax fails and AUC alone just is not enough. Journal of General Virology, 102(1), 001515.
+:    Ceballos, R. M., & __Stacy, C. L.__ (2021). Quantifying relative virulence: when mumax fails and AUC alone just is not enough. Journal of General Virology, 102(1), 001515.
 
 __2020__
 :    Ceballos, R. M., Drummond, C. G., __Stacy, C. L.__, Padilla-Crespo, E., & Stedman, K. M. (2020). Host-dependent differences in replication strategy of the Sulfolobus spindle-shaped virus strain SSV9 (aka, SSVK1): infection profiles in hosts of the family Sulfolobaceae. Frontiers in microbiology, 11, 1218.
