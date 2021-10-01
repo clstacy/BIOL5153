@@ -1,0 +1,176 @@
+---
+title: "STAT 639V - Assignment 2"
+author: "Carson Stacy"
+date: "9/30/2021"
+output:
+  pdf_document
+---
+
+```{r include=FALSE}
+require(tidyverse)
+require(ggpubr)
+```
+
+**1. Let $X$ have a uniform distribution on 0 to 100 days with probability density function $f(x) = 1/100$ for $0 < x < 100$. (10 points)**
+
+
+```{r echo=FALSE, fig.height=2, fig.width=2}
+x <- c(1:100)
+y <- dunif(x, 0, 100) #rep(0.01,101)
+z <- punif(x, 0, 100)
+S <- 1-z
+df <- data.frame(x,y,z,S)
+
+
+
+p1 <- ggplot(data = df, aes(x=x, y=y)) +
+  geom_line() +
+  ylim(0, 0.1) +
+  labs(x = "x", y = "f(x)") +
+  ggtitle("pdf for X") +
+  theme_bw()
+p2 <- ggplot(data = df, aes(x=x, y=z)) +
+  geom_line() +
+  ylim(0, 1) +
+  labs(x = "x", y = "F(x)") +
+  ggtitle("cdf for X") +
+  theme_bw()
+p3 <- ggplot(data = df, aes(x=x, y=S)) +
+  geom_line() +
+  ylim(0, 1) +
+  labs(x = "x", y = "S(x)") +
+  ggtitle("survival for X") +
+  theme_bw()
+
+p1
+p2
+p3
+
+```
+
+**(a) Find the survival function at 25, 50 and 75 days.**
+$$S(x) = 1 - F(x)$$
+
+The survival function at 25 days:
+$$S(X=25) = 1 - F(X=25) = 1 - P(X \leq 25) = 1 - \frac{25 - 1+ 1}{100} = 1- \frac{25}{100} = \boxed{0.75} $$
+The survival function at 50 days:
+$$S(X=50) = 1 - F(X=50) = 1 - P(X \leq 50) = 1 - \frac{50 - 1+ 1}{100} = 1- \frac{50}{100} = \boxed{0.50} $$
+
+The survival function at 75 days:
+$$S(X=75) = 1 - F(X=75) = 1 - P(X \leq 75) = 1 - \frac{75 - 1+ 1}{100} = 1- \frac{75}{100} = \boxed{0.25} $$
+
+**(b) Find the mean residual lifetime at 25,
+50 and 75 days.**
+
+We know that $$mrl(X=k) = \frac{\int_{k}^{\infty}(t-k)\times f(t)dt}{S(X=k)}$$
+
+The mean residual lifetime at 25 days:
+$$mrl(X=25) = \frac{\int_{25}^{100}(t-25)\times\frac{1}{100}dt}{\frac{3}{4}} = 
+\frac{1}{75}\int_{25}^{100}(t-25)dt = 
+\frac{1}{75}(\frac{1}{2}t^2\mid_{25}^{100} - 25t\vert_{25}^{100}) $$
+$$=
+\frac{1}{75}(\frac{1}{2}\times100^2 - \frac{1}{2}\times25^2 - 25\times100 + 25\times25) = 37\frac{1}{2} = \boxed{37.5} days
+$$
+
+
+The mean residual lifetime at 50 days:
+
+$$mrl(X=50) = \frac{\int_{50}^{100}(t-50)\times\frac{1}{100}dt}{\frac{1}{2}} = 
+\frac{1}{50}\int_{50}^{100}(t-50)dt = 
+\frac{1}{50}(\frac{1}{2}t^2\mid_{50}^{100} - 50t\vert_{50}^{100}) $$
+$$=
+\frac{1}{50}(\frac{1}{2}\times100^2 - \frac{1}{2}\times50^2 - 50\times100 + 50\times50)= \boxed{25} days$$
+
+The mean residual lifetime at 75 days:
+
+$$mrl(X=75) = \frac{\int_{75}^{100}(t-75)\times\frac{1}{100}dt}{\frac{1}{4}} = 
+\frac{1}{25}\int_{75}^{100}(t-25)dt = 
+\frac{1}{25}(\frac{1}{2}t^2\mid_{75}^{100} - 75t\vert_{75}^{100}) $$
+$$=
+\frac{1}{25}(\frac{1}{2}\times100^2 - \frac{1}{2}\times75^2 - 75\times100 + 75\times75) =  \boxed{12.5} days$$
+
+
+
+
+<!-- \pagebreak -->
+
+
+**2. Let $X$ have a uniform distribution on [0,$\theta$], find the hazard function and mean residual life function of $X$.
+(10 points)**
+
+given: $h(x) = \frac{f(x)}{S(x)}$. Assuming that $X$ is continuous, we know that $f(x) = \frac{1}{\theta - 0} = \frac{1}{\theta}$ and $S(x) = 1 - \frac{x}{\theta} = \frac{\theta - x}{\theta}$ for $x \in [0,\theta]$. 
+
+Therefore,
+$h(x) = \frac{\frac{1}{\theta}}{\frac{\theta - x}{\theta}} = \frac{1}{\theta} \times \frac{\theta}{\theta-x} = \boxed{\frac{1}{\theta-x}}$
+
+
+To calculate the mean residulal life for a given $x$, we have:
+
+$$mrl(x) = \frac{\int_x^\infty(t-x)f(t)dt}{S(x)} = \frac{\int_x^\theta(t-x)\frac{1}{\theta}dt}{\frac{\theta - x}{\theta}} = 
+\frac{\frac{1}{\theta}\int_x^\theta(t-x)dt}{\frac{\theta - x}{\theta}}
+$$
+
+$$= \frac{\frac{1}{\theta}(\frac{1}{2}t^2\mid_{t}^{\theta} - xt\vert_{t}^{\theta})}{\frac{\theta - x}{\theta}}
+= \frac{1}{\theta-x}(\frac{1}{2}t^2\mid_{t}^{\theta} - xt\vert_{t}^{\theta})$$
+$$= \frac{1}{\theta-x}(\frac{1}{2} \times \theta^2 - \frac{1}{2} \times x^2 - \theta x + x^2)
+= \frac{1}{\theta-x}(\frac{\theta^2}{2} + \frac{x^2}{2} - \theta x)
+= \frac{1}{2}\frac{1}{\theta-x}(\theta - x)^2 = \boxed{\frac{\theta - x}{2}}$$
+
+
+**3. The lifetime of light bulbs follows an exponential distribution with a hazard rate of 0.001 failures per hour of use ($\lambda$ = 0.001). (10 points)
+(a) Find the mean lifetime of a randomly selected light bulb.**
+
+
+The mean lifetime of a randomly selected lightbulb whose lifetime follows an exponential distribution with $h(x) = \lambda= 0.001$ is the expectation of the r.v. X, the lifetime of lightbulbs. 
+
+
+Because $\lambda = \frac{1}{1000}$, the $E(X) = \frac{1}{\lambda} = \boxed{1000}$ This is a characteristic of the expectation of an exponential distributuion.
+
+
+
+**(b) What is the probability a light bulb will still function after 2,000 hours of use? **
+
+From the hazard function, we know that $$S(x) = e^{-\int_0^x \frac{1}{1000}du} = e^{\frac{-x}{1000}}$$
+
+Solving the survival function at X = 2000, we have:
+
+$$S(X = 2000) = exp(\frac{-2000}{1000} = e^{-2} \approx \boxed{0.135} )$$
+
+which means the probability a light bulb will survive over 2,000 hours of use is about 0.135.
+
+
+
+<!-- Because $f(x) = - (S'(x))$, we find the p.d.f. of X to be $$\frac{1}{1000} \times exp(\frac{-x}{1000})$$ where $x > 0$. -->
+
+<!-- The p -->
+
+\pagebreak
+
+**4. The time in days to development of a tumor for rats exposed to a carcinogen follows a Weibull distribution with $\alpha$ = 2 and $\lambda$ = 0.001. (10 points)**
+
+**(a) What is the probability a rat will be tumor free at 30 days?** 
+
+Let X be the time to tumor development in days where $X$ ~ $Weibull(\alpha = 2, \lambda = 0.001)$
+
+The p.d.f. of the weibull distribution is $$f(x) = \alpha\lambda e^{-\lambda x^\alpha} \times x^{\alpha-1} = \frac{2}{1000}e^{\frac{-x^2}{1000}} \times x^{2-1} = \frac{x}{500} e^{\frac{-x^2}{1000}}$$
+
+From this p.d.f., the $S(t)$ or $P(X>t)$ can be found by integration from $t$ to $\infty$:
+
+$$S(t) = P(X>t) = \int_t^{\infty} \frac{x}{500} e^{\frac{-x^2}{1000}}dx = -e^{\frac{-x^2}{1000}}\vert_{t}^{\infty} = e^{\frac{-t^2}{1000}}$$
+
+Setting $ t = 30$, we find:
+$$P(X>30) = e^{\frac{-30^2}{1000}} = e^{-0.9} \approx \boxed{0.407}$$
+
+**(b) What is the mean time to tumor?** ($\Gamma(0.5) = \sqrt{\pi}$).
+
+We know that for the Weibull distribution, the $$E(X) = \Gamma(1 + \frac{1}{\alpha}) \times \lambda^{\frac{-1}{\alpha}}$$
+
+so $$E(X) = \Gamma(1 + \frac{1}{2}) \times (\frac{1}{1000})^{-\frac{1}{2}} = \Gamma(\frac{3}{2}) \times \sqrt{1000} = \frac{1}{2}\sqrt{\pi} \times \sqrt{1000} \approx \boxed{28.02} days$$
+
+
+**(c) Find the median time to tumor.**
+
+Let $S(x) = 0.5$ and solve for x to find the median time to tumor: $$S(t) = 0.5 = e^\frac{-t^2}{1000}$$
+
+$$log(0.5) = \frac{-t^2}{1000}$$
+$$\sqrt{-1000 \times log(0.5) } = t \approx \boxed{26.33}$$

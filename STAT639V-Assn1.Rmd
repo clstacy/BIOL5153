@@ -11,22 +11,22 @@ output:
 
 given: $n = 9 , y = \{3, 2, 3, 1, 2, 2, 2, 3, 1\} ,  P(1) = 0.2 , P(2) = 0.4 , P(3) = 0.4$
 
-$\underline{Sample\space mean:}$ $$\bar{y} = \frac{1}{n} * \sum_{i = 1}^{n} y_{i} = \frac{3 + 2 + 3 + 1 + 2 + 2 + 2 + 3 + 1}{9} = \frac{19}{9} = \boxed{2.\bar{1}}$$
+$\underline{Sample\text{ } mean:}$ $$\bar{y} = \frac{1}{n} * \sum_{i = 1}^{n} y_{i} = \frac{3 + 2 + 3 + 1 + 2 + 2 + 2 + 3 + 1}{9} = \frac{19}{9} = \boxed{2.\bar{1}}$$
 
-$\underline{Sample\space variance:}$ $$S^2 = \frac{1}{n-1} * \sum_{i = 1}^{n} (y_{i} - \bar{y})^2 = \frac{3(3 - 2.\bar{1})^2 + 4(2 - 2.\bar{1})^2 + 2(1 - 2.\bar{1})^2}{9-1} \approx \frac{2.37 + 0.05 + 2.47}{8} \approx \boxed{0.611}$$
-
-
-$\underline{Theoretical\space mean:}$ $$\mu = E(Y) = \sum_{j = 1}^{k} y_{j}p_{j} = (1 * 0.2) + (2 * 0.4) + (3 * 0.4) = \boxed{2.2}$$
+$\underline{Sample\text{ } variance:}$ $$S^2 = \frac{1}{n-1} * \sum_{i = 1}^{n} (y_{i} - \bar{y})^2 = \frac{3(3 - 2.\bar{1})^2 + 4(2 - 2.\bar{1})^2 + 2(1 - 2.\bar{1})^2}{9-1} \approx \frac{2.37 + 0.05 + 2.47}{8} \approx \boxed{0.611}$$
 
 
-$\underline{Theoretical\space variance:}$ $$\sigma^2 = E(Y - \mu)^2 = \sum_{j = 1}^{k} (y_{j} - \mu)^2p_{j} = (1 - 2.2)^2 * 0.2 +  (2 - 2.2)^2 * 0.4 + (3 - 2.2)^2 * 0.4 = \boxed{0.56}$$
+$\underline{Theoretical\text{ } mean:}$ $$\mu = E(Y) = \sum_{j = 1}^{k} y_{j}p_{j} = (1 * 0.2) + (2 * 0.4) + (3 * 0.4) = \boxed{2.2}$$
+
+
+$\underline{Theoretical\text{ } variance:}$ $$\sigma^2 = E(Y - \mu)^2 = \sum_{j = 1}^{k} (y_{j} - \mu)^2p_{j} = (1 - 2.2)^2 * 0.2 +  (2 - 2.2)^2 * 0.4 + (3 - 2.2)^2 * 0.4 = \boxed{0.56}$$
 
 \pagebreak
 
 
 **2. The 2012 Gallup survey suggests that 26.2% of Americans are obese. Among a random sample of 10 Americans, what is the probability that (a) at least 2 are obese? (b) no more than 7 are obese? (10 points)**
 
-given: $$n = 10,\space p=0.262,\space P(k\space success\space in\space n\space trials) = \binom{n}{k}p^k(1-p)^{(n-k)}$$
+given: $$n = 10,\text{ } p=0.262,\text{ } P(k\text{ } success\text{ } in\text{ } n\text{ } trials) = \binom{n}{k}p^k(1-p)^{(n-k)}$$
 
 (a) The probability that at least 2 are obese $P(k \ge 2)$ is equivalent to $1 - P(k < 2)$ which is equivalent to $P(k \ge 2) = 1 - [P(k=0) + P(k=1)]$
 
@@ -66,7 +66,7 @@ pbinom(7,10,0.262, lower.tail = TRUE)
 
 **3. A bowl contains 10 marbles including 2 red marbles, 3 green marbles, and 5 blue marbles. If we randomly select 4 marbles from the bowl, WITH replacement, what is the probability of selecting 2 green marbles and 2 blue marbles? (10 points)**
 
-given: $n = 4,\space n_{red}=2,\space n_{green} = 3,\space n_{blue}=5,\space P(green) = 0.3,\space P(red)=0.2,\space P(blue)=0.5$
+given: $n = 4,\text{ } n_{red}=2,\text{ } n_{green} = 3,\text{ } n_{blue}=5,\text{ } P(green) = 0.3,\text{ } P(red)=0.2,\text{ } P(blue)=0.5$
 
 According to the multinomial formula,
 $$P(n_{green}=2, n_{blue}=2, n_{red}=0) = \frac{n!}{n_{green}!n_{blue}!n_{red}!} * P(green)^{n_{green}} * P(blue)^{n_{blue}} * P(red)^{n_{red}} $$
@@ -122,7 +122,7 @@ $$ IQR \approx \boxed{2.697959} $$
 
 **6. A coin was flipped 10 times independently, and 3 heads were observed. Let p be the probability of getting a head, compute the maximum likelihood estimate of p. (10 points)**
 
-given: $n=10,\space y = 3,\space p=P(H)$
+given: $n=10,\text{ } y = 3,\text{ } p=P(H)$
 
 $$Y \sim {\sf Bin}(n, p)$$
 The maximum likelihood estimate for p ($\hat{p}_{MLE}$) can be calculated according to $\hat{p}_{MLE} = \frac{y}{n}$ where n is the number of trials and y is the number of successes.
