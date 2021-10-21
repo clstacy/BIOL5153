@@ -1,0 +1,303 @@
+---
+title: "STAT 639V - Assignment 3"
+author: "Carson Stacy"
+date: "9/30/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r include=FALSE}
+require(tidyverse)
+require(ggpubr)
+library(knitr)
+```
+
+**1. Using the leukemia data (posted on Blackboard), compute the Nelson-Aalen estimators for the cumulative
+hazard function $H(t)$ and survival function $S(t)$ of 6-MP patients. (20 points)**
+
+
+```{r echo=FALSE, results='asis'}
+leukemia_data <- data.frame(matrix(vector(mode = 'numeric'), nrow = 21, ncol = 0))
+leukemia_data$Pair <- c(1:21)
+leukemia_data$`Remission Status at Randomization` <- c(
+  "Partial Remissoin",
+  "Complete Remission",
+  "Complete Remission",
+  "Complete Remission",
+  "Complete Remission",
+  "Partial Remissoin",
+  "Complete Remission",
+  "Complete Remission",
+  "Complete Remission",
+  "Complete Remission",
+  "Complete Remission",
+  "Partial Remissoin",
+  "Complete Remission",
+  "Complete Remission",
+  "Complete Remission",
+  "Partial Remissoin",
+  "Partial Remissoin",
+  "Complete Remission",
+  "Complete Remission",
+  "Complete Remission",
+  "Complete Remission"
+)
+
+leukemia_data$`Time to Relapse for Placebo Patients` <- c('1','22','3','12','8','17','2','11','8','12','2', '5', '4','15','8','23','5','11','4','1','8')
+#leukemia_data$placebo_censor <- rep(0, 21)
+leukemia_data$`Time to Relapse for 6-MP Patients` <- c('10','7','32+','23','22','6','16','34+','32+','25+','11+',
+  '20+','19+','6','17+','35+','6','13','9+','6+','10+')
+
+
+kable(leukemia_data, caption= "Remission duration of 6-MP versues placebo in children with acute leukemia")
+```
+
+
+```{r echo=FALSE, results='asis'}
+leukemia_summary <- data.frame(matrix(vector(mode = 'numeric'), nrow = 7, ncol = 0))
+
+leukemia_summary$t_i <- c(
+  6,
+  7,
+  10,
+  13,
+  16,
+  22,
+  23
+)
+leukemia_summary$d_i <- c(
+  3,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1
+)
+leukemia_summary$Y_i <- c(
+  21,
+  17,
+  15,
+  12,
+  11,
+  7,
+  6
+)
+
+leukemia_summary$NA_hazard <- c(
+  '3/21 = 0.1428571',
+  '(0.143)+(1/17) = 0.2016807',
+  '(0.202)+(1/15) = 0.2683473',
+  '(0.268)+(1/12) = 0.3516807',
+  '(0.352)+(1/11) = 0.4425898',
+  '(0.443)+(1/7) = 0.5854469',
+  '(0.585)+(1/6) = 0.7521136'
+)
+leukemia_summary$NA_survival <- c(
+  'exp(-0.1428571) = 0.8668779',
+  'exp(-0.2016807) = 0.8173559',
+  'exp(-0.2683473) = 0.7646422',
+  'exp(-0.3516807) = 0.7035047',
+  'exp(-0.4425898) = 0.6423707',
+  'exp(-0.5854469) = 0.5568569',
+  'exp(-0.7521136) = 0.4713692'
+)
+
+kable(leukemia_summary, caption= "Summary of Survival for Nelson-Aalen estimator")
+```
+
+$$\widetilde{H}(t) = \left\{\begin{array}{ll}
+0 & : t < 6\\
+0.143 & : 6 \le t < 7\\
+0.202 & : 7 \le t < 10\\
+0.268 & : 10 \le t < 13\\
+0.352 & : 13 \le t < 16\\
+0.443 & : 16 \le t < 22\\
+0.585 & : 22 \le t < 23\\
+0.752 & : 23 \le t < 35
+\end{array}
+\right.$$
+
+To find the standard deviation for these intervals:
+
+```{r echo=FALSE, results='asis'}
+sigma_sq_H <- c(
+  '3/(21*21) = ',
+  '0.0068+(1/(17*17)) = ',
+  '0.0103+(1/(15*15)) = ',
+  '0.0147+(1/(12*12)) = ',
+  '0.0217+(1/(11*11)) = ',
+  '0.0299+(1/(7*7)) = ',
+  '0.0503+(1/(6*6)) = '
+)
+
+sigma_sq_H_ans<- c(
+  3/(21*21),
+  0.0068+(1/(17*17)),
+  0.01026293+(1/(15*15)),
+  0.01470737+(1/(12*12)),
+  0.02165182+(1/(11*11)),
+  0.02991628+(1/(7*7)),
+  0.05032444+(1/(6*6))
+)
+
+`$\\sigma^2_H(t)$` <- c(
+  '3/(21*21) = 0.0068',
+  '0.0068+(1/(17*17)) = 0.0103',
+  '0.0103+(1/(15*15)) = 0.0147',
+  '0.0147+(1/(12*12)) = 0.0217',
+  '0.0217+(1/(11*11)) = 0.0299',
+  '0.0299+(1/(7*7)) = 0.0503',
+  '0.0503+(1/(6*6)) = 0.0781'
+)
+
+`$\\sigma_H(t)$` <- c(
+  'sqrt(0.0068) = 0.0825',
+  'sqrt(0.0103) = 0.1013',
+  'sqrt(0.0147) = 0.1213',
+  'sqrt(0.0217) = 0.1471',
+  'sqrt(0.0299) = 0.1730',
+  'sqrt(0.0503) = 0.2243',
+  'sqrt(0.0781) = 0.2795'
+)
+
+estimate_calc_H <- tibble(`$\\sigma^2_H(t)$`, `$\\sigma_H(t)$`)
+
+kable(estimate_calc_H)
+
+```
+
+```{r echo=FALSE, results='asis'}
+`$\\tilde{H}(t)$` <- c('0', '0.143', '0.202', '0.268', '0.352', '0.443', '0.585', '0.752')
+`Time on Study $(t)$`<- c("$0 \\leq t < 6$",
+                          "$6 \\leq  t < 7$",
+                        "$7 \\leq  t < 10$",
+                        "$10 \\leq  t < 13$",
+                        "$13 \\leq t < 16$",
+                        "$16 \\leq t < 22$",
+                        "$22 \\leq t < 23$",
+                        "$23 \\leq t < 35$")
+
+`Standard Deviation` <- c('0',
+                          '0.0825', 
+                          '0.1013', 
+                          '0.1213', 
+                          '0.1471', 
+                          '0.1730', 
+                          '0.2243', 
+                          '0.2795')
+
+finalanswer_H <- tibble(`$\\tilde{H}(t)$`, `Time on Study $(t)$`, `Standard Deviation`)
+
+kable(finalanswer_H)
+```
+
+
+
+
+The NA estimate of the survival function $\widetilde{S}(t)$ is:
+$$\widetilde{S}(t) = \left\{\begin{array}{ll}
+1 & : t < 6\\
+0.867 & : 6 \le t < 7\\
+0.817 & : 7 \le t < 10\\
+0.765 & : 10 \le t < 13\\
+0.704 & : 13 \le t < 16\\
+0.642 & : 16 \le t < 22\\
+0.557 & : 22 \le t < 23\\
+0.471 & : 23 \le t < 35
+\end{array}
+\right.$$
+
+
+```{r echo=FALSE, results='asis'}
+
+NA_survival <- c(0.8668779,
+0.8173559,
+0.7646422,
+0.7035047,
+0.6423707,
+0.5568569,
+0.4713692)
+
+
+`$\\tilde{S}(t)$` <- c(
+  0.8668779,
+0.8173559,
+0.7646422,
+0.7035047,
+0.6423707,
+0.5568569,
+0.4713692
+)
+
+`$\\tilde{S}^2(t)$` <- c(
+  round(0.8668779^2, 4),
+  round(0.8173559^2, 4),
+  round(0.7646422^2, 4),
+  round(0.7035047^2, 4),
+  round(0.6423707^2, 4),
+  round(0.5568569^2, 4),
+  round(0.4713692^2, 4)
+)
+
+`$\\sigma^2_S(t)$` <- c(
+  '3/(21*21) = 0.0068',
+  '0.0068+(1/(17*17)) = 0.0103',
+  '0.0103+(1/(15*15)) = 0.0147',
+  '0.0147+(1/(12*12)) = 0.0217',
+  '0.0217+(1/(11*11)) = 0.0299',
+  '0.0299+(1/(7*7)) = 0.0503',
+  '0.0503+(1/(6*6)) = 0.0781'
+)
+
+`$\\hat{Var}(\\longtilde{S}^2(t))$` <- c(
+  '0.7515 * 0.0068 = 0.0051',
+  '0.6681 * 0.0103 = 0.0069',
+  '0.5847 * 0.0147 = 0.0086',
+  '0.4949 * 0.0217 = 0.0107',
+  '0.4126 * 0.0299 = 0.0123',
+  '0.3101 * 0.0503 = 0.0156',
+  '0.2222 * 0.0781 = 0.0174'
+)
+
+`Standard Deviation` <- c(
+  'sqrt(0.0051) = 0.0714',
+  'sqrt(0.0069) = 0.0831',
+  'sqrt(0.0086) = 0.0927',
+  'sqrt(0.0107) = 0.1034',
+  'sqrt(0.0123) = 0.1109',
+  'sqrt(0.0156) = 0.1249',
+  'sqrt(0.0174) = 0.1319'
+)
+
+```
+
+
+```{r echo=FALSE, results='asis'}
+`$\\tilde{S}(t)$` <- c('1', '0.8669', '0.8174', '0.7646', '0.7035', '0.6424', '0.5569', '0.4714')
+
+
+`Time on Study $(t)$`<- c("$0 \\leq t < 6$",
+                        "$6 \\leq  t < 7$",
+                        "$7 \\leq  t < 10$",
+                        "$10 \\leq  t < 13$",
+                        "$13 \\leq t < 16$",
+                        "$16 \\leq t < 22$",
+                        "$22 \\leq t < 23$",
+                        "$23 \\leq t < 35$")
+
+`Standard Deviation` <- c('0',
+                          '0.0714', 
+                          '0.0831', 
+                          '0.0927', 
+                          '0.1034', 
+                          '0.1109', 
+                          '0.1249', 
+                          '0.1319')
+
+finalanswer_S <- tibble( `Time on Study $(t)$`, `$\\tilde{S}(t)$`, `Standard Deviation`)
+
+kable(finalanswer_S)
+```
