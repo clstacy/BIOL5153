@@ -1,7 +1,7 @@
 ---
 title: "STAT 639V - Assignment 3"
 author: "Carson Stacy"
-date: "9/30/2021"
+date: "10/22/2021"
 output:
   pdf_document: default
   html_document:
@@ -296,7 +296,7 @@ NA_survival <- c(0.8668779,
                           '0.2243', 
                           '0.2795')
 
-finalanswer_H <- tibble(`$\\tilde{H}(t)$`, `Time on Study $(t)$`, `Standard Deviation`)
+finalanswer_H <- tibble(`Time on Study $(t)$`, `$\\tilde{H}(t)$`, `Standard Deviation`)
 
 kable(finalanswer_H)
 ```
