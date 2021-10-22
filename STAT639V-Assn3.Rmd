@@ -18,6 +18,9 @@ library(knitr)
 hazard function $H(t)$ and survival function $S(t)$ of 6-MP patients. (20 points)**
 
 
+The raw data used for this question is reproduced below.
+The estimators of this data are on the following pages.
+
 ```{r echo=FALSE, results='asis'}
 leukemia_data <- data.frame(matrix(vector(mode = 'numeric'), nrow = 21, ncol = 0))
 leukemia_data$Pair <- c(1:21)
@@ -51,14 +54,29 @@ leukemia_data$`Time to Relapse for 6-MP Patients` <- c('10','7','32+','23','22',
   '20+','19+','6','17+','35+','6','13','9+','6+','10+')
 
 
-kable(leukemia_data, caption= "Remission duration of 6-MP versues placebo in children with acute leukemia")
+kable(leukemia_data, caption= "Remission duration of 6-MP vs placebo in children with acute leukemia")
 ```
+
+\pagebreak
+
+The Nelson-Aalen estimates for Survival ($\tilde{S}(t)$) and Hazard ($\tilde{H}(t)$) functions for this data are calculated below.
+
+$t_i$ represents the $i$ event times of the data, or times where at least one event occurred.
+
+$d_i$ represents the number of events that occurred at the $i^{th}$ event time.
+
+$Y_i$ represents the number of subjects that were at risk for event occurring at time $t_i$.
+
+$\tilde{H}$ represents the Nelson-Aalen estimate for hazard at time $t_i$ and how it was calculated.
+
+$\tilde{S}$ represents the Nelson-Aalen estimate for survival at time $t_i$ and how it was calculated.
+
 
 
 ```{r echo=FALSE, results='asis'}
 leukemia_summary <- data.frame(matrix(vector(mode = 'numeric'), nrow = 7, ncol = 0))
 
-leukemia_summary$t_i <- c(
+leukemia_summary$`$t_i$` <- c(
   6,
   7,
   10,
@@ -67,7 +85,7 @@ leukemia_summary$t_i <- c(
   22,
   23
 )
-leukemia_summary$d_i <- c(
+leukemia_summary$`$d_i$` <- c(
   3,
   1,
   1,
@@ -76,7 +94,7 @@ leukemia_summary$d_i <- c(
   1,
   1
 )
-leukemia_summary$Y_i <- c(
+leukemia_summary$`$Y_i$` <- c(
   21,
   17,
   15,
@@ -86,7 +104,7 @@ leukemia_summary$Y_i <- c(
   6
 )
 
-leukemia_summary$NA_hazard <- c(
+leukemia_summary$`$\\tilde{H}$` <- c(
   '3/21 = 0.1428571',
   '(0.143)+(1/17) = 0.2016807',
   '(0.202)+(1/15) = 0.2683473',
@@ -95,7 +113,7 @@ leukemia_summary$NA_hazard <- c(
   '(0.443)+(1/7) = 0.5854469',
   '(0.585)+(1/6) = 0.7521136'
 )
-leukemia_summary$NA_survival <- c(
+leukemia_summary$`$\\tilde{S}$` <- c(
   'exp(-0.1428571) = 0.8668779',
   'exp(-0.2016807) = 0.8173559',
   'exp(-0.2683473) = 0.7646422',
@@ -107,6 +125,8 @@ leukemia_summary$NA_survival <- c(
 
 kable(leukemia_summary, caption= "Summary of Survival for Nelson-Aalen estimator")
 ```
+
+From this data, we can say that NA estimator $\tilde{H}(t)$ for this data is:
 
 $$\widetilde{H}(t) = \left\{\begin{array}{ll}
 0 & : t < 6\\
@@ -120,7 +140,7 @@ $$\widetilde{H}(t) = \left\{\begin{array}{ll}
 \end{array}
 \right.$$
 
-To find the standard deviation for these intervals:
+To find the standard deviation of the $\tilde{H}(t)$ for these time intervals:
 
 ```{r echo=FALSE, results='asis'}
 sigma_sq_H <- c(
@@ -169,35 +189,13 @@ kable(estimate_calc_H)
 
 ```
 
-```{r echo=FALSE, results='asis'}
-`$\\tilde{H}(t)$` <- c('0', '0.143', '0.202', '0.268', '0.352', '0.443', '0.585', '0.752')
-`Time on Study $(t)$`<- c("$0 \\leq t < 6$",
-                          "$6 \\leq  t < 7$",
-                        "$7 \\leq  t < 10$",
-                        "$10 \\leq  t < 13$",
-                        "$13 \\leq t < 16$",
-                        "$16 \\leq t < 22$",
-                        "$22 \\leq t < 23$",
-                        "$23 \\leq t < 35$")
 
-`Standard Deviation` <- c('0',
-                          '0.0825', 
-                          '0.1013', 
-                          '0.1213', 
-                          '0.1471', 
-                          '0.1730', 
-                          '0.2243', 
-                          '0.2795')
-
-finalanswer_H <- tibble(`$\\tilde{H}(t)$`, `Time on Study $(t)$`, `Standard Deviation`)
-
-kable(finalanswer_H)
-```
+\pagebreak
 
 
 
+The NA estimate of the survival function $\tilde{S}(t)$ can also be determined from the information in Table 2 above:
 
-The NA estimate of the survival function $\widetilde{S}(t)$ is:
 $$\widetilde{S}(t) = \left\{\begin{array}{ll}
 1 & : t < 6\\
 0.867 & : 6 \le t < 7\\
@@ -209,6 +207,9 @@ $$\widetilde{S}(t) = \left\{\begin{array}{ll}
 0.471 & : 23 \le t < 35
 \end{array}
 \right.$$
+
+
+Therefore, the Nelson-Aalen estimators (estimate and standard deviations) for this data for both Hazard and Survival are summarized below:
 
 
 ```{r echo=FALSE, results='asis'}
@@ -274,6 +275,31 @@ NA_survival <- c(0.8668779,
 
 ```
 
+
+```{r echo=FALSE, results='asis'}
+`$\\tilde{H}(t)$` <- c('0', '0.143', '0.202', '0.268', '0.352', '0.443', '0.585', '0.752')
+`Time on Study $(t)$`<- c("$0 \\leq t < 6$",
+                          "$6 \\leq  t < 7$",
+                        "$7 \\leq  t < 10$",
+                        "$10 \\leq  t < 13$",
+                        "$13 \\leq t < 16$",
+                        "$16 \\leq t < 22$",
+                        "$22 \\leq t < 23$",
+                        "$23 \\leq t < 35$")
+
+`Standard Deviation` <- c('0',
+                          '0.0825', 
+                          '0.1013', 
+                          '0.1213', 
+                          '0.1471', 
+                          '0.1730', 
+                          '0.2243', 
+                          '0.2795')
+
+finalanswer_H <- tibble(`$\\tilde{H}(t)$`, `Time on Study $(t)$`, `Standard Deviation`)
+
+kable(finalanswer_H)
+```
 
 ```{r echo=FALSE, results='asis'}
 `$\\tilde{S}(t)$` <- c('1', '0.8669', '0.8174', '0.7646', '0.7035', '0.6424', '0.5569', '0.4714')
