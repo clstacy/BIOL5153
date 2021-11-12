@@ -1,5 +1,5 @@
 ---
-title: "STAT 639V - Assignment 3"
+title: "STAT 639V - Assignment 4"
 author: "Carson Stacy"
 date: "11/03/2021"
 output:
@@ -20,9 +20,6 @@ library(knitr)
 library(survival)
 # add survival object column
 lung$SurvObj <- with(lung, Surv(time, status == 2))
-
-# # change male to 0, female to 1.
-# lung$sex01 <- ifelse(lung$sex == 1, 0, 1)
 
 # fit the Cox proportional hazard model for the data
 coxreg <- coxph(SurvObj ~ sex + age, lung)
