@@ -78,6 +78,7 @@ bfeed <- bfeed %>%
               recode(race, "1" = "white", "2" = "black", "3"="other"),
               levels = c("white", "black", "other")
               ),
+         status = delta,
          delta = factor(
               recode(delta, "1" = "yes", "0" = "no"),
               levels = c("no", "yes")
@@ -142,18 +143,57 @@ bfeed %>%
   theme_minimal() +
   # scale_fill_uchicago() +
   theme(legend.position = "none") +
-  ggtitle("Distribution of categorical variables")
+  ggtitle("Distribution of categorical variables") +
+  xlab("participant response")
 ```
 
 ## Assumptions
 
+Given that (1) earlier ages of stopping breastfeeding are often considered more important and (2) ages of stopping breastfeeding likely are right skewed, the peto-peto
+
 ## Statistical Models
+
+### Parametric model: Exponential vs Weibull
+
+```{r}
+library(My.stepwise)
+# exponential parametric model
+parareg=survreg(SurvObj ~ as.factor(sex) + age, bfeed, dist="exponential")
+
+# weibull parametric model
+parareg=survreg(SurvObj ~ as.factor(sex) + age, bfeed, dist="weibull")
+
+
+# create a variable list for stepwise selection of variables in models:
+my.variable.list <- c("race", "poverty", "smoke", "alcohol", "agemth", "ybirth", "yschool", "pc3mth")
+
+My.stepwise.coxph(Time = "time", Status = "status1", variable.list = my.variable.list,
+                  data = my.data, sle = 0.15, sls = 0.15)
+My.step
+
+```
+
+Cox model approach is a semi-parametric model useful with fixed-time covariates
+
+here is the cox model of the entire bfeed dataset:
+
+```{r}
+m1 <- coxph(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
+              yschool, data = bfeed) 
+summary(m1)
+
+termplot(m1)
+
+cox.zph(m1)
+
+ggcoxdiagnostics(m1, type = "schoenfeld")
+```
 
 ## Cross-Group Comparisons
 
 Kaplan Meier Curve of entire dataset combined:
 
-```{r fig.height=3, fig.width=3}
+```{r}
 # create survival object:
 km.as.one <- survfit(SurvObj ~ 1, data = bfeed)
 # summary(km.as.one)
@@ -172,6 +212,8 @@ km.by.agemth <- survfit(SurvObj ~ agemth, data = bfeed)
 
 km.by.pc3mth <- survfit(SurvObj ~ pc3mth, data = bfeed)
 
+km.by.ybirth <- survfit(SurvObj ~ ybirth, data = bfeed)
+
 #KM plot combining all participants
 ggsurvplot(
    km.as.one,               # survfit object with calculated statistics.
@@ -189,6 +231,9 @@ ggsurvplot(
   risk.table.y.text = FALSE,  # show bars instead of names in text annotations
                              # in legend of risk table
   # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
   fun = "pct"                #show survival function as percentage
 )
 
@@ -198,6 +243,8 @@ ggsurvplot(
    data = bfeed,             # data used to fit survival curves.
    risk.table = TRUE,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
    xlim = c(0,200),          # present narrower X axis, but not affect
@@ -209,6 +256,9 @@ ggsurvplot(
   risk.table.y.text = FALSE,  # show bars instead of names in text annotations
                              # in legend of risk table
   # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
   fun = "pct"                #show survival function as percentage
 )
 
@@ -218,6 +268,8 @@ ggsurvplot(
    data = bfeed,             # data used to fit survival curves.
    risk.table = TRUE,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
    xlim = c(0,200),          # present narrower X axis, but not affect
@@ -229,6 +281,9 @@ ggsurvplot(
   risk.table.y.text = FALSE,  # show bars instead of names in text annotations
                              # in legend of risk table
   # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
   fun = "pct"                #show survival function as percentage
 )
 
@@ -238,6 +293,8 @@ ggsurvplot(
    data = bfeed,             # data used to fit survival curves.
    risk.table = TRUE,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
    xlim = c(0,200),          # present narrower X axis, but not affect
@@ -249,6 +306,9 @@ ggsurvplot(
   risk.table.y.text = FALSE,  # show bars instead of names in text annotations
                              # in legend of risk table
   # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
   fun = "pct"                #show survival function as percentage
 )
 
@@ -259,6 +319,8 @@ ggsurvplot(
    data = bfeed,             # data used to fit survival curves.
    risk.table = TRUE,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
    xlim = c(0,200),          # present narrower X axis, but not affect
@@ -270,6 +332,9 @@ ggsurvplot(
   risk.table.y.text = FALSE,  # show bars instead of names in text annotations
                              # in legend of risk table
   # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
   fun = "pct"                #show survival function as percentage
 )
 
@@ -280,6 +345,8 @@ ggsurvplot(
    data = bfeed,             # data used to fit survival curves.
    risk.table = TRUE,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
    xlim = c(0,200),          # present narrower X axis, but not affect
@@ -291,6 +358,9 @@ ggsurvplot(
   risk.table.y.text = FALSE,  # show bars instead of names in text annotations
                              # in legend of risk table
   # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
   fun = "pct"                #show survival function as percentage
 )
 
@@ -300,6 +370,8 @@ ggsurvplot(
    data = bfeed,             # data used to fit survival curves.
    risk.table = TRUE,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
    xlim = c(0,200),          # present narrower X axis, but not affect
@@ -311,6 +383,9 @@ ggsurvplot(
   risk.table.y.text = FALSE,  # show bars instead of names in text annotations
                              # in legend of risk table
   # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
   fun = "pct"                #show survival function as percentage
 )
 
@@ -320,6 +395,8 @@ ggsurvplot(
    data = bfeed,             # data used to fit survival curves.
    risk.table = TRUE,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
    xlim = c(0,200),          # present narrower X axis, but not affect
@@ -331,11 +408,45 @@ ggsurvplot(
   risk.table.y.text = FALSE,  # show bars instead of names in text annotations
                              # in legend of risk table
   # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  fun = "pct"                #show survival function as percentage
+)
+
+#KM curve according to birth year
+ggsurvplot(
+   km.by.ybirth,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
   fun = "pct"                #show survival function as percentage
 )
 ```
 
 ## Goodness-of-Fit Test
+
+```{r}
+ # log rank test survdiff
+survdiff(SurvObj ~ race, bfeed)
+
+```
 
 # Discussion
 
