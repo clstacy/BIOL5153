@@ -464,7 +464,7 @@ Notice that the the hazard is a constant $\lambda$.
 
 The key assumption of the exponential survival model are that the the hazard rate is constant, derived from the memoryless property of the exponential distribution. Based on what is known about cessation of breastfeeding, this would not seem likely to be a valid assumption; however, figure X shows the exponential model provides a reasonable fit to the data. The curves for "white" and "black" overlap too closely to see in the figure, matching the regression outputs below showing similar survival for these two groups.
 
-```{r exponential hazard best model plot, echo=FALSE, fig.cap="Comparing KM curve for duration of breastfeeding according to mothers' race with exponential regression model."}
+```{r exponentialAIC, echo=FALSE}
 # exponential parametric model
 
 # create vector of AIC values for expo
@@ -474,11 +474,11 @@ expAIC <- rep(0.0, 9)
 
 expreg_all <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth + yschool + pc3mth, bfeed, dist="exponential")
 expAIC[1] <- AIC(expreg_all)
-summary(expreg_all) # has highest p-val: pc3mth
+# summary(expreg_all) # has highest p-val: pc3mth
 
 expreg_less1 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth + yschool, bfeed, dist="exponential")
 expAIC[2] <- AIC(expreg_less1)
-summary(expreg_less1) # has highest p-val: agemth
+# summary(expreg_less1) # has highest p-val: agemth
 
 expreg_less2 <- survreg(SurvObj ~ race + 
                           poverty + smoke + 
@@ -486,41 +486,42 @@ expreg_less2 <- survreg(SurvObj ~ race +
                           ybirth, bfeed, dist="exponential")
 
 expAIC[3] <- AIC(expreg_less2)
-summary(expreg_less2) # has highest p-val: alcohol
+# summary(expreg_less2) # has highest p-val: alcohol
 
 expreg_less3 <- survreg(SurvObj ~ race  + 
                           poverty + smoke + yschool + ybirth,
                           bfeed, dist="exponential")
 expAIC[4] <- AIC(expreg_less3)
-summary(expreg_less3) # has highest p-val: poverty
+# summary(expreg_less3) # has highest p-val: poverty
 
 expreg_less4 <- survreg(SurvObj ~ race + smoke + yschool + ybirth,
                         bfeed, dist="exponential")
 expAIC[5] <- AIC(expreg_less4)
-summary(expreg_less4) # has highest p-val: race
+# summary(expreg_less4) # has highest p-val: race
 
 expreg_less5 <- survreg(SurvObj ~  smoke + yschool + ybirth,
                         bfeed, dist="exponential")
 expAIC[6] <- AIC(expreg_less5)
-summary(expreg_less5) # has highest p-val: smoke
+# summary(expreg_less5) # has highest p-val: smoke
 
 
 expreg_less6 <- survreg(SurvObj ~  yschool + ybirth,
                         bfeed, dist="exponential")
 expAIC[7] <- AIC(expreg_less6)
-summary(expreg_less6) # has highest p-val: yschool
+# summary(expreg_less6) # has highest p-val: yschool
 
 expreg_less7 <- survreg(SurvObj ~ ybirth,
                         bfeed, dist="exponential")
 expAIC[8] <- AIC(expreg_less7)
-summary(expreg_less7) 
+# summary(expreg_less7) 
 
 expreg_less8 <- survreg(SurvObj ~ 1,
                         bfeed, dist="exponential")
 expAIC[9] <- AIC(expreg_less8)
-summary(expreg_less8) 
+# summary(expreg_less8) 
+```
 
-
+```{r exponential, echo=FALSE, fig.cap="Comparing KM curve for duration of breastfeeding according to mothers' race with exponential regression model."}
 # predicted curves based on exponential best model
 pred.exp1 = predict(expreg_less4, newdata=list(race="white", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
 pred.exp2 = predict(expreg_less4, newdata=list(race="black", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
@@ -566,27 +567,35 @@ gg.km.by.race$plot <- gg.km.by.race$plot + geom_line(data=df_long, aes(x=time, y
 gg.km.by.race
 ```
 
-#### goodness of fit\
+#### Goodness of fit\
 
-Parametric models such as the exponential model allow for multivariate analysis. Given this, parameter selection is needed to find the best combination of parameters to predict or characterize survival. A backwards selection approach is utilized here to select parameters, in which all predictor variables were included in the model, the Akaike Information Criterion (AIC) for the model was recorded, and then the least significant parameter was dropped from the model until no parameters remain. The results of this process are in figure X below. This approach selected a model with four variables: race, smoking, years of education, and year child was born.
+Parametric models such as the exponential model allow for multivariate analysis. Given this, parameter selection is needed to find the best combination of parameters to predict or characterize survival. A backwards selection approach is utilized here to select parameters, in which all predictor variables were included in the model, the Akaike Information Criterion (AIC) for the model was recorded, and then the least significant parameter was dropped from the model until no parameters remain. The results of this process are in figure 4 below. This approach selected a model with four variables: race, smoking, years of education, and year child was born.
 
 ```{r, echo=FALSE}
 summary_expAIC <- tibble(
   "# Parameters" = c(8:0),
   "AIC" = expAIC, 
   "Equation" = c(
-    "SurvObj ~ ybirth + yschool +  smoke +  race  + poverty + alcohol + agemth + pc3mth",
-    "SurvObj ~ race  + smoke + yschool + ybirth  + poverty + alcohol + agemth + pc3mth",
-    "SurvObj ~ race + smoke + yschool + ybirth",
+    "SurvObj ~ ybirth + yschool + ... + agemth + pc3mth",
+    "SurvObj ~ ybirth + yschool + ... + alcohol + agemth",
+    "SurvObj ~ ybirth + yschool + ... + poverty + alcohol",
+    "SurvObj ~ ybirth + yschool + smoke + race + poverty",
+    "SurvObj ~ ybirth + yschool + smoke + race", # lowest AIC
+    "SurvObj ~ ybirth + yschool + smoke",
+    "SurvObj ~ ybirth + yschool",
+    "SurvObj ~ ybirth",
+    "SurvObj ~ 1"
   )
 )
 
-summary_expreg$table %>%
-  knitr::kable(digits=3,caption = "SurvObj ~ race + smoke + yschool + ybirth")#,caption="Exponential survival model with lowest AIC")
+summary_expAIC %>%
+  knitr::kable(digits=5,caption="Exponential survival model with lowest AIC")
 ```
 
 
-#### Parameter Estimates \
+#### Parameter Estimates\
+
+The parameter estimates for the best fit exponential model are shown in Table 5. We see p-values below the 0.05 threshold for all parameters except for where race is black has a p-value higher than 0.05. These parameters indicate that
 
 ```{r, echo=FALSE}
 summary_expreg <- summary(expreg_less4)
@@ -594,6 +603,8 @@ summary_expreg <- summary(expreg_less4)
 summary_expreg$table %>%
   knitr::kable(digits=3,caption = "SurvObj ~ race + smoke + yschool + ybirth")#,caption="Exponential survival model with lowest AIC")
 ```
+
+
 
 convert AFT estimates (survreg()) to PH:
 
@@ -603,9 +614,6 @@ convert AFT estimates (survreg()) to PH:
 ```
 
 
-#### Predictions and Validations\
-
-a
 
 ### Weibull
 
