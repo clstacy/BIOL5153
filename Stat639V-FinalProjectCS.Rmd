@@ -21,7 +21,7 @@ header-includes:
 
 Breastfeeding has been a topic of academic and public interest since the invention of formula and the feeding bottle in the 19th century [@stevens2009history]. Since the invention of baby formula, breastfeeding rates have reduced dramatically. The breastfeeding rate was 90% in the 20th century, but has decreased to approximately 37% in the 21st century [@gaynor2003breastfeeding; @victora2016breastfeeding]. This trend has many scientists concerned [@mcfadden2016spotlight; @perez2020breastfeeding; @pomeranz2021breastmilk].
 
-The importance of breastfeeding in low and middle-income nations is widely acknowledged. In low-income nations, unclean water in formula is a death sentence for an infant. Perhaps this partially explains why the prevalence of breastfeeding is higher in low and middle-income nations than in high-income nations. A large body of scientific research spanning public health studies to cell biology experiments show the importance of promoting infant breastfeeding everywhere [@walters2019cost]. From kick-starting the infant's gut microbiome via human milk oligosaccharides, to the transfer of important immune molecules (e.g. IgA) to transfer of stem cells [@hassiotou2014dawn] and micro-RNAs from mother to infant suggested to regulate infant gene expression [@munch2013transcriptome; @van2020impact]. Beyond positive impacts on the child's current and future health, benefits have been shown for the breast feeding mother as well [@leon2002quantifying]. From the [World Health Organization](https://www.who.int/health-topics/breastfeeding#tab=tab_1) to the American Academy of Pediatrics [@section2012breastfeeding], most doctors and organizations avidly support exclusive breastfeeding during the first six month of an infant's life.
+The importance of breastfeeding in low and middle-income nations is widely acknowledged. In low-income nations, unclean water in formula is a death sentence for an infant [@perez2012scaling]. Perhaps this partially explains why the prevalence of breastfeeding is higher in low and middle-income nations than in high-income nations. A large body of scientific research spanning public health studies to cell biology experiments show the importance of promoting infant breastfeeding everywhere [@hoddinott2008breast; @walters2019cost]. From kick-starting the infant's gut microbiome via human milk oligosaccharides, to the transfer of important immune molecules (e.g. IgA) to transfer of stem cells [@pannaraj2017association; @hassiotou2014dawn] and micro-RNAs from mother to infant suggested to regulate infant gene expression [@munch2013transcriptome; @van2020impact]. Beyond positive impacts on the child's current and future health, benefits have been shown for the breast feeding mother as well [@leon2002quantifying]. From the [World Health Organization](https://www.who.int/health-topics/breastfeeding#tab=tab_1) to the American Academy of Pediatrics [@section2012breastfeeding], most doctors and organizations avidly support exclusive breastfeeding during the first six month of an infant's life.
 
 It is apparent that breastfeeding is important for health -- or is it? Despite the ubiquity of recommendations regarding breastfeeding, there exists less high quality data on the topic than might be expected. Ethical considerations make the gold standard double-blind experimental design a non-starter, so observational studies and their confounding baggage are the norm in breastfeeding literature. A hallmark study in the 1990's in Belarus called the PROBIT trial involved 17,000 mothers which were experimentally "treated" with promotion of breastfeeding while the control group was not [@kramer2001promotion]. The results of this trial were mixed. In the context of immediate health benefits of the child, breast feeding showed a significant reduction in: number of gastrointestinal infections, likelihood of eczema and other rashes. However, no significant differences were seen in any other considered outcomes (e.g., respiratory infections, ear infections, wheezing, mortality). Regarding long-term outcomes, the PROBIT trial found no effect on any long-term outcomes measured. Sibling studies, which compare outcomes of siblings pairs where one was breastfed while the other bottle fed, find no impact on any measured outcomes [@colen2014breast; @raissian2018best].
 
@@ -31,13 +31,14 @@ It has been argued that the differences seen in many observational studies compa
 
 The controversy is not against breastfeeding, especially in low-income nations, rather it is promoting communication evidence-based of the magnitude of benefits of breastfeeding.
 
-It is in the context of thinking about a mother's breastfeeding decisions through a socioeconomic lens that this project examines time to cessation of breastfeeding data of new mothers from the National Longitudinal Survey of Youth (NSLY, 1995). A finding that demographic factors have no effect on time to cessation of breastfeeding would be unexpected based on the claims of @raissian2018best. A finding of significant differences does not confirm their assertions, but rather provides valuable information about relevant demographic variables related to breast feeding cessation and context for considering some observational research finding drastic benefits of breast feeding. Additionally, this analysis shows the utility of survival analysis methodology in time-to-event scenarios such as breast feeding cessation.
+It is in the context of thinking about a mother's breastfeeding decisions through a socioeconomic lens that this project examines time to cessation of breastfeeding data of new mothers from the National Longitudinal Survey of Youth (NSLY, 1995). A finding that demographic factors have no effect on time to cessation of breastfeeding would be unexpected based on the claims of @raissian2018best. A finding of significant differences does not confirm their assertions, but rather provides valuable information about relevant demographic variables related to breast feeding cessation and context for considering some observational research finding drastic benefits of breast feeding. Additionally, this analysis shows the utility of sfurvival analysis methodology in time-to-event scenarios such as breast feeding cessation.
 
 ## The Data
 
 \vspace{-2truemm}
 
 This project utilizes data on breastfeeding decisions of young mothers compiled from the National Longitudinal Survey of Youth (NLSY, 1995) personal interviews conducted by the United States Bureau of Labor Statistics branch of the US Department of Labor. All NLSY files are public access, and can be downloaded from <http://www.bls.gov/nls/nlsy79.html>. The data set was compiled as part of the text *Survival Analysis Techniques for Censored and truncated data* by @klein2003survival, available in the `KMsurv` package as `bfeed`.
+
 ```{r, quietly=TRUE, echo=FALSE, warning=FALSE, message=FALSE}
 library(tidyverse) # package for data analysis
 library(ggsci) # for graph colors
@@ -146,7 +147,7 @@ The *event* in this data is self-reported cessation of breastfeeding of new moth
 
 Data on breastfeeding used in this study has been extracted from a large set of surveys sampling several thousand individuals, many of whom have been surveyed over decades. The NLSY79 Child and Young Adult surveys include a wide variety of information on children born to female respondents of the NLSY79 surveys. Parents reported in interviews on many aspects of the raising of their child, among that corpus of information are the data shown here.
 
-Participants were chosen randomly from the United States population for the study, so responses from all 50 states and outlying territories are included in the sample. Detailed information about the design of the survey is available at https://www.bls.gov/nls/nlsy79.htm#intro-to-sample. Relevant surveys were conducted from 1979 through 1986 and questions related to breastfeeding were asked to mothers who had given birth in the past 12 months. Information about duration of breastfeeding was provided by mothers via memory recall. Responses to other variables (e.g. smoking at the time of birth) were also provided by the mother. A sample of the data itself can be seen in Table 2. The `SurvObj` variable combines the `duration` and `delta` variables to give duration with participants who were still breastfeeding at last interview denoted with the `+` symbol.
+Participants were chosen randomly from the United States population for the study, so responses from all 50 states and outlying territories are included in the sample. Detailed information about the design of the survey is available at <https://www.bls.gov/nls/nlsy79.htm#intro-to-sample>. Relevant surveys were conducted from 1979 through 1986 and questions related to breastfeeding were asked to mothers who had given birth in the past 12 months. Information about duration of breastfeeding was provided by mothers via memory recall. Responses to other variables (e.g. smoking at the time of birth) were also provided by the mother. A sample of the data itself can be seen in Table 2. The `SurvObj` variable combines the `duration` and `delta` variables to give duration with participants who were still breastfeeding at last interview denoted with the `+` symbol.
 
 ```{r, echo=FALSE}
 bfeed %>%
@@ -156,6 +157,7 @@ bfeed %>%
 ```
 
 ### Censoring and Missing Values
+
 \vspace{-3truemm}
 
 ```{r, echo=FALSE}
@@ -166,8 +168,6 @@ n_censored <- bfeed %>%
 ```
 
 In this data set, a total of `r toString(n_censored)` mothers were still breastfeeding their infant at the time of their final data collection interview. Most of these censoring events occurred in the final year(s) of the study, when time from birth to final interview was significantly less than the nearly 10 years from birth of child to final interview of the earliest participants in the study. The compiled dataset does not contain any information about possible patient drop-out or missed interviews.
-
-
 
 ```{r, fig.cap = "Histograms of numerical variable distributions.", echo=FALSE}
 fig1 <- bfeed %>% 
@@ -224,29 +224,43 @@ fig2 <- bfeed %>%
 ggarrange(fig1, fig2, nrow =2)
 ```
 
-
-\vspace{-2truemm}
-
-## The Data - Visualized
-
-\vspace{-3truemm}
-
-DELTETHISMAYBE:Exploration of the data (continued)
-
-
 # Methods and Data Analysis
 
 \vspace{-2truemm}
 
-[insert a summary of techniques that are used here: KM curves, log-rank test, parametric tests, and cox PH test]
+The techniques of survival analysis allow for useful descriptions of time-to-event data. The primary function of survival analysis is the probability of survival beyond time `t`, called the survival function.
+
+$$
+S(t) = Pr(T > t) = 1 - F(t)
+$$
+
+where T is the random variable survival time, in this case T represents the duration of breast feeding in weeks. A characteristic of the survival function $S(t)$ is that it is the complement of the cumulative density function (CDF) $F(t)$ which itself is the integral of the probability density function $f(t)$ from 0 to 1.
+
+Another essential function for analyzing time-to-event data is the hazard function, which is the instantaneous rate of event occurrence at time t given survival to time t,
+
+$$
+h(t) = \frac{f(t)}{S(t)}
+$$
+
+where $h(t)$ is the hazard function, and $f(t)$ and $S(t)$ are as above.
+
+Survival analysis involves estimating these functions based on the data. There exist non-parametric, parametric, and semi-parametric models for estimating the survival function. In this project, the non-parametric method is the Kaplan-Meier (KM) estimator. The log-rank test is used in testing for statistical differences between KM curves. The parametric method is fitting to a distribution (e.g., Weibull or exponential) and using the relationships above to estimate the survival or hazard curves. Finally, perhaps the most common technique in survival analysis is the Cox proportional hazards model, a semi-parametric approach. Each of these approaches are utilized below. Prior to analyzing the data, a visual summary of the data set is available in Figure 1 above.
 
 ## Kaplan Meier Survival Estimates
 
-The Kaplan-Meier curve shows an estimate of the time to an event, which here represents the time in weeks until a mother stops breastfeeding her child.
+The Kaplan-Meier curve shows an estimate of the time to an event, which here represents the time in weeks until a mother stops breastfeeding her child. The Kaplan-Meier estimator for the survival function is:
 
-A Kaplan-Meier curve of all of the data can be seen in figure 3 below.
+$$
+\hat{S} = 
+\begin{cases}
+ 1 & t < t_1 \\
+ \prod_{t \geq t_i} [1 - \frac{d_i}{Y_i}] & t \geq t_1 \\
+ \end{cases}
+$$ where $1 \leq d_i \leq Y_i$ with $t_i$ representing the distinct time at which breastfeeding ceased, $Y_i$ representing the number of individuals still breastfeeding at time $t_i$, and $d_i$ is the number of individuals who stopped breastfeeding at time $t_i$.
 
-```{r KMcurve_all, fig.cap="KM curve for all participants for duration of breastfeeding.", echo=FALSE, warning=FALSE}
+The Kaplan-Meier curve drops only when an individual stops breastfeeding, not when they are censored. The survival function, as well as its estimators, are bound in value from between 0 and 1. Confidence interval estimates for the KM curve can be estimated via variance. A Kaplan-Meier curve of the entire survey sample can be seen in Figure 3 below.
+
+```{r KMcurve_all, fig.cap="KM curve for all participants for duration of breastfeeding. Gray shaded region represents a pointwise 95% confidence interval for the survival curve. The symbol + corresponds to a censoring time. The number of participants still breastfeeding at a given number of weeks is shown below the survival curve plot.", echo=FALSE, warning=FALSE}
 # create survival object:
 km.as.one <- survfit(SurvObj ~ 1, data = bfeed)
 
@@ -256,7 +270,7 @@ gg.km.as.one <- ggsurvplot(
    data = bfeed,             # data used to fit survival curves.
    risk.table = TRUE,        # show risk table.
    #pval = TRUE,              # show p-value of log-rank test.
-   #conf.int = TRUE,          # show confidence intervals for 
+   # conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
    xlim = c(0,200),          # present narrower X axis, but not affect
                              # survival estimates.
@@ -298,11 +312,11 @@ l6mo.all <- gg.km.as.one$data.survplot %>%
 
 ```
 
-The red dashed line on these curves corresponds to the 6 months of breastfeeding milestone, which is the WHO recommendation for breastfeeding children [cite]. Based on the KM curve in figure 2, only `r toString(round(pct6mo.all,2))`% of mothers interviewed reported breastfeeding their children at least 6 months (CI = (`r toString(round(l6mo.all,2))`% , `r toString(round(u6mo.all,2))`%)). The KM estimate for median duration of breastfeeding was `r toString(surv_median(km.as.one)$median)` weeks, which is `r toString(26 - surv_median(km.as.one)$median)` weeks short of the WHO recommended 6 month minimum.
+The red dashed line on these curves corresponds to the 6 months of breastfeeding milestone, which is the WHO recommendation for breastfeeding children [@grummer2017new]. Based on the KM curve in Figure 2, only `r toString(round(pct6mo.all,2)*100)`% of mothers interviewed reported breastfeeding their children at least 6 months CI = (`r toString(round(l6mo.all,2)*100)`% , `r toString(round(u6mo.all,2)*100)`%). The KM estimate for median duration of breastfeeding for all mothers was `r toString(surv_median(km.as.one)$median)` weeks, which is `r toString(26 - surv_median(km.as.one)$median)` weeks less than the WHO recommended 6 months minimum.
 
 ### KM curve - Cross Group Comparisons
 
-```{r, echo=FALSE, fig.cap="KM curve for duration of breastfeeding according to whether mother smoked when child was born."}
+```{r , echo=FALSE}
 km.by.smoke <- survfit(SurvObj ~ smoke, data = bfeed)
 
 #KM curve according to smoking
@@ -334,12 +348,36 @@ gg.km.by.smoke <- ggsurvplot(
 gg.km.by.smoke$plot <- gg.km.by.smoke$plot +
   geom_vline(xintercept=26, color="red", linetype = "dashed") + # add 6mo marker (WHO recommendation)
   geom_label(label="6 months", x=40, y = 75)
+
+# get 6 month survival time estimate smoke
+pct6mo.smoke <- gg.km.by.smoke$data.survplot %>%
+  filter(time == 26) %>%
+  pull(surv)
+
+#upperbound 
+u6mo.smoke <- gg.km.by.smoke$data.survplot %>%
+  filter(time == 26) %>%
+  pull(upper)
+
+# lowerbound for est
+l6mo.smoke <- gg.km.by.smoke$data.survplot %>%
+  filter(time == 26) %>%
+  pull(lower)
+```
+
+In the survey, mothers were asked whether they were smoking at the time that they gave birth to their child. Kaplan-Meier curves for mothers who reported smoking compared to those who did not can be seen in Figure 3. It is possible to compare the point estimates for the proportion of mothers in the smoking vs nonsmoking group who were still breastfeeding at 6 months. For mothers in the smoking group, `r toString(round(pct6mo.smoke[[2]],2)*100)`% of mothers interviewed reported breastfeeding their children at least 6 months CI = (`r toString(round(l6mo.smoke[[2]],2)*100)`% , `r toString(round(u6mo.smoke[[2]],2)*100)`%). In the group of non-smoking mothers, `r toString(round(pct6mo.smoke[[1]],2)*100)`% reported breastfeeding their children at least 6 months CI = (`r toString(round(l6mo.smoke[[1]],2)*100)`% , `r toString(round(u6mo.smoke[[1]],2)*100)`%). The question then arises whether the difference between these two curves is significant. The overlapping point estimate confidence intervals at 6 months suggests the difference may be due to chance; however, survival analysis provides a more robust way to test for a difference between these two groups.
+
+```{r smoke, echo=FALSE, fig.cap="KM curve for duration of breastfeeding according to whether mother smoked when child was born. Shaded regions represents a pointwise 95% confidence interval for the survival curves. The symbol + corresponds to a censoring time. The number of participants still breastfeeding by group at a given number of weeks is shown below the survival curve plot."}
 gg.km.by.smoke
 ```
 
-The log-rank test can be used to compare if the difference between these curves is significant. We can see in Figure X above that there appears to be a difference in survival curves between mothers who smoked at birth of their child and mothers who did not. Given differences at early time points are considered more important from a public health perspective, the peto-peto modification would be an appropriate tool to use for testing for a difference at earlier time points in this data.
+#### Log-rank test
 
-Some categorical variables are composed of more than two variables. The chi-squared generalization of the log-rank test, implemented in the R package `survival` with the function `survdiff()` can be utilized, testing for whether at least one of the curves is significantly different.
+The log-rank test can be used to compare if the difference between these KM curves is significant. We can see in Figure 3 above that there appears to be a difference in survival curves between mothers who smoked at birth of their child and mothers who did not. Given differences at early time points are considered more important from a public health perspective, the peto-peto modification would be an appropriate tool to use for testing for a difference at earlier time points in this data.
+
+Some categorical variables are composed of more than two variables. The chi-squared generalization of the log-rank test, implemented in the R package `survival` with the function `survdiff()` can be utilized, testing for whether at least one of the curves is significantly different. In the supplemental materials section, KM curves for other variables along with their corresponding peto-peto test p-values for difference are available as figures S? - S?.
+
+Categorical variables that appear to have a significant effect on survival based on the log-rank test of KM curves are the race of the mother and their smoking status (Table 3).
 
 ```{r, echo=FALSE}
 # calculate log-rank test p-values for each categorical variable
@@ -381,7 +419,7 @@ log_rank_pvals <- tibble(
 
 log_rank_pvals %>%
   add_significance("p-value") %>%
-  knitr::kable(caption = "p-values of log-rank test for difference in breastfeeding duration according to variable",
+  knitr::kable(caption = "p-values of log-rank test for difference in breastfeeding duration according to single variable",
                label = "ns corresponds to a p-value greater than 0.05, * a p-value less than 0.05, and ** a p-value less than 0.01 for log-rank test for difference based on variable ID.")
 
 ```
@@ -390,9 +428,9 @@ The KM curve is not the ideal approach for resolving the effect of numerical pre
 
 ### Kaplan-Meier Curve Assumptions
 
-Given that (1) earlier ages of stopping breastfeeding are often considered more important and (2) ages of stopping breastfeeding likely are right skewed, the peto-peto
+"Kaplan-Meier estimator has a few assumptions: the survival probability is the same for censored and uncensored subjects; the likelihood of the occurrence of the event is the same for the participants enrolled early and late; the probability of censoring is the same for different groups; finally, the event is assumed to occur at the defined time" [@goel2010understanding]
 
-With KM curve for all participants, I want to add a median "survival time" =\> better let's put percent that make it to 6mo (the who recommended minimum time), then I can do the same thing for some of the groups that have been broken up so they can be compared.
+Given that (1) earlier ages of stopping breastfeeding are often considered more important and (2) ages of stopping breastfeeding likely are right skewed, the peto-peto
 
 ## Parametric Survival Estimates
 
@@ -403,6 +441,8 @@ Moving beyond univariate analyses, parametric survival models allow for descript
 ### Exponential
 
 #### Assumptions of the exponential survival model
+
+assumes constant hazard function.
 
 #### goodness of fit
 
@@ -466,24 +506,23 @@ In contrast to the parametric models above, the Cox PH model is semi-parametric.
 
 [(e.g., assumptions, statistical models, parameter estimations, goodness-of-fit test, cross-group comparisons, predictions and validations, etc)]
 
-#### Assumptions of the Cox PH survival model
+### goodness of fit
 
-#### goodness of fit
+### Parameter Estimates
 
-#### Parameter Estimates
+### Assumptions of the Cox PH survival model
 
-#### Predictions and Validations
+### Predictions and Validations
 
 # Discussion
 
 (e.g., strengths and shortcomings of your model, and possible improvements)
 
-
 weaknesses:
 
-The approach to data collection for this study relies on accurate recall and participant truthfulness. Given that mothers' choices around raising their child are often stigmatized and human recall of previous events is suboptimal, the data is likely imperfect. 
+The approach to data collection for this study relies on accurate recall and participant truthfulness. Given that mothers' choices around raising their child are often stigmatized and human recall of previous events is suboptimal, the data is likely imperfect.
 
-
+The proportion of this data that is censored is relatively small, only about 3% of the total sample. In this case it is possible that alternative approaches such as the Mann-Whitney U test would be useful, but the ability of survival analysis to estimate risk can be exceptionally useful.
 
 # Conclusion
 
@@ -495,11 +534,6 @@ The approach to data collection for this study relies on accurate recall and par
 :::
 
 \newpage
-
-
-
-
-
 
 ## Statistical Models
 
@@ -974,10 +1008,6 @@ Social determinants of health have profound impacts on life outcomes.
 There is a preponderance of evidence that childhood experiences significantly impact life trajectories. Improving child health has been a top priority for the World Health Organization for decades [cite].
 
 Previous research has shown that the age at which a child stops breastfeeding has significant effects on later development [CITE]. An increased understanding of how to --\>
-
-
-
-
 
 \beginsupplement
 
