@@ -239,10 +239,10 @@ where T is the random variable survival time, in this case T represents the dura
 Another essential function for analyzing time-to-event data is the hazard function, which is the instantaneous rate of event occurrence at time t given survival to time t,
 
 $$
-h(t) = \frac{f(t)}{S(t)}
+\displaystyle h(t) = \lim_{\Delta{t} \to 0} \frac{Pr(t \leq T < t + \Delta{t} \mid T \geq t)}{\Delta{t}}
 $$
 
-where $h(t)$ is the hazard function, and $f(t)$ and $S(t)$ are as above.
+where $h(t)$ is the hazard function.
 
 Survival analysis involves estimating these functions based on the data. There exist non-parametric, parametric, and semi-parametric models for estimating the survival function. In this project, the non-parametric method is the Kaplan-Meier (KM) estimator. The log-rank test is used in testing for statistical differences between KM curves. The parametric method is fitting to a distribution (e.g., Weibull or exponential) and using the relationships above to estimate the survival or hazard curves. Finally, perhaps the most common technique in survival analysis is the Cox proportional hazards model, a semi-parametric approach. Each of these approaches are utilized below. Prior to analyzing the data, a visual summary of the data set is available in Figure 1 above.
 
@@ -256,7 +256,9 @@ $$
  1 & t < t_1 \\
  \prod_{t \geq t_i} [1 - \frac{d_i}{Y_i}] & t \geq t_1 \\
  \end{cases}
-$$ where $1 \leq d_i \leq Y_i$ with $t_i$ representing the distinct time at which breastfeeding ceased, $Y_i$ representing the number of individuals still breastfeeding at time $t_i$, and $d_i$ is the number of individuals who stopped breastfeeding at time $t_i$.
+$$ 
+
+where $1 \leq d_i \leq Y_i$ with $t_i$ representing the distinct time at which breastfeeding ceased, $Y_i$ representing the number of individuals still breastfeeding at time $t_i$, and $d_i$ is the number of individuals who stopped breastfeeding at time $t_i$.
 
 The Kaplan-Meier curve drops only when an individual stops breastfeeding, not when they are censored. The survival function, as well as its estimators, are bound in value from between 0 and 1. Confidence interval estimates for the KM curve can be estimated via variance. A Kaplan-Meier curve of the entire survey sample can be seen in Figure 3 below.
 
@@ -371,11 +373,12 @@ In the survey, mothers were asked whether they were smoking at the time that the
 gg.km.by.smoke
 ```
 
+\vspace{-3truemm}
+#### Log-rank test\
+\
+\vspace{-5truemm}
 
-#### Log-rank test
-
-
-The log-rank test can be used to compare if the difference between these KM curves is significant. We can see in Figure 3 above that there appears to be a difference in survival curves between mothers who smoked at birth of their child and mothers who did not. Given differences at early time points are considered more important from a public health perspective, the peto-peto modification would be an appropriate tool to use for testing for a difference at earlier time points in this data.
+The log-rank test ($H_0$: no difference) can be used to compare if the difference between these KM curves is significant. We can see in Figure 3 above that there appears to be a difference in survival curves between mothers who smoked at birth of their child and mothers who did not. Given differences at early time points are considered more important from a public health perspective, the peto-peto modification would be an appropriate tool to use for testing for a difference at earlier time points in this data.
 
 Some categorical variables are composed of more than two variables. The chi-squared generalization of the log-rank test, implemented in the R package `survival` with the function `survdiff()` can be utilized, testing for whether at least one of the curves is significantly different. In the supplemental materials section, KM curves for other variables along with their corresponding peto-peto test p-values for difference are available as figures S? - S?.
 
@@ -436,50 +439,206 @@ Given that earlier ages of stopping breastfeeding are considered biologically mo
 
 ## Parametric Survival Estimates
 
-Parametric modelling is a powerful tool for analyzing a wide variety. Linear regression is perhaps the most widely known parametric regression model in the scientific research community. Parametric models also exist for analyzing time-to-event data such as time to cessation of breastfeeding discussed here. Moving beyond univariate analyses, parametric survival models allow for description of numerical and multivariate models. There are several models that exist for modeling time-to-event data. Three parametric models will be fit to the data: the exponential, Weibull, and lognormal models. The exponential and Weibull models are interesting in that they can utilize either the accelerated failure time (AFT) assumption or the proportional hazards (PH) assumption for describing survival data. To summarize briefly, AFT =?, PH = ?. The commonality across these models is that they assume the outcome follows some known distribution.
+Parametric modelling is a powerful tool for analyzing a wide variety. Linear regression is perhaps the most widely known parametric regression model in the scientific research community. Parametric models also exist for analyzing time-to-event data such as time to cessation of breastfeeding discussed here. Moving beyond univariate analyses, parametric survival models allow for description of numerical and multivariate models. There are several models that exist for modeling time-to-event data. Three parametric models will be fit to the data: the exponential, Weibull, and lognormal models. The exponential and Weibull models are interesting in that they can utilize either the accelerated failure time (AFT) assumption or the proportional hazards (PH) assumption for describing survival data. To summarize briefly, proportional hazards assumes that the hazard ratio for any two individuals is constant over time while the AFT model assumes that the effects of covariates
+are fixed and multiplicative by the acceleration factor on the time scale of $t$. The commonality across these parametric models is that they assume the outcome follows some known distribution.
 
-(e.g., assumptions, statistical models, parameter estimations, goodness-of-fit test, cross-group comparisons, predictions and validations, etc)
+<!-- (e.g., assumptions, statistical models, parameter estimations, goodness-of-fit test, cross-group comparisons, predictions and validations, etc) -->
 
 ### Exponential
 
-#### Assumptions of the exponential survival model
+The exponential model is a less complicated model because its function is time-independent:
 
-assumes constant hazard function.
+$$
+h(t) = \lambda
+$$
+and
+$$
+S(t) = e^{-\lambda t}
+$$
+where $h(t)$ is the hazard function and $S(t)$ is the survival function. These are the AFT parameterizations of the exponential model.
 
-#### goodness of fit
+Notice that the the hazard is a constant $\lambda$.
 
-#### Parameter Estimates
 
-convert aft estimates to PH:
+#### Assumptions of the exponential survival model\
+
+The key assumption of the exponential survival model are that the the hazard rate is constant, derived from the memoryless property of the exponential distribution. Based on what is known about cessation of breastfeeding, this would not seem likely to be a valid assumption; however, figure X shows the exponential model provides a reasonable fit to the data. The curves for "white" and "black" overlap too closely to see in the figure, matching the regression outputs below showing similar survival for these two groups.
+
+```{r exponential hazard best model plot, echo=FALSE, fig.cap="Comparing KM curve for duration of breastfeeding according to mothers' race with exponential regression model."}
+# exponential parametric model
+
+# create vector of AIC values for expo
+expAIC <- rep(0.0, 9)
+
+## include all parameters (diy backselection)
+
+expreg_all <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth + yschool + pc3mth, bfeed, dist="exponential")
+expAIC[1] <- AIC(expreg_all)
+summary(expreg_all) # has highest p-val: pc3mth
+
+expreg_less1 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth + yschool, bfeed, dist="exponential")
+expAIC[2] <- AIC(expreg_less1)
+summary(expreg_less1) # has highest p-val: agemth
+
+expreg_less2 <- survreg(SurvObj ~ race + 
+                          poverty + smoke + 
+                          alcohol + yschool + 
+                          ybirth, bfeed, dist="exponential")
+
+expAIC[3] <- AIC(expreg_less2)
+summary(expreg_less2) # has highest p-val: alcohol
+
+expreg_less3 <- survreg(SurvObj ~ race  + 
+                          poverty + smoke + yschool + ybirth,
+                          bfeed, dist="exponential")
+expAIC[4] <- AIC(expreg_less3)
+summary(expreg_less3) # has highest p-val: poverty
+
+expreg_less4 <- survreg(SurvObj ~ race + smoke + yschool + ybirth,
+                        bfeed, dist="exponential")
+expAIC[5] <- AIC(expreg_less4)
+summary(expreg_less4) # has highest p-val: race
+
+expreg_less5 <- survreg(SurvObj ~  smoke + yschool + ybirth,
+                        bfeed, dist="exponential")
+expAIC[6] <- AIC(expreg_less5)
+summary(expreg_less5) # has highest p-val: smoke
+
+
+expreg_less6 <- survreg(SurvObj ~  yschool + ybirth,
+                        bfeed, dist="exponential")
+expAIC[7] <- AIC(expreg_less6)
+summary(expreg_less6) # has highest p-val: yschool
+
+expreg_less7 <- survreg(SurvObj ~ ybirth,
+                        bfeed, dist="exponential")
+expAIC[8] <- AIC(expreg_less7)
+summary(expreg_less7) 
+
+expreg_less8 <- survreg(SurvObj ~ 1,
+                        bfeed, dist="exponential")
+expAIC[9] <- AIC(expreg_less8)
+summary(expreg_less8) 
+
+
+# predicted curves based on exponential best model
+pred.exp1 = predict(expreg_less4, newdata=list(race="white", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+pred.exp2 = predict(expreg_less4, newdata=list(race="black", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+pred.exp3 = predict(expreg_less4, newdata=list(race="other", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+
+# put preds together in tidy df
+df = data.frame(y=seq(99,1,by=-1), race_white=pred.exp1, race_black=pred.exp3, race_other = pred.exp3)
+df_long = gather(df, key= "race", value="time", -y)
+
+
+#km fit race
+km.by.race <- survfit(SurvObj ~ race, data = bfeed)
+
+#KM curve according to race
+gg.km.by.race <- ggsurvplot(
+   km.by.race,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   # risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "1",   # Pval using log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  # title = "KM Curve - Race",
+  fun = "pct"                #show survival function as percentage
+    
+) 
+
+# KM curve plot for race adding survreg predictions
+gg.km.by.race$plot <- gg.km.by.race$plot + geom_line(data=df_long, aes(x=time, y=y, group=race))
+gg.km.by.race
+```
+
+#### goodness of fit\
+
+Parametric models such as the exponential model allow for multivariate analysis. Given this, parameter selection is needed to find the best combination of parameters to predict or characterize survival. A backwards selection approach is utilized here to select parameters, in which all predictor variables were included in the model, the Akaike Information Criterion (AIC) for the model was recorded, and then the least significant parameter was dropped from the model until no parameters remain. The results of this process are in figure X below. This approach selected a model with four variables: race, smoking, years of education, and year child was born.
+
+```{r, echo=FALSE}
+summary_expAIC <- tibble(
+  "# Parameters" = c(8:0),
+  "AIC" = expAIC, 
+  "Equation" = c(
+    "SurvObj ~ ybirth + yschool +  smoke +  race  + poverty + alcohol + agemth + pc3mth",
+    "SurvObj ~ race  + smoke + yschool + ybirth  + poverty + alcohol + agemth + pc3mth",
+    "SurvObj ~ race + smoke + yschool + ybirth",
+  )
+)
+
+summary_expreg$table %>%
+  knitr::kable(digits=3,caption = "SurvObj ~ race + smoke + yschool + ybirth")#,caption="Exponential survival model with lowest AIC")
+```
+
+
+#### Parameter Estimates \
+
+```{r, echo=FALSE}
+summary_expreg <- summary(expreg_less4)
+
+summary_expreg$table %>%
+  knitr::kable(digits=3,caption = "SurvObj ~ race + smoke + yschool + ybirth")#,caption="Exponential survival model with lowest AIC")
+```
+
+convert AFT estimates (survreg()) to PH:
 
 ```{r, echo=FALSE}
 # b.ph <- -coef(fit.aft)/fit.aft$scale
 #https://myweb.uiowa.edu/pbreheny/7210/f15/notes/10-15.pdf
 ```
 
-#### Predictions and Validations
+
+#### Predictions and Validations\
+
+a
 
 ### Weibull
 
-#### Assumptions of the Weibull survival model
+#### Assumptions of the Weibull survival model\
 
-#### goodness of fit
+a
 
-#### Parameter Estimates
+#### Goodness of fit \
 
-#### Predictions and Validations
+
+a
+
+#### Parameter Estimates\
+
+
+a
+
+#### Predictions and Validations \
+
+a
+
 
 ### Lognormal
 
 TODO: create a supplemental figure to be referenced in this section in order to show how `bfeed$duration` looks when log transformed (it becomes normal yay)
 
-#### Assumptions of the lognormal survival model
+#### Assumptions of the lognormal survival model\
 
-#### Parameter Estimates
+#### Parameter Estimates\
 
-#### goodness of fit
+#### goodness of fit\
 
-#### Predictions and Validations
+#### Predictions and Validations\
 
 ```{r deleteme, echo=FALSE}
 # if I have time, I want to overlay KM curves with the parametric curves for each.
@@ -721,9 +880,8 @@ my.variable.list <- c("race",
 My.stepwise.coxph(Time = "duration", Status = "delta", variable.list = my.variable.list,
                   data = bfeed_og, sle = 0.15, sls = 0.15)
 # best model
-
-
 ```
+
 
 ### Cox Proportional Hazards model of time-independent variables
 
