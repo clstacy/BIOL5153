@@ -371,7 +371,9 @@ In the survey, mothers were asked whether they were smoking at the time that the
 gg.km.by.smoke
 ```
 
+
 #### Log-rank test
+
 
 The log-rank test can be used to compare if the difference between these KM curves is significant. We can see in Figure 3 above that there appears to be a difference in survival curves between mothers who smoked at birth of their child and mothers who did not. Given differences at early time points are considered more important from a public health perspective, the peto-peto modification would be an appropriate tool to use for testing for a difference at earlier time points in this data.
 
@@ -428,15 +430,15 @@ The KM curve is not the ideal approach for resolving the effect of numerical pre
 
 ### Kaplan-Meier Curve Assumptions
 
-"Kaplan-Meier estimator has a few assumptions: the survival probability is the same for censored and uncensored subjects; the likelihood of the occurrence of the event is the same for the participants enrolled early and late; the probability of censoring is the same for different groups; finally, the event is assumed to occur at the defined time" [@goel2010understanding]
+There are three major assumptions of the Kaplan-Meier estimator: first, that the censored participants have the same breastfeeding duration as the participants who are not censored; second, that the time of recruitment into the study does not effect the survival outcomes; and lastly, that events happened when they are said to have happened[@goel2010understanding]. Given the nature of the data, the first assumption appears to be reasonable. The second assumption will be shown by subsequent analysis below to be perhaps a poor assumption. The final assumption is likely not entirely true, but ideally the errors in recall of participants will be randomly distributed throughout the survey sample, reducing the effect of incorrect information.
 
-Given that (1) earlier ages of stopping breastfeeding are often considered more important and (2) ages of stopping breastfeeding likely are right skewed, the peto-peto
+Given that earlier ages of stopping breastfeeding are considered biologically more important, the peto-peto modification would better resolve differences early in the estimated survival curves. Regardless of the version of the log-rank test used, the assumptions for these tests are based on the KM assumptions, so the use of these tests is appropriate under weak assumptions.
 
 ## Parametric Survival Estimates
 
-(e.g., assumptions, statistical models, parameter estimations, goodness-of-fit test, cross-group comparisons, predictions and validations, etc)
+Parametric modelling is a powerful tool for analyzing a wide variety. Linear regression is perhaps the most widely known parametric regression model in the scientific research community. Parametric models also exist for analyzing time-to-event data such as time to cessation of breastfeeding discussed here. Moving beyond univariate analyses, parametric survival models allow for description of numerical and multivariate models. There are several models that exist for modeling time-to-event data. Three parametric models will be fit to the data: the exponential, Weibull, and lognormal models. The exponential and Weibull models are interesting in that they can utilize either the accelerated failure time (AFT) assumption or the proportional hazards (PH) assumption for describing survival data. To summarize briefly, AFT =?, PH = ?. The commonality across these models is that they assume the outcome follows some known distribution.
 
-Moving beyond univariate analyses, parametric survival models allow for description of numerical and multivariate models. There are several models that exist for modeling survival data.
+(e.g., assumptions, statistical models, parameter estimations, goodness-of-fit test, cross-group comparisons, predictions and validations, etc)
 
 ### Exponential
 
@@ -447,6 +449,13 @@ assumes constant hazard function.
 #### goodness of fit
 
 #### Parameter Estimates
+
+convert aft estimates to PH:
+
+```{r, echo=FALSE}
+# b.ph <- -coef(fit.aft)/fit.aft$scale
+#https://myweb.uiowa.edu/pbreheny/7210/f15/notes/10-15.pdf
+```
 
 #### Predictions and Validations
 
