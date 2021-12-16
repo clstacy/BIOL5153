@@ -1,19 +1,29 @@
 ---
-title: "Survival Analysis of Breastfeeding"
+title: \vspace{3.5in} Survival Analysis of Breastfeeding Cessation
 author: "Carson Stacy"
-subtitle: STAT 639V Survival Analysis Final Project
+date: "`r Sys.Date()`"
+subtitle: "STAT 639V Survival Analysis Final Project"
 output:
   pdf_document: default
-  html_notebook: default
+  toc: true
+bibliography: references.bib
+header-includes:
+  \newcommand{\beginsupplement}{\setcounter{table}{0}\renewcommand{\thetable}{S\arabic{table}}\setcounter{figure}{0} \renewcommand{\thefigure}{S\arabic{figure}}}
 ---
+
+\newpage
+
+\tableofcontents
+
+\newpage
 
 # Introduction
 
-Breastfeeding has been a topic of academic and public interest since the invention of formula and the feeding bottle in the 19th century [cite]. Since the invention of baby formula, breastfeeding rates have reduced dramatically. The breastfeeding rate was 90% in the 20th century, but has decreased to approximately 37% in the 21st century (Gaynor, 2003; Victorial *et al.*, 2016). This trend has many scientists concerned [McFadden *et al*., 2016; Pomeranz *et al.*, 2021; Pérez-Escamilla, 2020].
+Breastfeeding has been a topic of academic and public interest since the invention of formula and the feeding bottle in the 19th century [@stevens2009history]. Since the invention of baby formula, breastfeeding rates have reduced dramatically. The breastfeeding rate was 90% in the 20th century, but has decreased to approximately 37% in the 21st century [@gaynor2003breastfeeding; @victora2016breastfeeding]. This trend has many scientists concerned [@mcfadden2016spotlight; @perez2020breastfeeding; @pomeranz2021breastmilk].
 
-The importance of breastfeeding in low and middle-income nations is widely acknowledged. In low-income nations, unclean water in formula is a death sentence for an infant. Perhaps this partially explains why the prevalence of breastfeeding is higher in low and middle-income nations than in high-income nations. A large body of scientific research spanning public health studies to cell biology experiments show the importance of promoting infant breastfeeding everywhere []. From kick-starting the infant's gut microbiome via human milk oligosaccharides, to the transfer of important immune molecules (e.g. IgA) to transfer of stem cells (Hassiotou *et al.*, 2014) and micro-RNAs from mother to infant suggested to regulate infant gene expression (Munch *et al.*, 2013). Beyond positive impacts on the child's current and future health, benefits have been shown for the breast feeding mother as well [cite]. From the World Health Organization to the American Academy of Pediatrics, most doctors and organizations avidly support exclusive breastfeeding during the first six month of an infant's life.
+The importance of breastfeeding in low and middle-income nations is widely acknowledged. In low-income nations, unclean water in formula is a death sentence for an infant. Perhaps this partially explains why the prevalence of breastfeeding is higher in low and middle-income nations than in high-income nations. A large body of scientific research spanning public health studies to cell biology experiments show the importance of promoting infant breastfeeding everywhere [@walters2019cost]. From kick-starting the infant's gut microbiome via human milk oligosaccharides, to the transfer of important immune molecules (e.g. IgA) to transfer of stem cells [@hassiotou2014dawn] and micro-RNAs from mother to infant suggested to regulate infant gene expression [@munch2013transcriptome; @van2020impact]. Beyond positive impacts on the child's current and future health, benefits have been shown for the breast feeding mother as well [@leon2002quantifying]. From the [World Health Organization](https://www.who.int/health-topics/breastfeeding#tab=tab_1) to the American Academy of Pediatrics [@section2012breastfeeding], most doctors and organizations avidly support exclusive breastfeeding during the first six month of an infant's life.
 
-It is apparent that breastfeeding is important for health -- or is it? Despite the ubiquity of recommendations regarding breastfeeding, there is less high quality data on the topic than might be expected. Ethical considerations make the gold standard double-blind experimental design a non-starter, so observational studies and their confounding baggage are the norm in breastfeeding literature. A hallmark study in the 1990's in Belarus called the PROBIT trial involved 17,000 mothers which were experimentally "treated" with promotion of breastfeeding while the control group was not [cite]. The results of this trial were mixed. In the context of immediate health benefits of the child, breast feeding showed a significant reduction in: number of gastrointestinal infections, likelihood of eczema and other rashes. However, no significant differences were seen in any other considered outcomes (e.g., respiratory infections, ear infections, wheezing, mortality). Regarding long-term outcomes, the PROBIT trial found no effect on any long-term outcomes measured. Sibling studies, which compare outcomes of siblings pairs where one was breastfed while the other bottle fed, find no impact on any measured outcomes [wu 2018, "is breast truly best" 2014].
+It is apparent that breastfeeding is important for health -- or is it? Despite the ubiquity of recommendations regarding breastfeeding, there exists less high quality data on the topic than might be expected. Ethical considerations make the gold standard double-blind experimental design a non-starter, so observational studies and their confounding baggage are the norm in breastfeeding literature. A hallmark study in the 1990's in Belarus called the PROBIT trial involved 17,000 mothers which were experimentally "treated" with promotion of breastfeeding while the control group was not [@kramer2001promotion]. The results of this trial were mixed. In the context of immediate health benefits of the child, breast feeding showed a significant reduction in: number of gastrointestinal infections, likelihood of eczema and other rashes. However, no significant differences were seen in any other considered outcomes (e.g., respiratory infections, ear infections, wheezing, mortality). Regarding long-term outcomes, the PROBIT trial found no effect on any long-term outcomes measured. Sibling studies, which compare outcomes of siblings pairs where one was breastfed while the other bottle fed, find no impact on any measured outcomes [@colen2014breast; @raissian2018best].
 
 It has been argued that the differences seen in many observational studies comparing breast and bottle fed infants are the result of maternal selection. In other words, mothers are not deciding randomly whether to feed their infants with breast or bottle. In the US, mothers who breastfeed tend to be more highly educated and wealthier than mothers who bottle feed. A recent study suggests
 
@@ -21,27 +31,34 @@ It has been argued that the differences seen in many observational studies compa
 
 The controversy is not against breastfeeding, especially in low-income nations, rather it is promoting communication evidence-based of the magnitude of benefits of breastfeeding.
 
-It is in the context of thinking about a mother's breastfeeding decisions through a socioeconomic lens that this project examines time to cessation of breastfeeding data of new mothers from the National Longitudinal Survey of Youth (NSLY, 1995). A finding that demographic factors have no effect on time to cessation of breastfeeding would be unexpected based on Raissan and Su's claims. A finding of significant differences does not confirm their assertions, but rather provides valuable information about relevant demographic variables related to breast feeding cessation and context for considering some observational research finding drastic benefits of breast feeding.
+It is in the context of thinking about a mother's breastfeeding decisions through a socioeconomic lens that this project examines time to cessation of breastfeeding data of new mothers from the National Longitudinal Survey of Youth (NSLY, 1995). A finding that demographic factors have no effect on time to cessation of breastfeeding would be unexpected based on the claims of @raissian2018best. A finding of significant differences does not confirm their assertions, but rather provides valuable information about relevant demographic variables related to breast feeding cessation and context for considering some observational research finding drastic benefits of breast feeding. Additionally, this analysis shows the utility of survival analysis methodology in time-to-event scenarios such as breast feeding cessation.
 
-## Data Collection and Experimental Design
+## The Data
 
-This project utilizes data on breastfeeding decisions of young mothers compiled from the National Longitudinal Survey of Youth (NLSY, 1995) personal interviews. The data set was compiled as part of the 1997 text *Survival Analysis Techniques for Censored and truncated data* by Klein and Moeschberger, available in the `KMsurv` package as `bfeed`.
+\vspace{-2truemm}
 
-```{r, quietly=TRUE}
+This project utilizes data on breastfeeding decisions of young mothers compiled from the National Longitudinal Survey of Youth (NLSY, 1995) personal interviews conducted by the United States Bureau of Labor Statistics branch of the US Department of Labor. All NLSY files are public access, and can be downloaded from <http://www.bls.gov/nls/nlsy79.html>. The data set was compiled as part of the text *Survival Analysis Techniques for Censored and truncated data* by @klein2003survival, available in the `KMsurv` package as `bfeed`.
+```{r, quietly=TRUE, echo=FALSE, warning=FALSE, message=FALSE}
 library(tidyverse) # package for data analysis
 library(ggsci) # for graph colors
 library(KMsurv) # package with data set
 library(survival) # package for survival analysis
 library(survminer) # for ggsurvplot viz
-data(bfeed) # load data set into R
+library(rstatix) # package for piped stat tests
+
+data("bfeed") # load data set into R
 
 ```
 
+\vspace{-2truemm}
+
 ### Variables
 
-The data is comprised of `r toString(nrow(bfeed))` new mothers, with `r toString(ncol(bfeed))` variables recorded for each individual. Descriptions for each variable recorded can be seen in Table 1 below.
+\vspace{-3truemm}
 
-```{r}
+The data is comprised of data from `r toString(nrow(bfeed))` new mothers, with `r toString(ncol(bfeed))` variables recorded for each individual. Descriptions for each variable recorded can be seen in Table 1 below. There are six categorical variables, of which only `race` of mother has more than two categories. There are 4 numerical variables, all discrete integers with a sufficient number of values to loosely approximate continuity.
+
+```{r, echo=FALSE}
 var_names <- tibble(
   c(1:ncol(bfeed)),
   c(colnames(bfeed)),
@@ -59,19 +76,16 @@ var_names <- tibble(
 )
 knitr::kable(var_names, 
              col.names = c("No.", "Variable ID", "Variable definition"),
-             caption = "Table 1: List of variable IDs and their definitions"
+             caption = "List of variable IDs and their definitions"
              )
 ```
 
-### Censoring and Missing Values
+```{r, echo=FALSE}
+# data processing
 
-# Methods and Data Analysis
+bfeed_og <- bfeed %>%
+  mutate(SurvObj = Surv(duration, delta == 1) )
 
-(e.g., assumptions, statistical models, parameter estimations, goodness-of-fit test, cross-group comparisons, predictions and validations, etc)
-
-## Data Exploration
-
-```{r}
 # raw data processing
 bfeed <- bfeed %>%
   mutate(race = factor(
@@ -112,66 +126,563 @@ bfeed <- bfeed %>%
            
            ),
          ybirth = ybirth + 1900 , # making data more exact for visualization
-         SurvObj = Surv(duration, delta == "yes") #add Survival Obj variable
-         
-         ) 
-
-str(bfeed)
-
-
+         SurvObj = Surv(duration, delta == "yes"), #add Survival Obj variable
+         race_o = case_when(
+          race == "other" ~ 1,
+          race != "other" ~ 0),
+         race_b = case_when(
+          race == "black" ~ 1,
+          race != "black" ~ 0)
+  )
 ```
 
-Exploration of the data
+The *event* in this data is self-reported cessation of breastfeeding of new mothers interviewed. In the context of time-to-event analysis, the indicator variable for whether or not breastfeeding had been ceased at the time of the interview was `delta`, and the time from birth of the child to cessation of breastfeeding is coded as the variable `duration`. If the mother has not yet stopped breastfeeding the child at the time of the interview, then the `duration` variable instead represents time from birth of the child to time of the interview. In the context of survival analysis, these data are considered to be right-censored. In other words, for these patients the study stopped before the event of stopping breastfeeding had not yet occurred. It is unclear the exact definition of *completing breast feeding* utilized in the survey methodology. Whether this means the end of utilizing breast milk as the sole food source for the child vs completely removing breast milk from the infant's diet. To summarize, variables three through ten in Table 1 are candidate predictors for variable one while accounting for the censoring of some participants indicated via variable two.
 
-```{r}
-bfeed %>% 
-  select_if(is.numeric) %>%    
+\vspace{-2truemm}
+
+### Experimental Design
+
+\vspace{-3truemm}
+
+Data on breastfeeding used in this study has been extracted from a large set of surveys sampling several thousand individuals, many of whom have been surveyed over decades. The NLSY79 Child and Young Adult surveys include a wide variety of information on children born to female respondents of the NLSY79 surveys. Parents reported in interviews on many aspects of the raising of their child, among that corpus of information are the data shown here.
+
+Participants were chosen randomly from the United States population for the study, so responses from all 50 states and outlying territories are included in the sample. Detailed information about the design of the survey is available at https://www.bls.gov/nls/nlsy79.htm#intro-to-sample. Relevant surveys were conducted from 1979 through 1986 and questions related to breastfeeding were asked to mothers who had given birth in the past 12 months. Information about duration of breastfeeding was provided by mothers via memory recall. Responses to other variables (e.g. smoking at the time of birth) were also provided by the mother. A sample of the data itself can be seen in Table 2. The `SurvObj` variable combines the `duration` and `delta` variables to give duration with participants who were still breastfeeding at last interview denoted with the `+` symbol.
+
+```{r, echo=FALSE}
+bfeed %>%
+  select(-c(race_o, race_b, education, status)) %>%
+  head(n=5) %>%
+  knitr::kable(caption = "Time to cessation of breastfeeding data set")
+```
+
+### Censoring and Missing Values
+\vspace{-3truemm}
+
+```{r, echo=FALSE}
+n_censored <- bfeed %>%
+  filter(delta=="no") %>%
+  count() %>%
+  pull()
+```
+
+In this data set, a total of `r toString(n_censored)` mothers were still breastfeeding their infant at the time of their final data collection interview. Most of these censoring events occurred in the final year(s) of the study, when time from birth to final interview was significantly less than the nearly 10 years from birth of child to final interview of the earliest participants in the study. The compiled dataset does not contain any information about possible patient drop-out or missed interviews.
+
+
+
+```{r, fig.cap = "Histograms of numerical variable distributions.", echo=FALSE}
+fig1 <- bfeed %>% 
+  select(-c(status, SurvObj, race_o, race_b)) %>% # artificial duplicate variables
+  rename("Age of Mother at Birth" = agemth, # change names 
+         "Duration of Breastfeeding (weeks)" = duration,
+         "Breastfeeding Completed" = delta,
+         "Year Child was Born" = ybirth,
+         "Years of Schooling - Mother" = yschool,
+         "Race of Mother" = race,
+         "Poverty" = poverty,
+         "Alcohol" = alcohol,
+         "Prenatal Care after 3rd Month" = pc3mth,
+         "Years of Education - Mother" = yschool
+         ) %>%
+  select_if(is.numeric) %>%
   gather() %>%    
   ggplot(aes(value))+ 
   geom_histogram(bins = 30)+ 
   facet_wrap(~key, scales = "free") +
   theme_minimal() +
-  scale_color_npg() +
-  ggtitle("Distribution of numerical variables");   
+  scale_x_continuous(n.breaks = 10)+
+  labs(x=" ", y="Number of Participants") +
+  theme(plot.title = element_text(size = 12)) +
+  ggtitle("Distribution of numerical variables")
+```
 
-bfeed %>% 
+```{r echo=FALSE, fig.cap="Distributions of categorical and numerical variables comprising the data set.", fig.height=5, fig.width=6.5, warning=FALSE}
+fig2 <- bfeed %>% 
+  select(-education) %>%
+  rename("Age of Mother at Birth" = agemth, # change names 
+         "Duration of Breastfeeding (weeks)" = duration,
+         "Breastfeeding Completed" = delta,
+         "Year Child was Born" = ybirth,
+         "Years of Schooling - Mother" = yschool,
+         "Race of Mother" = race,
+         "Poverty" = poverty,
+         "Alcohol" = alcohol,
+         "Prenatal Care after 3rd Month" = pc3mth,
+         "Years of Education - Mother" = yschool
+         ) %>%
   select_if(negate(is.numeric)) %>%    
   gather() %>%    
-  ggplot(aes((value), fill = value))+ 
+  ggplot(aes((value)))+ 
   geom_bar()+ 
   facet_wrap(~key, scales = "free")+
   theme_minimal() +
-  # scale_fill_uchicago() +
+  # scale_fill_grey() +
   theme(legend.position = "none") +
   ggtitle("Distribution of categorical variables") +
-  xlab("participant response")
+  theme(plot.title = element_text(size = 12)) +
+  labs(x = "Participant Response", y = "Number of Participants")
+
+ggarrange(fig1, fig2, nrow =2)
 ```
 
-## Assumptions
+
+\vspace{-2truemm}
+
+## The Data - Visualized
+
+\vspace{-3truemm}
+
+DELTETHISMAYBE:Exploration of the data (continued)
+
+
+# Methods and Data Analysis
+
+\vspace{-2truemm}
+
+[insert a summary of techniques that are used here: KM curves, log-rank test, parametric tests, and cox PH test]
+
+## Kaplan Meier Survival Estimates
+
+The Kaplan-Meier curve shows an estimate of the time to an event, which here represents the time in weeks until a mother stops breastfeeding her child.
+
+A Kaplan-Meier curve of all of the data can be seen in figure 3 below.
+
+```{r KMcurve_all, fig.cap="KM curve for all participants for duration of breastfeeding.", echo=FALSE, warning=FALSE}
+# create survival object:
+km.as.one <- survfit(SurvObj ~ 1, data = bfeed)
+
+#KM plot combining all participants
+gg.km.as.one <- ggsurvplot(
+   km.as.one,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   risk.table = TRUE,        # show risk table.
+   #pval = TRUE,              # show p-value of log-rank test.
+   #conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   palette = "black",           # make combined curve black
+   xlab = "Time (weeks)",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 20.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  # title = "KM Curve - Duration of Breast Feeding",
+  legend = "none",
+  fun = "pct"                #show survival function as percentage
+)
+gg.km.as.one$plot <- gg.km.as.one$plot +
+  geom_vline(xintercept=26, color="red", linetype = "dashed") + # add 6mo marker (WHO recommendation)
+  geom_label(label="6 months", x=40, y = 75)
+gg.km.as.one
+
+# get 6 month survival time estimate
+pct6mo.all <- gg.km.as.one$data.survplot %>%
+  filter(time == 26) %>%
+  pull(surv)
+
+#upperbound 
+u6mo.all <- gg.km.as.one$data.survplot %>%
+  filter(time == 26) %>%
+  pull(upper)
+
+# lowerbound for est
+l6mo.all <- gg.km.as.one$data.survplot %>%
+  filter(time == 26) %>%
+  pull(lower)
+
+
+```
+
+The red dashed line on these curves corresponds to the 6 months of breastfeeding milestone, which is the WHO recommendation for breastfeeding children [cite]. Based on the KM curve in figure 2, only `r toString(round(pct6mo.all,2))`% of mothers interviewed reported breastfeeding their children at least 6 months (CI = (`r toString(round(l6mo.all,2))`% , `r toString(round(u6mo.all,2))`%)). The KM estimate for median duration of breastfeeding was `r toString(surv_median(km.as.one)$median)` weeks, which is `r toString(26 - surv_median(km.as.one)$median)` weeks short of the WHO recommended 6 month minimum.
+
+### KM curve - Cross Group Comparisons
+
+```{r, echo=FALSE, fig.cap="KM curve for duration of breastfeeding according to whether mother smoked when child was born."}
+km.by.smoke <- survfit(SurvObj ~ smoke, data = bfeed)
+
+#KM curve according to smoking
+gg.km.by.smoke <- ggsurvplot(
+   km.by.smoke,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "1",   # normal log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  # title = "KM Curve - Smoking",
+  fun = "pct"                #show survival function as percentage
+)
+
+gg.km.by.smoke$plot <- gg.km.by.smoke$plot +
+  geom_vline(xintercept=26, color="red", linetype = "dashed") + # add 6mo marker (WHO recommendation)
+  geom_label(label="6 months", x=40, y = 75)
+gg.km.by.smoke
+```
+
+The log-rank test can be used to compare if the difference between these curves is significant. We can see in Figure X above that there appears to be a difference in survival curves between mothers who smoked at birth of their child and mothers who did not. Given differences at early time points are considered more important from a public health perspective, the peto-peto modification would be an appropriate tool to use for testing for a difference at earlier time points in this data.
+
+Some categorical variables are composed of more than two variables. The chi-squared generalization of the log-rank test, implemented in the R package `survival` with the function `survdiff()` can be utilized, testing for whether at least one of the curves is significantly different.
+
+```{r, echo=FALSE}
+# calculate log-rank test p-values for each categorical variable
+
+# race
+lr_p_race <- pchisq(
+  survdiff(SurvObj ~ race, bfeed)$chisq,
+  length(survdiff(SurvObj ~ race, bfeed)$n)-1, lower.tail=F
+)
+
+# poverty
+lr_p_poverty <- pchisq(
+  survdiff(SurvObj ~ poverty, bfeed)$chisq,
+  length(survdiff(SurvObj ~ poverty, bfeed)$n)-1, lower.tail=F
+)
+
+# smoke
+lr_p_smoke <- pchisq(
+  survdiff(SurvObj ~ smoke, bfeed)$chisq,
+  length(survdiff(SurvObj ~ smoke, bfeed)$n)-1, lower.tail=F
+)
+
+# alcohol
+lr_p_alcohol <- pchisq(
+  survdiff(SurvObj ~ alcohol, bfeed)$chisq,
+  length(survdiff(SurvObj ~ alcohol, bfeed)$n)-1, lower.tail=F
+)
+
+# prenatal care after 3mo
+lr_p_pc3mth <- pchisq(
+  survdiff(SurvObj ~ pc3mth, bfeed)$chisq,
+  length(survdiff(SurvObj ~ pc3mth, bfeed)$n)-1, lower.tail=F
+)
+
+log_rank_pvals <- tibble(
+  "Variable ID" = c("race", "poverty", "smoke", "alcohol", "pc3mth"),
+  "p-value" = c(lr_p_race, lr_p_poverty, lr_p_smoke, lr_p_alcohol, lr_p_pc3mth)
+)
+
+log_rank_pvals %>%
+  add_significance("p-value") %>%
+  knitr::kable(caption = "p-values of log-rank test for difference in breastfeeding duration according to variable",
+               label = "ns corresponds to a p-value greater than 0.05, * a p-value less than 0.05, and ** a p-value less than 0.01 for log-rank test for difference based on variable ID.")
+
+```
+
+The KM curve is not the ideal approach for resolving the effect of numerical predictor variables on the response variable breastfeeding duration. Other approaches described below are better suited to elucidating these types of variables.
+
+### Kaplan-Meier Curve Assumptions
 
 Given that (1) earlier ages of stopping breastfeeding are often considered more important and (2) ages of stopping breastfeeding likely are right skewed, the peto-peto
+
+With KM curve for all participants, I want to add a median "survival time" =\> better let's put percent that make it to 6mo (the who recommended minimum time), then I can do the same thing for some of the groups that have been broken up so they can be compared.
+
+## Parametric Survival Estimates
+
+(e.g., assumptions, statistical models, parameter estimations, goodness-of-fit test, cross-group comparisons, predictions and validations, etc)
+
+Moving beyond univariate analyses, parametric survival models allow for description of numerical and multivariate models. There are several models that exist for modeling survival data.
+
+### Exponential
+
+#### Assumptions of the exponential survival model
+
+#### goodness of fit
+
+#### Parameter Estimates
+
+#### Predictions and Validations
+
+### Weibull
+
+#### Assumptions of the Weibull survival model
+
+#### goodness of fit
+
+#### Parameter Estimates
+
+#### Predictions and Validations
+
+### Lognormal
+
+TODO: create a supplemental figure to be referenced in this section in order to show how `bfeed$duration` looks when log transformed (it becomes normal yay)
+
+#### Assumptions of the lognormal survival model
+
+#### Parameter Estimates
+
+#### goodness of fit
+
+#### Predictions and Validations
+
+```{r deleteme, echo=FALSE}
+# if I have time, I want to overlay KM curves with the parametric curves for each.
+
+# tmp2 <- survreg(SurvObj ~ smoke, bfeed, dist="lognormal")
+# 
+# 
+# surv <- seq(.99,0.01, -.01)
+# t <- predict(tmp2, type = "quantile", p = 1-surv, newdata=data.frame(
+#                  smoke = levels(bfeed$smoke)
+#                ))
+# 
+# newdat <- data.frame(
+#                  smoke = levels(bfeed$smoke)
+#                )
+# surv_wide <- cbind(newdat,t)
+# surv_long<- surv_wide %>% pivot_longer(-smoke, names_to = "surv_id", values_to="time") %>%
+#   mutate(surv = surv[as.numeric(surv_id)],
+#          upper = NA,
+#          lower=NA,
+#          std.err = NA,
+#          strata=NA) %>%
+#   as.data.frame()
+# 
+# ggsurvplot_df(surv_long, surv.geom=geom_line,
+#               color="smoke")
+
+```
+
+## Cox Proportional Hazards Model
+
+In contrast to the parametric models above, the Cox PH model is semi-parametric. The baseline hazard of the model is nonparametric
+
+[(e.g., assumptions, statistical models, parameter estimations, goodness-of-fit test, cross-group comparisons, predictions and validations, etc)]
+
+#### Assumptions of the Cox PH survival model
+
+#### goodness of fit
+
+#### Parameter Estimates
+
+#### Predictions and Validations
+
+# Discussion
+
+(e.g., strengths and shortcomings of your model, and possible improvements)
+
+
+weaknesses:
+
+The approach to data collection for this study relies on accurate recall and participant truthfulness. Given that mothers' choices around raising their child are often stigmatized and human recall of previous events is suboptimal, the data is likely imperfect. 
+
+
+
+# Conclusion
+
+\newpage
+
+# References
+
+::: {#refs}
+:::
+
+\newpage
+
+
+
+
+
 
 ## Statistical Models
 
 ### Parametric model: Exponential vs Weibull
 
-```{r}
-library(My.stepwise)
+```{r, echo=FALSE}
 # exponential parametric model
-parareg=survreg(SurvObj ~ as.factor(sex) + age, bfeed, dist="exponential")
 
-# weibull parametric model
-parareg=survreg(SurvObj ~ as.factor(sex) + age, bfeed, dist="weibull")
+# create vector of AIC values for expo
+expAIC <- rep(0.0, 8)
 
+## include all parameters (diy backselection)
+
+expreg_all <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
+              yschool + pc3mth, bfeed, dist="exponential")
+expAIC[1] <- AIC(expreg_all)
+summary(expreg_all) # has highest p-val: pc3mth
+
+expreg_less1 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
+                yschool, bfeed, dist="exponential")
+expAIC[2] <- AIC(expreg_less1)
+summary(expreg_less1) # has highest p-val: agemth
+
+expreg_less2 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + yschool + ybirth,
+                        bfeed, dist="exponential")
+expAIC[3] <- AIC(expreg_less2)
+summary(expreg_less2) # has highest p-val: alcohol
+
+expreg_less3 <- survreg(SurvObj ~ race  + poverty + smoke + yschool + ybirth,
+                        bfeed, dist="exponential")
+expAIC[4] <- AIC(expreg_less3)
+summary(expreg_less3) # has highest p-val: poverty
+
+expreg_less4 <- survreg(SurvObj ~ race + smoke + yschool + ybirth,
+                        bfeed, dist="exponential")
+expAIC[5] <- AIC(expreg_less4)
+summary(expreg_less4) # has highest p-val: race
+
+expreg_less5 <- survreg(SurvObj ~  smoke + yschool + ybirth,
+                        bfeed, dist="exponential")
+expAIC[6] <- AIC(expreg_less5)
+summary(expreg_less5) # has highest p-val: smoke
+
+
+expreg_less6 <- survreg(SurvObj ~  yschool + ybirth,
+                        bfeed, dist="exponential")
+expAIC[7] <- AIC(expreg_less6)
+summary(expreg_less6) # has highest p-val: yschool
+
+expreg_less7 <- survreg(SurvObj ~ ybirth,
+                        bfeed, dist="exponential")
+expAIC[8] <- AIC(expreg_less7)
+summary(expreg_less7) 
+
+
+
+
+# Weibull parametric model
+
+# create vector of AIC values for Weibull
+WeibullAIC <- rep(0.0, 8)
+
+## include all parameters (diy backselection)
+
+Weibullreg_all <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
+              yschool + pc3mth, bfeed, dist="weibull")
+WeibullAIC[1] <- AIC(Weibullreg_all)
+summary(Weibullreg_all) # has highest p-val: pc3mth
+
+
+
+Weibullreg_less1 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
+                yschool, bfeed, dist="weibull")
+WeibullAIC[2] <- AIC(Weibullreg_less1)
+summary(Weibullreg_less1) # has highest p-val: agemth
+
+Weibullreg_less2 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + yschool + ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[3] <- AIC(Weibullreg_less2)
+summary(Weibullreg_less2) # has highest p-val: alcohol
+
+Weibullreg_less3 <- survreg(SurvObj ~ race  + poverty + smoke + yschool + ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[4] <- AIC(Weibullreg_less3)
+summary(Weibullreg_less3) # has highest p-val: poverty
+
+Weibullreg_less4 <- survreg(SurvObj ~ race + smoke + yschool + ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[5] <- AIC(Weibullreg_less4)
+summary(Weibullreg_less4) # has highest p-val: race
+
+Weibullreg_less5 <- survreg(SurvObj ~  smoke + yschool + ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[6] <- AIC(Weibullreg_less5)
+summary(Weibullreg_less5) # has highest p-val: smoke
+
+
+Weibullreg_less6 <- survreg(SurvObj ~  yschool + ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[7] <- AIC(Weibullreg_less6)
+summary(Weibullreg_less6) # has highest p-val: yschool
+
+Weibullreg_less7 <- survreg(SurvObj ~ ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[8] <- AIC(Weibullreg_less7)
+summary(Weibullreg_less7) 
+
+
+
+
+# lognormal parametric model
+
+# create vector of AIC values for lognormal
+lognormalAIC <- rep(0.0, 8)
+
+## include all parameters (diy backselection)
+
+lognormalreg_all <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
+              yschool + pc3mth, bfeed, dist="lognormal")
+lognormalAIC[1] <- AIC(lognormalreg_all)
+summary(lognormalreg_all) # has highest p-val: pc3mth
+
+
+
+lognormalreg_less1 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
+                yschool, bfeed, dist="lognormal")
+lognormalAIC[2] <- AIC(lognormalreg_less1)
+summary(lognormalreg_less1) # has highest p-val: agemth
+
+lognormalreg_less2 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + yschool + ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[3] <- AIC(lognormalreg_less2)
+summary(lognormalreg_less2) # has highest p-val: alcohol
+
+lognormalreg_less3 <- survreg(SurvObj ~ race + poverty + smoke + yschool + ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[4] <- AIC(lognormalreg_less3)
+summary(lognormalreg_less3) # has highest p-val: poverty
+
+lognormalreg_less4 <- survreg(SurvObj ~ race + smoke + yschool + ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[5] <- AIC(lognormalreg_less4)
+summary(lognormalreg_less4) # has highest p-val: race
+
+lognormalreg_less5 <- survreg(SurvObj ~  smoke + yschool + ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[6] <- AIC(lognormalreg_less5)
+summary(lognormalreg_less5) # has highest p-val: smoke
+
+
+lognormalreg_less6 <- survreg(SurvObj ~  yschool + ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[7] <- AIC(lognormalreg_less6)
+summary(lognormalreg_less6) # has highest p-val: yschool
+
+lognormalreg_less7 <- survreg(SurvObj ~ ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[8] <- AIC(lognormalreg_less7)
+summary(lognormalreg_less7) 
+
+
+
+
+
+
+
+
+library(My.stepwise)
 
 # create a variable list for stepwise selection of variables in models:
-my.variable.list <- c("race", "poverty", "smoke", "alcohol", "agemth", "ybirth", "yschool", "pc3mth")
+my.variable.list <- c("race", 
+                      "poverty", "smoke", "alcohol",
+                      "agemth", "ybirth", "yschool", "pc3mth"
+                      )
 
-My.stepwise.coxph(Time = "time", Status = "status1", variable.list = my.variable.list,
-                  data = my.data, sle = 0.15, sls = 0.15)
-My.step
+My.stepwise.coxph(Time = "duration", Status = "delta", variable.list = my.variable.list,
+                  data = bfeed_og, sle = 0.15, sls = 0.15)
+# best model
+
 
 ```
+
+### Cox Proportional Hazards model of time-independent variables
 
 Cox model approach is a semi-parametric model useful with fixed-time covariates
 
@@ -187,6 +698,9 @@ termplot(m1)
 cox.zph(m1)
 
 ggcoxdiagnostics(m1, type = "schoenfeld")
+
+#alternative code to above line  (I think)
+ggcoxzph(cox.zph(m1))
 ```
 
 ## Cross-Group Comparisons
@@ -234,6 +748,7 @@ ggsurvplot(
   log.rank.weights = "S1",   # Peto Peto test for log-rank test
   pval.method.coord = c(120,90), # location of p-value text
   pval.method.size = 3,      # p-val text size
+  # title = "KM Curve - Duration of Breast Feeding",
   fun = "pct"                #show survival function as percentage
 )
 
@@ -259,6 +774,7 @@ ggsurvplot(
   log.rank.weights = "S1",   # Peto Peto test for log-rank test
   pval.method.coord = c(120,90), # location of p-value text
   pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Race",
   fun = "pct"                #show survival function as percentage
 )
 
@@ -284,6 +800,7 @@ ggsurvplot(
   log.rank.weights = "S1",   # Peto Peto test for log-rank test
   pval.method.coord = c(120,90), # location of p-value text
   pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Poverty",
   fun = "pct"                #show survival function as percentage
 )
 
@@ -309,6 +826,7 @@ ggsurvplot(
   log.rank.weights = "S1",   # Peto Peto test for log-rank test
   pval.method.coord = c(120,90), # location of p-value text
   pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Education",
   fun = "pct"                #show survival function as percentage
 )
 
@@ -335,6 +853,7 @@ ggsurvplot(
   log.rank.weights = "S1",   # Peto Peto test for log-rank test
   pval.method.coord = c(120,90), # location of p-value text
   pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Smoking",
   fun = "pct"                #show survival function as percentage
 )
 
@@ -361,6 +880,7 @@ ggsurvplot(
   log.rank.weights = "S1",   # Peto Peto test for log-rank test
   pval.method.coord = c(120,90), # location of p-value text
   pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Alcohol",
   fun = "pct"                #show survival function as percentage
 )
 
@@ -386,6 +906,7 @@ ggsurvplot(
   log.rank.weights = "S1",   # Peto Peto test for log-rank test
   pval.method.coord = c(120,90), # location of p-value text
   pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Age of Mother",
   fun = "pct"                #show survival function as percentage
 )
 
@@ -411,6 +932,7 @@ ggsurvplot(
   log.rank.weights = "S1",   # Peto Peto test for log-rank test
   pval.method.coord = c(120,90), # location of p-value text
   pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Prenatal Care Visit",
   fun = "pct"                #show survival function as percentage
 )
 
@@ -436,49 +958,10 @@ ggsurvplot(
   log.rank.weights = "S1",   # Peto Peto test for log-rank test
   pval.method.coord = c(120,90), # location of p-value text
   pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Birth Year",
   fun = "pct"                #show survival function as percentage
 )
 ```
-
-## Goodness-of-Fit Test
-
-```{r}
- # log rank test survdiff
-survdiff(SurvObj ~ race, bfeed)
-
-```
-
-# Discussion
-
-(e.g., strengths and shortcomings of your model, and possible improvements)
-
-# Methods and data analysis
-
-# Conclusion
-
-# References
-
-Gaynor G. Breastfeeding advocacy. Maine Nurse. 2003;5(2):13.
-
-Victora, C.G., Bahl, R., Barros, A.J., França, G.V., Horton, S., Krasevec, J., Murch, S., Sankar, M.J., Walker, N., Rollins, N.C. and Group, T.L.B.S., 2016. Breastfeeding in the 21st century: epidemiology, mechanisms, and lifelong effect. The Lancet, 387(10017), pp.475-490.
-
-McFadden, A., Mason, F., Baker, J., Begin, F., Dykes, F., Grummer-Strawn, L., Kenney-Muir, N., Whitford, H., Zehner, E. and Renfrew, M.J., 2016. Spotlight on infant formula: coordinated global action needed. *The Lancet*, *387*(10017), pp.413-415.
-
-Pérez-Escamilla, R., 2020. Breastfeeding in the 21st century: How we can make it work. *Social Science & Medicine*, *244*, p.112331.
-
-Pomeranz, J. L., Chu, X., Groza, O., Cohodes, M., & Harris, J. L. (2021). Breastmilk or infant formula? Content analysis of infant feeding advice on breastmilk substitute manufacturer websites. *Public Health Nutrition*, 1-9.
-
-EM Munch, RA Harris, M Mohammad, *et al.***Transcriptome profiling of microRNA by Next-Gen deep sequencing reveals known and novel miRNA species in the lipid fraction of human breast milk**
-
-PLoS One, 8 (2013), p. e50564
-
-F Hassiotou, PE Hartmann**At the dawn of a new discovery: the potential of breast milk stem cells**
-
-Adv Nutr, 5 (2014), pp. 770-778
-
-Is breast truly best? Estimating the effects of breastfeeding on long-term child health and wellbeing in the United States using sibling comparisons
-
-Klein and Moeschberger (1997) *Survival Analysis Techniques for Censored and truncated data*, Springer. *National Longitudinal Survey of Youth Handbook*The Ohio State University, 1995.
 
 \<!--\# It is in this context
 
@@ -491,3 +974,282 @@ Social determinants of health have profound impacts on life outcomes.
 There is a preponderance of evidence that childhood experiences significantly impact life trajectories. Improving child health has been a top priority for the World Health Organization for decades [cite].
 
 Previous research has shown that the age at which a child stops breastfeeding has significant effects on later development [CITE]. An increased understanding of how to --\>
+
+
+
+
+
+\beginsupplement
+
+# Supplemental Figures
+
+lognormal transformation of Duration of Breastfeeding
+
+```{r}
+# bfeed %>%
+#   mutate(lognormduration = lognormal(duration))
+```
+
+## code used to create this report
+
+```{r, eval=FALSE}
+# create survival object:
+km.as.one <- survfit(SurvObj ~ 1, data = bfeed)
+# summary(km.as.one)
+
+km.by.race <- survfit(SurvObj ~ race, data = bfeed)
+
+km.by.poverty <- survfit(SurvObj ~ poverty, data = bfeed)
+
+km.by.education <- survfit(SurvObj ~ education, data = bfeed)
+
+km.by.smoke <- survfit(SurvObj ~ smoke, data = bfeed)
+
+km.by.alcohol <- survfit(SurvObj ~ alcohol, data = bfeed)
+
+km.by.agemth <- survfit(SurvObj ~ agemth, data = bfeed)
+
+km.by.pc3mth <- survfit(SurvObj ~ pc3mth, data = bfeed)
+
+km.by.ybirth <- survfit(SurvObj ~ ybirth, data = bfeed)
+
+#KM plot combining all participants
+ggsurvplot(
+   km.as.one,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   risk.table = TRUE,        # show risk table.
+   #pval = TRUE,              # show p-value of log-rank test.
+   #conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Duration of Breast Feeding",
+  fun = "pct"                #show survival function as percentage
+)
+
+#KM curve according to race
+ggsurvplot(
+   km.by.race,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Race",
+  fun = "pct"                #show survival function as percentage
+)
+
+#KM curve according to poverty
+ggsurvplot(
+   km.by.poverty,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Poverty",
+  fun = "pct"                #show survival function as percentage
+)
+
+#KM curve according to education
+ggsurvplot(
+   km.by.education,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Education",
+  fun = "pct"                #show survival function as percentage
+)
+
+
+#KM curve according to smoking
+ggsurvplot(
+   km.by.smoke,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Smoking",
+  fun = "pct"                #show survival function as percentage
+)
+
+
+#KM curve according to alcohol
+ggsurvplot(
+   km.by.alcohol,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Alcohol",
+  fun = "pct"                #show survival function as percentage
+)
+
+#KM curve according to age of mother at birth of child
+ggsurvplot(
+   km.by.agemth,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Age of Mother",
+  fun = "pct"                #show survival function as percentage
+)
+
+#KM curve according to prenatal care after 3rd month
+ggsurvplot(
+   km.by.pc3mth,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Prenatal Care Visit",
+  fun = "pct"                #show survival function as percentage
+)
+
+#KM curve according to birth year
+ggsurvplot(
+   km.by.ybirth,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  title = "KM Curve - Birth Year",
+  fun = "pct"                #show survival function as percentage
+)
+```
+
+```{r fig.cap="correlation between birth year and duration of breastfeeding"}
+bfeed %>%
+  ggplot(aes(x=ybirth, y=duration, color = delta)) +
+  geom_point()+ geom_smooth(method = "lm")
+```
