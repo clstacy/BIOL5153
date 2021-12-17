@@ -967,13 +967,75 @@ $$
 HR(t, x_1,x_2) = \frac{h(t,X=1,\beta)}{h(t,X=0,\beta)} = \frac{h_0(t)\Gamma(X=1,\beta)}{h_0(t)\Gamma(X=0,\beta)} = \frac{\Gamma(X=1,\beta)}{\Gamma(X=0,\beta)} = e^{\beta}
 $$
 
-Note that the HR depends only on $\beta$ and amount of increase in $X$, not time nor the baseline hazard. A hazard ratio close to one means the variable has little effect on survival, while an HR > 1 corresponds to an increased risk of event occurence. An HR value close to zero means the factor increases time until the event.
+Note that the HR depends only on $\beta$ and amount of increase in $X$, not time nor the baseline hazard. A hazard ratio close to one means the variable has little effect on survival, while an HR > 1 corresponds to an increased risk of event occurrence. An HR value close to zero means the factor increases time until the event.
 
 ### Goodness of Fit
 
+In order to optimize the Cox model fit, an iterative forward-backwards stepwise selection approach was utilized via the `My.stepwise.coxph` function of the `My.stepwise` package. The significance level for entry and significance level for stay were both set to 0.15 for the fitting procedure. The code used for the resulting best model from this process is shown below. This approach selected a model with four variables: race, smoking, years of education, and year child was born.
 
+Code for stepwise selection of Cox PH model:
+```{r, eval=FALSE}
+# create variable list for stepwise selection of variables in models:
+my.variable.list <- c("race", "poverty", "smoke", "alcohol",
+                      "agemth", "ybirth", "yschool", "pc3mth")
+
+# run the stepwise selection
+My.stepwise::My.stepwise.coxph(Time = "duration", 
+                               Status = "delta", 
+                               variable.list = my.variable.list, 
+                               data = bfeed, 
+                               sle = 0.15, sls = 0.15)
+# best model:
+"duration ~ smoke + race + ybirth + yschool + poverty"
+```
+
+```{r}
+
+explanatory = c("race", "poverty", "smoke", "alcohol",
+                      "agemth", "ybirth", "yschool", "pc3mth")
+dependent = "Surv(duration, delta)"
+bfeed_og %>%
+    mutate(
+      race = as.factor(race),
+      poverty = as.factor(poverty),
+      smoke = as.factor(smoke),
+      alcohol = as.factor(alcohol)
+    ) %>%
+    finalfit::finalfit(dependent, explanatory) -> t
+
+t %>% knitr::kable()
+```
+
+#TODO: table above looks really good! change around the second column of t to make names pretty, read through tutorial website on how to make it a bit prettier, then include it here in the paper! Make sure to set the reduced model with explanatory_multi = c() to get the optimized model from above to be the multi() output.
 
 ### Parameter Estimates
+
+
+
+```{r, echo=FALSE}
+# create variable list for stepwise selection of variables in models:
+my.variable.list <- c("race", "poverty", "smoke", "alcohol",
+                      "agemth", "ybirth", "yschool", "pc3mth")
+
+# run the stepwise selection
+My.stepwise::My.stepwise.coxph(Time = "duration", Status = "delta", variable.list = my.variable.list, data = bfeed_og, sle = 0.15, sls = 0.15)
+# best model:
+"duration ~ smoke + race + ybirth + yschool + poverty"
+
+coxph.full.model <- coxph(SurvObj ~ race + poverty + smoke + ybirth + yschool, data = bfeed) 
+
+summary(coxph.full.model)
+
+# termplot(m1) # useful but long in rmd file
+
+cox.zph(coxph.full.model)
+
+ggcoxdiagnostics(coxph.full.model, type = "schoenfeld")
+
+#alternative code to above line  (I think)
+ggcoxzph(cox.zph(coxph.full.model))
+```
+
 
 ### Assumptions of the Cox PH survival model
 
@@ -1001,6 +1063,9 @@ The approach to data collection for this study relies on accurate recall and par
 The proportion of this data that is censored is relatively small, only about 3% of the total sample. In this case it is possible that alternative approaches such as the Mann-Whitney U test would be useful, but the ability of survival analysis to estimate risk can be exceptionally useful.
 
 # Conclusion
+
+
+
 
 \newpage
 
@@ -1190,6 +1255,11 @@ My.stepwise.coxph(Time = "duration", Status = "delta", variable.list = my.variab
 # best model
 
 ```
+
+
+
+
+
 
 # Cox Proportional Hazards model of time-independent variables
 
