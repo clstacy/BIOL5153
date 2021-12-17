@@ -455,9 +455,7 @@ and
 $$
 S(t) = e^{-\lambda t}
 $$
-where $h(t)$ is the hazard function and $S(t)$ is the survival function. These are the AFT parameterizations of the exponential model.
-
-Notice that the the hazard is a constant $\lambda$.
+where $h(t)$ is the hazard function and $S(t)$ is the survival function. These are the AFT parameterizations of the exponential model. Note that the the hazard is a constant $\lambda$.
 
 
 #### Assumptions of the exponential survival model\
@@ -595,27 +593,37 @@ summary_expAIC %>%
 
 #### Parameter Estimates\
 
-The parameter estimates for the best fit exponential model are shown in Table 5. We see p-values below the 0.05 threshold for all parameters except for where race is black has a p-value higher than 0.05. These parameters indicate that
+The parameter estimates for the best fit exponential model are shown in Table 5. We see p-values below the 0.05 threshold for all parameters except for where race is black has a p-value higher than 0.05.
 
 ```{r, echo=FALSE}
 summary_expreg <- summary(expreg_less4)
 
+best.exp.model <- expreg_less4
+
 summary_expreg$table %>%
-  knitr::kable(digits=3,caption = "SurvObj ~ race + smoke + yschool + ybirth")#,caption="Exponential survival model with lowest AIC")
+  knitr::kable(digits=4,caption = "SurvObj ~ race + smoke + yschool + ybirth")#,caption="Exponential survival model with lowest AIC")
 ```
 
+The AFT interpretation of this model suggests that black mothers average duration of breast feeding may only be $e^(-0.173)$ = `r toString(round(exp(-.173),2))` of that of white mothers (p-value = 0.093). For mothers whose race is classified as "other", the average duration of breast feeding is $e^(-0.310)$ = `r toString(round(exp(-.310),2))` of white mothers. Mothers who reported smoking at time of child birth had `r toString(round(exp(-.267),2))` shorter breast feeding duration compared to non-smokers. On the other hand, every year of additional education the mother had attained corresponded to a $e^(0.05)$ = `r toString(round(exp(.05),2))`. In other words, mothers 5% increase in average duration of breast feeding for each additional year of schooling they completed. There also appeared to be a significant trend of child birth year effecting the duration of breastfeeding. In this model, each year later that the child was born resulted in reduction by a factor of `r toString(round(exp(-.267),2))` in average breast feeding time. 
+
+As mentioned above, the exponential model has a unique characteristic that it can be described as an AFT model or as a PH model. By dividing the negative of the coefficients of the AFT model in Table 5 by its scale parameter (1 in the case of the exponential model), one can find the proportional hazards for each variable, shown in Table S?.
 
 
-convert AFT estimates (survreg()) to PH:
-
-```{r, echo=FALSE}
-# b.ph <- -coef(fit.aft)/fit.aft$scale
-#https://myweb.uiowa.edu/pbreheny/7210/f15/notes/10-15.pdf
-```
 
 
 
 ### Weibull
+
+The Weibull model is a generalization of the exponential model that is widely used in survival analysis. The hazard and survival functions for this model is
+
+$$
+h(t) = \lambda
+$$
+and
+$$
+S(t) = e^{-\lambda t}
+$$
+where $h(t)$ is the hazard function and $S(t)$ is the survival function. These are the AFT parameterizations of the exponential model. Note that the the hazard is monotonic for this model. When $\alpha=1$, the Weibull model is the exponential model.
 
 #### Assumptions of the Weibull survival model\
 
@@ -623,11 +631,9 @@ a
 
 #### Goodness of fit \
 
-
 a
 
 #### Parameter Estimates\
-
 
 a
 
@@ -695,6 +701,8 @@ In contrast to the parametric models above, the Cox PH model is semi-parametric.
 (e.g., strengths and shortcomings of your model, and possible improvements)
 
 weaknesses:
+
+As the backward paramter selection in Table 4 shows, birth year was the most significant predictor of all predictor variables. This weakens the assumption of the Kaplan-Meier curve that time of entry has no effect on risk. Fortunately, other models shown here account for this pattern.
 
 The approach to data collection for this study relies on accurate recall and participant truthfulness. Given that mothers' choices around raising their child are often stigmatized and human recall of previous events is suboptimal, the data is likely imperfect.
 
@@ -1188,7 +1196,24 @@ Previous research has shown that the age at which a child stops breastfeeding ha
 
 # Supplemental Figures
 
-lognormal transformation of Duration of Breastfeeding
+
+## Proportional Hazard (PH) estimates for Exponential Model
+```{r, echo=FALSE}
+exp.aft.ph <- -coef(best.exp.model)/best.exp.model$scale
+#https://myweb.uiowa.edu/pbreheny/7210/f15/notes/10-15.pdf
+exp.aft.ph %>%
+  knitr::kable(digits=4,caption = "coefficients for PH exponential model", col.names = c( "value"))
+```
+
+## Proportional Hazard (PH) estimates for Weibull Model
+```{r, echo=FALSE}
+Weibull.aft.ph <- -coef(best.Weibull.model)/best.Weibull.model$scale
+#https://myweb.uiowa.edu/pbreheny/7210/f15/notes/10-15.pdf
+Weibull.aft.ph %>%
+  knitr::kable(digits=4,caption = "coefficients for PH Weibull model", col.names = c( "value"))
+```
+
+## lognormal transformation of Duration of Breastfeeding
 
 ```{r}
 # bfeed %>%
