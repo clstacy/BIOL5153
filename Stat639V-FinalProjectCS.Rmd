@@ -460,7 +460,7 @@ where $h(t)$ is the hazard function and $S(t)$ is the survival function. These a
 
 #### Assumptions of the exponential survival model\
 
-The key assumption of the exponential survival model are that the the hazard rate is constant, derived from the memoryless property of the exponential distribution. Based on what is known about cessation of breastfeeding, this would not seem likely to be a valid assumption; however, figure X shows the exponential model provides a reasonable fit to the data. The curves for "white" and "black" overlap too closely to see in the figure, matching the regression outputs below showing similar survival for these two groups.
+The key assumption of the exponential survival model are that the the hazard rate is constant, derived from the memoryless property of the exponential distribution. Based on what is known about cessation of breastfeeding, this would not seem likely to be a valid assumption; however, figure 4 shows the exponential model provides a reasonable fit to the data. Trends between the different racial groups correspond to regression outputs below showing similar survival for these three groups.
 
 ```{r exponentialAIC, echo=FALSE}
 # exponential parametric model
@@ -526,7 +526,7 @@ pred.exp2 = predict(expreg_less4, newdata=list(race="black", smoke = "no", yscho
 pred.exp3 = predict(expreg_less4, newdata=list(race="other", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
 
 # put preds together in tidy df
-df = data.frame(y=seq(99,1,by=-1), race_white=pred.exp1, race_black=pred.exp3, race_other = pred.exp3)
+df = data.frame(y=seq(99,1,by=-1), race_white=pred.exp1, race_black=pred.exp2, race_other = pred.exp3)
 df_long = gather(df, key= "race", value="time", -y)
 
 
@@ -534,7 +534,7 @@ df_long = gather(df, key= "race", value="time", -y)
 km.by.race <- survfit(SurvObj ~ race, data = bfeed)
 
 #KM curve according to race
-gg.km.by.race <- ggsurvplot(
+gg.km.by.race.exp <- ggsurvplot(
    km.by.race,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
    # risk.table = TRUE,        # show risk table.
@@ -561,13 +561,13 @@ gg.km.by.race <- ggsurvplot(
 ) 
 
 # KM curve plot for race adding survreg predictions
-gg.km.by.race.exp$plot <- gg.km.by.race$plot + geom_line(data=df_long, aes(x=time, y=y, group=race))
+gg.km.by.race.exp <- gg.km.by.race.exp$plot + geom_line(data=df_long, aes(x=time, y=y, group=race))
 gg.km.by.race.exp
 ```
 
 #### Goodness of fit\
 
-Parametric models such as the exponential model allow for multivariate analysis. Given this, parameter selection is needed to find the best combination of parameters to predict or characterize survival. A backwards selection approach is utilized here to select parameters, in which all predictor variables were included in the model, the Akaike Information Criterion (AIC) for the model was recorded, and then the least significant parameter was dropped from the model until no parameters remain. The results of this process are in figure 4 below. This approach selected a model with four variables: race, smoking, years of education, and year child was born.
+Parametric models such as the exponential model allow for multivariate analysis. Given this, parameter selection is needed to find the best combination of parameters to predict or characterize survival. A backwards selection approach is utilized here to select parameters, in which all predictor variables were included in the model, the Akaike Information Criterion (AIC) for the model was recorded, and then the least significant parameter was dropped from the model until no parameters remain. The results of this process are in Table 4 below. This approach selected a model with four variables: race, smoking, years of education, and year child was born.
 
 ```{r, echo=FALSE}
 summary_expAIC <- tibble(
@@ -587,13 +587,13 @@ summary_expAIC <- tibble(
 )
 
 summary_expAIC %>%
-  knitr::kable(digits=5,caption="Exponential survival model with lowest AIC")
+  knitr::kable(digits=5,caption="AIC of Backward selection of exponential survival model")
 ```
 
 
 #### Parameter Estimates\
 
-The parameter estimates for the best fit exponential model are shown in Table 5. We see p-values below the 0.05 threshold for all parameters except for where race is black has a p-value higher than 0.05.
+The parameter estimates for the best fit exponential model are shown in Table 5. We see p-values below the 0.05 threshold for all parameters except for where race of the mother is black has a p-value of than 0.0928.
 
 ```{r, echo=FALSE}
 summary_expreg <- summary(expreg_less4)
@@ -601,7 +601,7 @@ summary_expreg <- summary(expreg_less4)
 best.exp.model <- expreg_less4
 
 summary_expreg$table %>%
-  knitr::kable(digits=4,caption = "SurvObj ~ race + smoke + yschool + ybirth")#,caption="Exponential survival model with lowest AIC")
+  knitr::kable(digits=4,caption = "Exponential Model: SurvObj ~ race + smoke + yschool + ybirth")#,caption="Exponential survival model with lowest AIC")
 ```
 
 The AFT interpretation of this model suggests that black mothers average duration of breast feeding may only be $e^{-0.173}$ = `r toString(round(exp(-.173),2))` of that of white mothers (p-value = 0.093). For mothers whose race is classified as "other", the average duration of breast feeding is $e^{-0.310}$ = `r toString(round(exp(-.310),2))` of white mothers. Mothers who reported smoking at time of child birth had `r toString(round(exp(-.267),2))` shorter breast feeding duration compared to non-smokers. On the other hand, every year of additional education the mother had attained corresponded to a $e^{0.05}$ = `r toString(round(exp(.05),2))`. In other words, mothers 5% increase in average duration of breast feeding for each additional year of schooling they completed. There also appeared to be a significant trend of child birth year effecting the duration of breastfeeding. In this model, each year later that the child was born resulted in reduction by a factor of `r toString(round(exp(-.267),2))` in average breast feeding time. 
@@ -627,73 +627,71 @@ where $h(t)$ is the hazard function and $S(t)$ is the survival function. The sha
 
 #### Assumptions of the Weibull survival model\
 
-The key assumption of the exponential survival model are that the the hazard rate is constant, derived from the memoryless property of the exponential distribution. Based on what is known about cessation of breastfeeding, this would not seem likely to be a valid assumption; however, figure X shows the exponential model provides a reasonable fit to the data. The curves for "white" and "black" overlap too closely to see in the figure, matching the regression outputs below showing similar survival for these two groups.
+One assumption of the Weibull survival model is that the the hazard rate is monotonic. Additionally, when working as an AFT model, the differences between groups should be able to be represented by only an acceleration in aging by a constant. Part of this is that KM curves should not cross, an assumption that is reasonably held in this data set. Figure 5 shows the Weibull model provides a fit to the data comparable to that of the exponential model above. Trends between the different racial groups correspond to regression outputs below showing similar survival for these three groups.
 
-```{r exponentialAIC, echo=FALSE}
-# exponential parametric model
+```{r WeibullAIC, echo=FALSE}
+# Weibull parametric model
 
-# create vector of AIC values for expo
-expAIC <- rep(0.0, 9)
+# create vector of AIC values for Weibull
+WeibullAIC <- rep(0.0, 9)
 
 ## include all parameters (diy backselection)
 
-expreg_all <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth + yschool + pc3mth, bfeed, dist="exponential")
-expAIC[1] <- AIC(expreg_all)
-# summary(expreg_all) # has highest p-val: pc3mth
+Weibullreg_all <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
+              yschool + pc3mth, bfeed, dist="weibull")
+WeibullAIC[1] <- AIC(Weibullreg_all)
+# summary(Weibullreg_all) # has highest p-val: pc3mth
 
-expreg_less1 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth + yschool, bfeed, dist="exponential")
-expAIC[2] <- AIC(expreg_less1)
-# summary(expreg_less1) # has highest p-val: agemth
+Weibullreg_less1 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
+                yschool, bfeed, dist="weibull")
+WeibullAIC[2] <- AIC(Weibullreg_less1)
+# summary(Weibullreg_less1) # has highest p-val: agemth
 
-expreg_less2 <- survreg(SurvObj ~ race + 
-                          poverty + smoke + 
-                          alcohol + yschool + 
-                          ybirth, bfeed, dist="exponential")
+Weibullreg_less2 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + yschool + ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[3] <- AIC(Weibullreg_less2)
+# summary(Weibullreg_less2) # has highest p-val: alcohol
 
-expAIC[3] <- AIC(expreg_less2)
-# summary(expreg_less2) # has highest p-val: alcohol
+Weibullreg_less3 <- survreg(SurvObj ~ race  + poverty + smoke + yschool + ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[4] <- AIC(Weibullreg_less3)
+# summary(Weibullreg_less3) # has highest p-val: poverty
 
-expreg_less3 <- survreg(SurvObj ~ race  + 
-                          poverty + smoke + yschool + ybirth,
-                          bfeed, dist="exponential")
-expAIC[4] <- AIC(expreg_less3)
-# summary(expreg_less3) # has highest p-val: poverty
+Weibullreg_less4 <- survreg(SurvObj ~ race + smoke + yschool + ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[5] <- AIC(Weibullreg_less4)
+# summary(Weibullreg_less4) # has highest p-val: race
 
-expreg_less4 <- survreg(SurvObj ~ race + smoke + yschool + ybirth,
-                        bfeed, dist="exponential")
-expAIC[5] <- AIC(expreg_less4)
-# summary(expreg_less4) # has highest p-val: race
-
-expreg_less5 <- survreg(SurvObj ~  smoke + yschool + ybirth,
-                        bfeed, dist="exponential")
-expAIC[6] <- AIC(expreg_less5)
-# summary(expreg_less5) # has highest p-val: smoke
+Weibullreg_less5 <- survreg(SurvObj ~  smoke + yschool + ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[6] <- AIC(Weibullreg_less5)
+# summary(Weibullreg_less5) # has highest p-val: smoke
 
 
-expreg_less6 <- survreg(SurvObj ~  yschool + ybirth,
-                        bfeed, dist="exponential")
-expAIC[7] <- AIC(expreg_less6)
-# summary(expreg_less6) # has highest p-val: yschool
+Weibullreg_less6 <- survreg(SurvObj ~  yschool + ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[7] <- AIC(Weibullreg_less6)
+# summary(Weibullreg_less6) # has highest p-val: yschool
 
-expreg_less7 <- survreg(SurvObj ~ ybirth,
-                        bfeed, dist="exponential")
-expAIC[8] <- AIC(expreg_less7)
-# summary(expreg_less7) 
+Weibullreg_less7 <- survreg(SurvObj ~ ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[8] <- AIC(Weibullreg_less7)
+# summary(Weibullreg_less7) 
 
-expreg_less8 <- survreg(SurvObj ~ 1,
-                        bfeed, dist="exponential")
-expAIC[9] <- AIC(expreg_less8)
-# summary(expreg_less8) 
+Weibullreg_less8 <- survreg(SurvObj ~ 1,
+                        bfeed, dist="weibull")
+WeibullAIC[9] <- AIC(Weibullreg_less8)
+# summary(Weibullreg_less8) 
 ```
 
-```{r exponential, echo=FALSE, fig.cap="Comparing KM curve for duration of breastfeeding according to mothers' race with exponential regression model."}
+```{r Weibull, echo=FALSE, fig.cap="Comparing KM curve for duration of breastfeeding according to mothers' race with the Weibull regression model."}
 # predicted curves based on exponential best model
-pred.exp1 = predict(expreg_less4, newdata=list(race="white", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
-pred.exp2 = predict(expreg_less4, newdata=list(race="black", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
-pred.exp3 = predict(expreg_less4, newdata=list(race="other", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+pred.W1 = predict(Weibullreg_less4, newdata=list(race="white", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+pred.W2 = predict(Weibullreg_less4, newdata=list(race="black", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+pred.W3 = predict(Weibullreg_less4, newdata=list(race="other", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
 
 # put preds together in tidy df
-df = data.frame(y=seq(99,1,by=-1), race_white=pred.exp1, race_black=pred.exp3, race_other = pred.exp3)
+df = data.frame(y=seq(99,1,by=-1), race_white=pred.W1, race_black=pred.W2, race_other = pred.W3)
 df_long = gather(df, key= "race", value="time", -y)
 
 
@@ -701,7 +699,7 @@ df_long = gather(df, key= "race", value="time", -y)
 km.by.race <- survfit(SurvObj ~ race, data = bfeed)
 
 #KM curve according to race
-gg.km.by.race <- ggsurvplot(
+gg.km.by.race.Weibull <- ggsurvplot(
    km.by.race,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
    # risk.table = TRUE,        # show risk table.
@@ -728,29 +726,137 @@ gg.km.by.race <- ggsurvplot(
 ) 
 
 # KM curve plot for race adding survreg predictions
-gg.km.by.race.Weibull$plot <- gg.km.by.race$plot + geom_line(data=df_long, aes(x=time, y=y, group=race))
+gg.km.by.race.Weibull$plot <- gg.km.by.race.Weibull$plot + geom_line(data=df_long, aes(x=time, y=y, group=race))
 gg.km.by.race.Weibull
 ```
 
 
 #### Goodness of fit \
 
-a
+The same backwards selection approach is utilized here as the exponential model to select parameters and compare AIC scores. The results of this process are in Table 6 below. The Weibull model also selected the model with the same four variables: race, smoking, years of education, and year child was born.
+
+```{r, echo=FALSE}
+summary_WeibullAIC <- tibble(
+  "# Parameters" = c(8:0),
+  "AIC" = WeibullAIC, 
+  "Equation" = c(
+    "SurvObj ~ ybirth + yschool + ... + agemth + pc3mth",
+    "SurvObj ~ ybirth + yschool + ... + alcohol + agemth",
+    "SurvObj ~ ybirth + yschool + ... + poverty + alcohol",
+    "SurvObj ~ ybirth + yschool + smoke + race + poverty",
+    "SurvObj ~ ybirth + yschool + smoke + race", # lowest AIC
+    "SurvObj ~ ybirth + yschool + smoke",
+    "SurvObj ~ ybirth + yschool",
+    "SurvObj ~ ybirth",
+    "SurvObj ~ 1"
+  )
+)
+
+summary_WeibullAIC %>%
+  knitr::kable(digits=5,caption="AIC of Backward selection of Weibull survival model")
+```
+
 
 #### Parameter Estimates\
 
-a
+The parameter estimates for the best fit Weibull model are shown in Table 7. We see p-values below the 0.05 threshold for all parameters except for where race of the mother is black has a p-value of than 0.0936.
 
-#### Predictions and Validations \
+```{r, echo=FALSE}
+summary_Weibullreg <- summary(Weibullreg_less4)
 
-a
+best.Weibull.model <- Weibullreg_less4
+
+summary_Weibullreg$table %>%
+  knitr::kable(digits=4,caption = "Weibull Model: SurvObj ~ race + smoke + yschool + ybirth")#,caption="Exponential survival model with lowest AIC")
+```
+
+The parameter estimates for the Weibull model are extremely similar to the parameters of the exponential distribution, which one would expect given the log(scale) parameter for the fit is very close to zero corresponding to $\alpha$ value very close to one. The Weibull model can also be described as an AFT model or as a PH model.  Given these values are very similar to those of the exponential model, these values have not been included in this analysis.
+
+The finding that the generalization of the exponential distribution, the Weibull, closely matches the results of the exponential itself supports that the constant hazard assumption of the exponential is close to the optimal monotonic hazard function to fit the data. 
 
 
 ### Lognormal
 
-TODO: create a supplemental figure to be referenced in this section in order to show how `bfeed$duration` looks when log transformed (it becomes normal yay)
+
+
+
+
+
+COPIED: ######
+The Weibull model is a generalization of the exponential model that is widely used in survival analysis. The hazard and survival functions for this model is
+
+$$
+h(t) = \alpha \lambda t^{\alpha -1}
+$$
+and
+$$
+S(t) = e^{-\lambda t^\alpha}
+$$
+where $h(t)$ is the hazard function and $S(t)$ is the survival function. The shape parameter $\alpha$ can be thought of as a baseline log-hazard, while $\lambda$ is the rate parameter as in the exponential distribution. These are the AFT parameterizations of the Weibull model. Note that the the hazard is monotonic for this model. When $\alpha=1$, the Weibull model is the exponential model.
+####################
+
+
 
 #### Assumptions of the lognormal survival model\
+
+```{r}
+
+
+# lognormal parametric model
+
+# create vector of AIC values for lognormal
+lognormalAIC <- rep(0.0, 9)
+
+## include all parameters (diy backselection)
+
+lognormalreg_all <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
+              yschool + pc3mth, bfeed, dist="lognormal")
+lognormalAIC[1] <- AIC(lognormalreg_all)
+summary(lognormalreg_all) # has highest p-val: pc3mth
+
+
+lognormalreg_less1 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
+                yschool, bfeed, dist="lognormal")
+lognormalAIC[2] <- AIC(lognormalreg_less1)
+summary(lognormalreg_less1) # has highest p-val: agemth
+
+lognormalreg_less2 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + yschool + ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[3] <- AIC(lognormalreg_less2)
+summary(lognormalreg_less2) # has highest p-val: alcohol
+
+lognormalreg_less3 <- survreg(SurvObj ~ race + poverty + smoke + yschool + ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[4] <- AIC(lognormalreg_less3)
+summary(lognormalreg_less3) # has highest p-val: poverty
+
+lognormalreg_less4 <- survreg(SurvObj ~ race + smoke + yschool + ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[5] <- AIC(lognormalreg_less4)
+summary(lognormalreg_less4) # has highest p-val: race
+
+lognormalreg_less5 <- survreg(SurvObj ~  smoke + yschool + ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[6] <- AIC(lognormalreg_less5)
+summary(lognormalreg_less5) # has highest p-val: smoke
+
+
+lognormalreg_less6 <- survreg(SurvObj ~  yschool + ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[7] <- AIC(lognormalreg_less6)
+summary(lognormalreg_less6) # has highest p-val: yschool
+
+lognormalreg_less7 <- survreg(SurvObj ~ ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[8] <- AIC(lognormalreg_less7)
+summary(lognormalreg_less7) 
+
+lognormalreg_less8 <- survreg(SurvObj ~ 1,
+                        bfeed, dist="lognormal")
+lognormalAIC[9] <- AIC(lognormalreg_less8)
+summary(lognormalreg_less8) 
+```
+
 
 #### Parameter Estimates\
 
@@ -1000,10 +1106,10 @@ my.variable.list <- c("race",
 My.stepwise.coxph(Time = "duration", Status = "delta", variable.list = my.variable.list,
                   data = bfeed_og, sle = 0.15, sls = 0.15)
 # best model
+
 ```
 
-
-### Cox Proportional Hazards model of time-independent variables
+# Cox Proportional Hazards model of time-independent variables
 
 Cox model approach is a semi-parametric model useful with fixed-time covariates
 
@@ -1284,19 +1390,18 @@ ggsurvplot(
 )
 ```
 
+
+
 \<!--\# It is in this context
-
 The prevalence of breastfeeding behaviors is lower
-
 Researchers and public health organizations have touted the benefits of breastfeeding for infants [cite][][].
-
 Social determinants of health have profound impacts on life outcomes.
-
 There is a preponderance of evidence that childhood experiences significantly impact life trajectories. Improving child health has been a top priority for the World Health Organization for decades [cite].
-
 Previous research has shown that the age at which a child stops breastfeeding has significant effects on later development [CITE]. An increased understanding of how to --\>
 
 \beginsupplement
+
+
 
 # Supplemental Figures
 
@@ -1319,9 +1424,16 @@ Weibull.aft.ph %>%
 
 ## lognormal transformation of Duration of Breastfeeding
 
-```{r}
-# bfeed %>%
-#   mutate(lognormduration = lognormal(duration))
+```{r, echo=FALSE, fig.cap="Distribution of natural log tranformed breastfeeding duration alongside normal distribution $N(2.5, 1.1)$ (grey)"}
+bfeed %>%
+  mutate(lognormduration = log(duration)) %>%
+  ggplot(aes(x=lognormduration)) +
+  geom_density() +
+  theme_minimal() +
+  labs(x="ln(weeks of breastfeeding)", y="density") +
+  ggtitle("lognormal distribution of breastfeeding duration") +
+  stat_function(fun = dnorm, args = list(2.5, 1.1), color = "gray")
+
 ```
 
 ## code used to create this report
