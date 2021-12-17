@@ -1,7 +1,7 @@
 ---
 title: \vspace{3.5in} Survival Analysis of Breastfeeding Cessation
 author: "Carson Stacy"
-date: "`r Sys.Date()`"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 subtitle: "STAT 639V Survival Analysis Final Project"
 output:
   pdf_document: default
@@ -244,7 +244,7 @@ $$
 
 where $h(t)$ is the hazard function.
 
-Survival analysis involves estimating these functions based on the data. There exist non-parametric, parametric, and semi-parametric models for estimating the survival function. In this project, the non-parametric method is the Kaplan-Meier (KM) estimator. The log-rank test is used in testing for statistical differences between KM curves. The parametric method is fitting to a distribution (e.g., Weibull or exponential) and using the relationships above to estimate the survival or hazard curves. Finally, perhaps the most common technique in survival analysis is the Cox proportional hazards model, a semi-parametric approach. Each of these approaches are utilized below. Prior to analyzing the data, a visual summary of the data set is available in Figure 1 above.
+Survival analysis involves estimating these functions based on the data. There exist non-parametric, parametric, and semi-parametric models for estimating the survival function. In this project, the non-parametric method is the Kaplan-Meier (KM) estimator. The log-rank test is used in testing for statistical differences between KM curves. The parametric method is fitting to a distribution (e.g., Weibull or exponential) and using the relationships above to estimate the survival or hazard curves. Finally, perhaps the most common technique in survival analysis is the Cox proportional hazards model, a semi-parametric approach. Each of these approaches are utilized below. The predefined significance level $\alpha$ will be set at 0.05 for determining significance for this analysis unless otherwise specified. Prior to analyzing the data, a visual summary of the data set is available in Figure 1 above.
 
 ## Kaplan Meier Survival Estimates
 
@@ -1002,6 +1002,61 @@ summary(coxph.best.model)
 
 From this output, we see that the p-values `Pr(>|z|)` is significantly less than the threshold significance level of $\alpha = 0.05$ except for the indicator variable of race being black, which has a p-value of 0.065. The global statistical significance tests of the model show significant p-values $(p \leq 8 \times 10^{-8})$, indicating the overall test is a reasonable fit for the data.
 
+A plot comparing the KM curve of the data to that predicted by this Cox PH model are shown below in Figure 7:
+
+```{r coxPH, warning=FALSE, echo=FALSE, fig.cap="Comparing KM curve for duration of breastfeeding according to mothers' race with Cox PH model predictions."}
+# predicted curves based on CoxPH best model
+
+race_df <- with(bfeed,
+               data.frame(sex = rep("male",3), 
+                          race = c("white", "black", "other"),
+                          ybirth = rep(mean(ybirth, na.rm = TRUE), 3),
+                          yschool = rep(mean(yschool, na.rm = TRUE), 3),
+                          smoke = rep("no",3),
+                          poverty = rep("no",3)
+                          )
+               )
+# race_df
+
+km.cox.fit <- survfit(coxph.best.model, newdata = race_df)
+
+# put preds together in tidy df
+df = data.frame(y=seq(99,1,by=-1), race_white=pred.exp1, race_black=pred.exp2, race_other = pred.exp3)
+df_long = gather(df, key= "race", value="time", -y)
+
+
+#KM curve according to race
+gg.km.by.race.cox <- ggsurvplot(
+   km.cox.fit,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   # risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "1",   # Pval using log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  # title = "KM Curve - Race",
+  fun = "pct"                #show survival function as percentage
+    
+) 
+
+# KM curve plot for race adding survreg predictions
+gg.km.by.race.cox <- gg.km.by.race.cox$plot + geom_line(data=df_long, aes(x=time, y=y, group=race))
+gg.km.by.race.cox
+```
+
 ```{r, echo=FALSE}
 
 explanatory = c("race", "poverty", "smoke", "alcohol",
@@ -1020,10 +1075,11 @@ bfeed_og %>%
                          c("smoke", "race", "ybirth", "yschool", "poverty")
                        ) -> t
 
-colnames(t)[2] <- "group"
+colnames(t)[2] <- "Count (%)"
+colnames(t)[2] <- "Group"
 colnames(t)[1] <- "Duration"
 
-t <- data.frame(t) %>% 
+t <- tibble(t) %>% 
   remove_rownames() %>%
   mutate(group = c("white", "black", "other", "no", "yes","no", "yes","no", "yes", "Mean (SD)","Mean (SD)","Mean (SD)","no","yes")) 
 
@@ -1031,14 +1087,15 @@ t <- data.frame(t) %>%
 
 ### Parameter Estimates
 
-The estimated hazard ratios for each parameter included in the final CoxPH model are shown in Figure X below. We see that [...]
+Hazard ratios are a useful tool with an intuitive interpretation. The estimated hazard ratios for each parameter either univariate or included in the final Cox PH model are shown in Table 11 below. These values are calculated by exponentiation of the coefficient estimates such as the `coef` column of the Cox model from above. The 95% confidence intervals and p-values for the coefficient estimates are also shown in parenthesis next to each HR estimate. Rows with no value correspond to either the baseline group for which the hazard ratio is compared for the given variable, or a variable that was exlcuded from the best Cox PH model. For continuous variables, instead the hazard ratio corresponding to an increase of one in the variable.
 
 ```{r, echo=FALSE}
-t %>% knitr::kable()
+t %>% knitr::kable(digits=4, caption = "Hazard Ratios (HR) for Cox PH model of time-independent variables")
 ```
 
 
-```{r, echo=FALSE}
+
+```{r, echo=FALSE, eval=FALSE}
 # create variable list for stepwise selection of variables in models:
 my.variable.list <- c("race", "poverty", "smoke", "alcohol",
                       "agemth", "ybirth", "yschool", "pc3mth")
@@ -1047,54 +1104,57 @@ my.variable.list <- c("race", "poverty", "smoke", "alcohol",
 My.stepwise::My.stepwise.coxph(Time = "duration", Status = "delta", variable.list = my.variable.list, data = bfeed_og, sle = 0.15, sls = 0.15)
 # best Cox PH model:
 "duration ~ smoke + race + ybirth + yschool + poverty"
-
-coxph.full.model <- coxph(SurvObj ~ race + poverty + smoke + ybirth + yschool, data = bfeed) 
-
-summary(coxph.full.model)
-
-
 ```
 
+Among categorical predictor variables, the highest hazard ratio of the complete Cox PH model is the category of "other" in the `race` variable with a hazard ratio of $HR=1.34$, $CI=1.11,1.52$. This hazard ratio means that, holding all other variables constant, a mother whose race is "other" has a 34% higher hazard rate than a white mother with a 95% confidence interval between 11% to 52% increased hazard. 
+
+For numerical variables included in the model, significant effects are predicted in response to changes in both years of education of the mother as well as the year the child was born. The hazard ratio for years of education was $HR=0.94$, $CI=0.90,0.98$ which corresponds to approximately a 6% less likely to stop breastfeeding at a given time for each additional year of education the mother completes. Surprisingly, the year in which the child was born increased the hazard for early cessation of breastfeeding, with $HR=1.07$, $CI=1.04,1.11$. This means that children born each year are 7% more likely to stop breastfeeding at a given time than a child born the year before.
+
+Potential predictor variables excluded from the final model were: alcohol use, age of the mother, and prenatal care visit after the third month.
 
 ### Assumptions of the Cox PH survival model
 
-There are several important assumptions for appropriate use of the Cox proportional hazards regression model, including:
+The Cox proportional hazards model has three important assumptions: (1) that survival times are independent between individuals in the study, (2) that the relationship between predictors and the hazard is multiplicative, and (3) that the hazard ratio is constant over time.
 
-independence of survival times between distinct individuals in the sample,
-    
-a multiplicative relationship between the predictors and the hazard (as opposed to a linear one as was the case with multiple linear regression analysis, discussed in more detail below), and
+For the first assumption, it is reasonable to expect that the breastfeeding duration of random survey participants in this study are independent. 
 
-a constant hazard ratio over time.
+In order to test the assumption of proportional hazards, a test of proportional hazards was performed via the `cox.zph` function of the `survival` package in r. The results of this test are shown in Table 12. The $H_0$ of the p-value test is that the hazard for the variable is proprotional, so large p-values indicate the proportional hazards assumption is appropriate.
+
 
 ```{r, echo=FALSE}
 # termplot(m1) # useful but long in rmd file
 
-cox.zph(coxph.full.model)
+cox.zph(coxph.best.model)$table%>%
+  knitr::kable(digits=4, caption = "Test of Proprtional Hazards Assumption of Cox Regression Model")
+```
+We see that the p-value for years of education is small, indicating the proportional hazards assumption for this variable is likely not appropriate. The global p-value for the Cox model is smaller than would be desired. The p-values for the remaining variables are appropriate for a PH assumption.
 
-ggcoxdiagnostics(coxph.full.model, type = "schoenfeld")
+A graphical test of proportional hazards is shown below in Figure 8.
+
+```{r echo=FALSE, fig.cap="Schoenfield plot of residuals for Cox proportional hazards assumption", fig.height=7}
+# ggcoxdiagnostics(coxph.best.model, type = "schoenfeld")
 
 #alternative code to above line  (I think)
-ggcoxzph(cox.zph(coxph.full.model))
+ggcoxzph(cox.zph(coxph.best.model), font.main = 10, caption = "Test for Proportional Hazards")
 ```
-
-
-### Predictions and Validations
 
 # Discussion
 
-<!-- (e.g., strengths and shortcomings of your model, and possible improvements) -->
+Analysis of time-to-cessation of breastfeeding data is an approach with potential utility for characterizing patterns of breastfeeding behavior. Utilization of model approaches to exploring breastfeeding patterns from nonparametric, to semi-parametric and parametric approaches resulted in many different lenses with which to view a similar pattern: that race, smoking behaviors, and education of a mother correlate with differences in duration of breastfeeding. Furthermore, the downward trend in breastfeeding durations from year to year is important knowledge for public health officials (in the 1980's) to be aware of. The use of survival analysis techniques with this data allowed for the inclusion of participants who had not yet stopped breastfeeding when data was collected, while other approaches would likely not include this information as part of the analysis.
 
-weaknesses:
+This analysis was an interesting exercise in the use of survival analysis; however, it is not perfect. Although residual plots of the Cox model appear reasonable, the test for proportional hazards in table 12 indicate the assumption of the Cox model appears to be violated by the variable years of education. Therefore, this model could be improved by fitting a Cox model with `yschool` as a time-dependent variable.
 
-As the backward paramter selection in Table 4 shows, birth year was the most significant predictor of all predictor variables. This weakens the assumption of the Kaplan-Meier curve that time of entry has no effect on risk. Fortunately, other models shown here account for this pattern.
+As the backward parameter selection in Table 4 shows, birth year was the most significant predictor of all predictor variables. This weakens the assumption of the Kaplan-Meier curve that time of entry has no effect on risk. Fortunately, other models shown here account for this pattern.
 
-The approach to data collection for this study relies on accurate recall and participant truthfulness. Given that mothers' choices around raising their child are often stigmatized and human recall of previous events is suboptimal, the data is likely imperfect.
+The approach to data collection for this study relies on accurate recall and participant truthfulness. Given that mothers' choices around raising their child are often stigmatized and human recall of previous events is suboptimal, the data is likely imperfect. Additionally, he proportion of this data that is censored is relatively small, only about 3% of the total sample. In this case it is possible that alternative approaches such as the Mann-Whitney U test would be useful, but the ability of survival analysis to estimate risk can be exceptionally useful.
 
-The proportion of this data that is censored is relatively small, only about 3% of the total sample. In this case it is possible that alternative approaches such as the Mann-Whitney U test would be useful, but the ability of survival analysis to estimate risk can be exceptionally useful.
+Finally, A significant improvement to this analysis would be first splitting the data into a training and testing dataset, in order to better validate the accuracy of the models and correct for potential overfitting of the data.
 
-A significant improvement to this analysis would be first splitting the data into a training and testing dataset, in order to better validate the accuracy of the models and correct for potential overfitting of the data.
+
 
 # Conclusion
+
+The data analyzed here from the 1970s and 1980s is by no means adequate evidence to challenge any public health advice. Rather, this analysis shows the utility of time-to-event analysis for considering breastfeeding behaviors and supports the hypothesis that breastfeeding duration appears to be impacted by environmental and social factors. The findings that prenatal care appointments following 3 months had no impact on breastfeeding duration was a surprising finding. It has been widely reported that breastfeeding behavior for infants has been on the decline in the United States over the past few decades; however, the magnitude of effect of the year the child was born on duration breast feeding was striking if these data are representative of the larger population. This analysis suggests that a mother's decisions about breastfeeding appear to correlate with some of the predictor variables collected as part of the NLYS study. Perhaps this information could be useful for public health officials hoping to increase breastfeeding rates in the United States.
 
 
 
