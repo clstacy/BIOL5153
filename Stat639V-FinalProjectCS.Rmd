@@ -1,7 +1,7 @@
 ---
 title: \vspace{3.5in} Survival Analysis of Breastfeeding Cessation
 author: "Carson Stacy"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
 subtitle: "STAT 639V Survival Analysis Final Project"
 output:
   pdf_document: default
@@ -48,7 +48,6 @@ library(survminer) # for ggsurvplot viz
 library(rstatix) # package for piped stat tests
 
 data("bfeed") # load data set into R
-
 ```
 
 \vspace{-2truemm}
@@ -60,6 +59,7 @@ data("bfeed") # load data set into R
 The data is comprised of data from `r toString(nrow(bfeed))` new mothers, with `r toString(ncol(bfeed))` variables recorded for each individual. Descriptions for each variable recorded can be seen in Table 1 below. There are six categorical variables, of which only `race` of mother has more than two categories. There are 4 numerical variables, all discrete integers with a sufficient number of values to loosely approximate continuity.
 
 ```{r, echo=FALSE}
+# table 1
 var_names <- tibble(
   c(1:ncol(bfeed)),
   c(colnames(bfeed)),
@@ -150,6 +150,7 @@ Data on breastfeeding used in this study has been extracted from a large set of 
 Participants were chosen randomly from the United States population for the study, so responses from all 50 states and outlying territories are included in the sample. Detailed information about the design of the survey is available at <https://www.bls.gov/nls/nlsy79.htm#intro-to-sample>. Relevant surveys were conducted from 1979 through 1986 and questions related to breastfeeding were asked to mothers who had given birth in the past 12 months. Information about duration of breastfeeding was provided by mothers via memory recall. Responses to other variables (e.g. smoking at the time of birth) were also provided by the mother. A sample of the data itself can be seen in Table 2. The `SurvObj` variable combines the `duration` and `delta` variables to give duration with participants who were still breastfeeding at last interview denoted with the `+` symbol.
 
 ```{r, echo=FALSE}
+#table 2
 bfeed %>%
   select(-c(race_o, race_b, education, status)) %>%
   head(n=5) %>%
@@ -170,6 +171,7 @@ n_censored <- bfeed %>%
 In this data set, a total of `r toString(n_censored)` mothers were still breastfeeding their infant at the time of their final data collection interview. Most of these censoring events occurred in the final year(s) of the study, when time from birth to final interview was significantly less than the nearly 10 years from birth of child to final interview of the earliest participants in the study. The compiled dataset does not contain any information about possible patient drop-out or missed interviews.
 
 ```{r, fig.cap = "Histograms of numerical variable distributions.", echo=FALSE}
+Fig1a
 fig1 <- bfeed %>% 
   select(-c(status, SurvObj, race_o, race_b)) %>% # artificial duplicate variables
   rename("Age of Mother at Birth" = agemth, # change names 
@@ -196,6 +198,7 @@ fig1 <- bfeed %>%
 ```
 
 ```{r echo=FALSE, fig.cap="Distributions of categorical and numerical variables comprising the data set.", fig.height=5, fig.width=6.5, warning=FALSE}
+#fig1b
 fig2 <- bfeed %>% 
   select(-education) %>%
   rename("Age of Mother at Birth" = agemth, # change names 
@@ -263,6 +266,7 @@ where $1 \leq d_i \leq Y_i$ with $t_i$ representing the distinct time at which b
 The Kaplan-Meier curve drops only when an individual stops breastfeeding, not when they are censored. The survival function, as well as its estimators, are bound in value from between 0 and 1. Confidence interval estimates for the KM curve can be estimated via variance. A Kaplan-Meier curve of the entire survey sample can be seen in Figure 3 below.
 
 ```{r KMcurve_all, fig.cap="KM curve for all participants for duration of breastfeeding. Gray shaded region represents a pointwise 95% confidence interval for the survival curve. The symbol + corresponds to a censoring time. The number of participants still breastfeeding at a given number of weeks is shown below the survival curve plot.", echo=FALSE, warning=FALSE}
+#fig2
 # create survival object:
 km.as.one <- survfit(SurvObj ~ 1, data = bfeed)
 
@@ -319,6 +323,7 @@ The red dashed line on these curves corresponds to the 6 months of breastfeeding
 ### KM curve - Cross Group Comparisons
 
 ```{r , echo=FALSE}
+#prep fig3
 km.by.smoke <- survfit(SurvObj ~ smoke, data = bfeed)
 
 #KM curve according to smoking
@@ -370,6 +375,7 @@ l6mo.smoke <- gg.km.by.smoke$data.survplot %>%
 In the survey, mothers were asked whether they were smoking at the time that they gave birth to their child. Kaplan-Meier curves for mothers who reported smoking compared to those who did not can be seen in Figure 3. It is possible to compare the point estimates for the proportion of mothers in the smoking vs nonsmoking group who were still breastfeeding at 6 months. For mothers in the smoking group, `r toString(round(pct6mo.smoke[[2]],2)*100)`% of mothers interviewed reported breastfeeding their children at least 6 months CI = (`r toString(round(l6mo.smoke[[2]],2)*100)`% , `r toString(round(u6mo.smoke[[2]],2)*100)`%). In the group of non-smoking mothers, `r toString(round(pct6mo.smoke[[1]],2)*100)`% reported breastfeeding their children at least 6 months CI = (`r toString(round(l6mo.smoke[[1]],2)*100)`% , `r toString(round(u6mo.smoke[[1]],2)*100)`%). The question then arises whether the difference between these two curves is significant. The overlapping point estimate confidence intervals at 6 months suggests the difference may be due to chance; however, survival analysis provides a more robust way to test for a difference between these two groups.
 
 ```{r smoke, echo=FALSE, fig.cap="KM curve for duration of breastfeeding according to whether mother smoked when child was born. Shaded regions represents a pointwise 95% confidence interval for the survival curves. The symbol + corresponds to a censoring time. The number of participants still breastfeeding by group at a given number of weeks is shown below the survival curve plot."}
+#figure3
 gg.km.by.smoke
 ```
 
@@ -382,11 +388,13 @@ gg.km.by.smoke
 
 The log-rank test ($H_0$: no difference) can be used to compare if the difference between these KM curves is significant. We can see in Figure 3 above that there appears to be a difference in survival curves between mothers who smoked at birth of their child and mothers who did not. Given differences at early time points are considered more important from a public health perspective, the peto-peto modification would be an appropriate tool to use for testing for a difference at earlier time points in this data.
 
-Some categorical variables are composed of more than two variables. The chi-squared generalization of the log-rank test, implemented in the R package `survival` with the function `survdiff()` can be utilized, testing for whether at least one of the curves is significantly different. In the supplemental materials section, KM curves for other variables along with their corresponding peto-peto test p-values for difference are available as figures S? - S?.
+Some categorical variables are composed of more than two variables. The chi-squared generalization of the log-rank test, implemented in the R package `survival` with the function `survdiff()` can be utilized, testing for whether at least one of the curves is significantly different. In the supplemental materials section, KM curves for other variables along with their corresponding peto-peto test p-values for difference are available as Figure S1.
 
 Categorical variables that appear to have a significant effect on survival based on the log-rank test of KM curves are the race of the mother and their smoking status (Table 3).
 
 ```{r, echo=FALSE}
+#table 3
+
 # calculate log-rank test p-values for each categorical variable
 
 # race
@@ -451,15 +459,22 @@ The exponential model is a less complicated model because its function is time-i
 
 $$
 h(t) = \lambda
-$$ and $$
+$$ 
+
+and 
+
+$$
 S(t) = e^{-\lambda t}
-$$ where $h(t)$ is the hazard function and $S(t)$ is the survival function. These are the AFT parameterizations of the exponential model. Note that the the hazard is a constant $\lambda$.
+$$ 
+
+where $h(t)$ is the hazard function and $S(t)$ is the survival function. These are the AFT parameterizations of the exponential model. Note that the the hazard is a constant $\lambda$.
 
 #### Assumptions of the exponential survival model \
 
 The key assumption of the exponential survival model are that the the hazard rate is constant, derived from the memoryless property of the exponential distribution. Based on what is known about cessation of breastfeeding, this would not seem likely to be a valid assumption; however, figure 4 shows the exponential model provides a reasonable fit to the data. Trends between the different racial groups correspond to regression outputs below showing similar survival for these three groups.
 
 ```{r exponentialAIC, echo=FALSE}
+# prep for expo
 # exponential parametric model
 
 # create vector of AIC values for expo
@@ -517,6 +532,7 @@ expAIC[9] <- AIC(expreg_less8)
 ```
 
 ```{r exponential, echo=FALSE, fig.cap="Comparing KM curve for duration of breastfeeding according to mothers' race with exponential regression model."}
+#figure 4
 # predicted curves based on exponential best model
 pred.exp1 = predict(expreg_less4, newdata=list(race="white", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
 pred.exp2 = predict(expreg_less4, newdata=list(race="black", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
@@ -567,6 +583,7 @@ gg.km.by.race.exp
 Parametric models such as the exponential model allow for multivariate analysis. Given this, parameter selection is needed to find the best combination of parameters to predict or characterize survival. A backwards selection approach is utilized here to select parameters, in which all predictor variables were included in the model, the Akaike Information Criterion (AIC) for the model was recorded, and then the least significant parameter was dropped from the model until no parameters remain. The results of this process are in Table 4 below. This approach selected a model with four variables: race, smoking, years of education, and year child was born.
 
 ```{r, echo=FALSE}
+#Table 4
 summary_expAIC <- tibble(
   "# Parameters" = c(8:0),
   "AIC" = expAIC, 
@@ -592,6 +609,7 @@ summary_expAIC %>%
 The parameter estimates for the best fit exponential model are shown in Table 5. We see p-values below the 0.05 threshold for all parameters except for where race of the mother is black has a p-value of 0.0928.
 
 ```{r, echo=FALSE}
+#Table 5
 summary_expreg <- summary(expreg_less4)
 
 best.exp.model <- expreg_less4
@@ -610,15 +628,19 @@ The Weibull model is a generalization of the exponential model that is widely us
 
 $$
 h(t) = \alpha \lambda t^{\alpha -1}
-$$ and $$
+$$ 
+and 
+$$
 S(t) = e^{-\lambda t^\alpha}
-$$ where $h(t)$ is the hazard function and $S(t)$ is the survival function. The shape parameter $\alpha$ can be thought of as a baseline log-hazard, while $\lambda$ is the rate parameter as in the exponential distribution. These are the AFT parameterizations of the Weibull model. Note that the the hazard is monotonic for this model. When $\alpha=1$, the Weibull model is the exponential model.
+$$ 
+where $h(t)$ is the hazard function and $S(t)$ is the survival function. The shape parameter $\alpha$ can be thought of as a baseline log-hazard, while $\lambda$ is the rate parameter as in the exponential distribution. These are the AFT parameterizations of the Weibull model. Note that the the hazard is monotonic for this model. When $\alpha=1$, the Weibull model is the exponential model.
 
 #### Assumptions of the Weibull survival model 
 
 One assumption of the Weibull survival model is that the the hazard rate is monotonic. Additionally, when working as an AFT model, the differences between groups should be able to be represented by only an acceleration in aging by a constant. Part of this is that KM curves should not cross, an assumption that is reasonably held in this data set. Figure 5 shows the Weibull model provides a fit to the data comparable to that of the exponential model above. Trends between the different racial groups correspond to regression outputs below showing similar survival for these three groups.
 
 ```{r WeibullAIC, echo=FALSE}
+#prep Weibull
 # Weibull parametric model
 
 # create vector of AIC values for Weibull
@@ -674,6 +696,7 @@ WeibullAIC[9] <- AIC(Weibullreg_less8)
 ```
 
 ```{r Weibull, echo=FALSE, fig.cap="Comparing KM curve for duration of breastfeeding according to mothers' race with the Weibull regression model."}
+# figure 5
 # predicted curves based on exponential best model
 pred.W1 = predict(Weibullreg_less4, newdata=list(race="white", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
 pred.W2 = predict(Weibullreg_less4, newdata=list(race="black", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
@@ -724,6 +747,7 @@ gg.km.by.race.Weibull
 The same backwards selection approach is utilized here as the exponential model to select parameters and compare AIC scores. The results of this process are in Table 6 below. The Weibull model also selected the model with the same four variables: race, smoking, years of education, and year child was born.
 
 ```{r, echo=FALSE}
+# Table 6
 summary_WeibullAIC <- tibble(
   "# Parameters" = c(8:0),
   "AIC" = WeibullAIC, 
@@ -749,6 +773,7 @@ summary_WeibullAIC %>%
 The parameter estimates for the best fit Weibull model are shown in Table 7. We see p-values below the 0.05 threshold for all parameters except for where race of the mother is black has a p-value of 0.0936.
 
 ```{r, echo=FALSE}
+# Table7
 summary_Weibullreg <- summary(Weibullreg_less4)
 
 best.Weibull.model <- Weibullreg_less4
@@ -773,13 +798,15 @@ and
 
 $$
 h(t) = \frac{(\frac{1}{x\sigma})\phi(\frac{ln(x)}{\sigma})}{\Phi(\frac{-ln(x)}{\sigma})}
-$$ with $x > 0, \sigma > 0$. Here $h(t)$ the hazard function and $S(t)$ the survival function. Here $\phi$ represents the probability density function of the normal distribution while $\Phi$ is the cumulative distribution function of the normal distribution. The distribution of $ln(X) \sim N(\mu,\sigma)$ with mean $\mu$ and standard deviation $\sigma$.
+$$ 
+with $x > 0, \sigma > 0$. Here $h(t)$ the hazard function and $S(t)$ the survival function. Here $\phi$ represents the probability density function of the normal distribution while $\Phi$ is the cumulative distribution function of the normal distribution. The distribution of $ln(X) \sim N(\mu,\sigma)$ with mean $\mu$ and standard deviation $\sigma$.
 
 #### Assumptions of the lognormal survival model \
 
-The lognormal survival model assumes that the time-to-event variable is lognormally distributed. The duration variable of the breastfeeding data set is fairly well represented by a normal distribution following log-transformation (Supplementary Figure S1). As an AFT model, differences between groups should be able to be modelled as accerlated time. Figure 5 shows the lognormal model provides a fit to the data qualitatively similar to the other parametric models above. Trends between the different racial groups correspond to regression outputs below showing similar survival for these three groups.
+The lognormal survival model assumes that the time-to-event variable is lognormally distributed. The duration variable of the breastfeeding data set is fairly well represented by a normal distribution following log-transformation (Supplementary Figure S2). As an AFT model, differences between groups should be able to be modeled as accelerated time. Figure 5 shows the lognormal model provides a fit to the data qualitatively similar to the other parametric models above. Trends between the different racial groups correspond to regression outputs below showing similar survival for these three groups.
 
 ```{r, echo=FALSE}
+#prep for lognorm
 # lognormal parametric model
 
 # create vector of AIC values for lognormal
@@ -836,6 +863,7 @@ lognormalAIC[9] <- AIC(lognormalreg_less8)
 ```
 
 ```{r lognormal, echo=FALSE, fig.cap="Comparing KM curve for duration of breastfeeding according to mothers' race with the Weibull regression model."}
+#fig6
 # predicted curves based on exponential best model
 pred.lognormal1 = predict(lognormalreg_less4, newdata=list(race="white", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
 pred.lognormal2 = predict(lognormalreg_less4, newdata=list(race="black", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
@@ -886,6 +914,7 @@ gg.km.by.race.lognormal
 The same backwards selection approach is utilized here as the above models to select parameters and compare AIC scores. The results of this process are in Table 8 below. The lognormal model with the lowest AIC score had the same four variables: race, smoking, years of education, and year child was born.
 
 ```{r, echo=FALSE}
+#table8
 summary_lognormalAIC <- tibble(
   "# Parameters" = c(8:0),
   "AIC" = lognormalAIC, 
@@ -911,6 +940,7 @@ summary_lognormalAIC %>%
 The parameter estimates for the best fit lognormal model are shown in Table 9. We see p-values below the 0.05 threshold for all parameters except for where race of the mother is black has a p-value of 0.2062.
 
 ```{r, echo=FALSE}
+#table9
 summary_lognormalreg <- summary(lognormalreg_less4)
 
 best.lognormal.model <- lognormalreg_less4
@@ -926,6 +956,7 @@ The AFT interpretation of this lognormal model suggests that black mothers avera
 The results of the different parametric models converged on similar results for the best group of predictors and coefficients for those predictors. While any of the models would be reasonable approximations for modeling, it is possible to compare AIC values for all of the models to see which model is optimal. In Table 10 it can be seen that the model with the lowest AIC value among those tested is the lognormal model utilizing the year of birth, years of mother education, smoking, and race to predict duration of breastfeeding. 
 
 ```{r, echo=FALSE}
+#table10
 lognormalAIC <- round(lognormalAIC,0)
 lognormalAIC[5] <- paste("\\color{red}{",round(lognormalAIC[5], 2), "}")
 
@@ -995,6 +1026,7 @@ My.stepwise::My.stepwise.coxph(Time = "duration",
 The output of the `coxph` function from the `survival` package for the step-wise selected CoxPH model is shown below:
 
 ```{r, echo=FALSE}
+# output in Rmd file
 coxph.best.model <- coxph(SurvObj ~ race + poverty + smoke + ybirth + yschool, data = bfeed) 
 
 summary(coxph.best.model)
@@ -1006,6 +1038,7 @@ A plot comparing the KM curve of the data to that predicted by this Cox PH model
 
 ```{r coxPH, warning=FALSE, echo=FALSE, fig.cap="Comparing KM curve for duration of breastfeeding according to mothers' race with Cox PH model predictions."}
 # predicted curves based on CoxPH best model
+#fig7
 
 race_df <- with(bfeed,
                data.frame(sex = rep("male",3), 
@@ -1058,7 +1091,7 @@ gg.km.by.race.cox
 ```
 
 ```{r, echo=FALSE}
-
+#table 11 prep
 explanatory = c("race", "poverty", "smoke", "alcohol",
                       "agemth", "ybirth", "yschool", "pc3mth")
 dependent = "Surv(duration, delta)"
@@ -1075,13 +1108,13 @@ bfeed_og %>%
                          c("smoke", "race", "ybirth", "yschool", "poverty")
                        ) -> t
 
-colnames(t)[2] <- "Count (%)"
+colnames(t)[3] <- "Count (%)"
 colnames(t)[2] <- "Group"
 colnames(t)[1] <- "Duration"
 
 t <- tibble(t) %>% 
   remove_rownames() %>%
-  mutate(group = c("white", "black", "other", "no", "yes","no", "yes","no", "yes", "Mean (SD)","Mean (SD)","Mean (SD)","no","yes")) 
+  mutate(Group = c("white", "black", "other", "no", "yes","no", "yes","no", "yes", "Mean (SD)","Mean (SD)","Mean (SD)","no","yes")) 
 
 ```
 
@@ -1090,6 +1123,7 @@ t <- tibble(t) %>%
 Hazard ratios are a useful tool with an intuitive interpretation. The estimated hazard ratios for each parameter either univariate or included in the final Cox PH model are shown in Table 11 below. These values are calculated by exponentiation of the coefficient estimates such as the `coef` column of the Cox model from above. The 95% confidence intervals and p-values for the coefficient estimates are also shown in parenthesis next to each HR estimate. Rows with no value correspond to either the baseline group for which the hazard ratio is compared for the given variable, or a variable that was exlcuded from the best Cox PH model. For continuous variables, instead the hazard ratio corresponding to an increase of one in the variable.
 
 ```{r, echo=FALSE}
+#table 11
 t %>% knitr::kable(digits=4, caption = "Hazard Ratios (HR) for Cox PH model of time-independent variables")
 ```
 
@@ -1123,7 +1157,7 @@ In order to test the assumption of proportional hazards, a test of proportional 
 
 ```{r, echo=FALSE}
 # termplot(m1) # useful but long in rmd file
-
+#table12
 cox.zph(coxph.best.model)$table%>%
   knitr::kable(digits=4, caption = "Test of Proprtional Hazards Assumption of Cox Regression Model")
 ```
@@ -1132,9 +1166,9 @@ We see that the p-value for years of education is small, indicating the proporti
 A graphical test of proportional hazards is shown below in Figure 8.
 
 ```{r echo=FALSE, fig.cap="Schoenfield plot of residuals for Cox proportional hazards assumption", fig.height=7}
-# ggcoxdiagnostics(coxph.best.model, type = "schoenfeld")
+# Figure 8
 
-#alternative code to above line  (I think)
+#alternative code to above line 
 ggcoxzph(cox.zph(coxph.best.model), font.main = 10, caption = "Test for Proportional Hazards")
 ```
 
@@ -1168,217 +1202,17 @@ The data analyzed here from the 1970s and 1980s is by no means adequate evidence
 
 \newpage
 
-## Statistical Models
+\beginsupplement
 
-### Parametric model: Exponential vs Weibull
+# Supplemental Materials
 
-```{r, echo=FALSE}
-# exponential parametric model
+Supplementary figures and tables are available here. Code used to generate this report is available at the bottom of this document.
 
-# create vector of AIC values for expo
-expAIC <- rep(0.0, 8)
+## Figures
+<!-- ## KM graphs for all different variables -->
 
-## include all parameters (diy backselection)
-
-expreg_all <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
-              yschool + pc3mth, bfeed, dist="exponential")
-expAIC[1] <- AIC(expreg_all)
-summary(expreg_all) # has highest p-val: pc3mth
-
-expreg_less1 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
-                yschool, bfeed, dist="exponential")
-expAIC[2] <- AIC(expreg_less1)
-summary(expreg_less1) # has highest p-val: agemth
-
-expreg_less2 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + yschool + ybirth,
-                        bfeed, dist="exponential")
-expAIC[3] <- AIC(expreg_less2)
-summary(expreg_less2) # has highest p-val: alcohol
-
-expreg_less3 <- survreg(SurvObj ~ race  + poverty + smoke + yschool + ybirth,
-                        bfeed, dist="exponential")
-expAIC[4] <- AIC(expreg_less3)
-summary(expreg_less3) # has highest p-val: poverty
-
-expreg_less4 <- survreg(SurvObj ~ race + smoke + yschool + ybirth,
-                        bfeed, dist="exponential")
-expAIC[5] <- AIC(expreg_less4)
-summary(expreg_less4) # has highest p-val: race
-
-expreg_less5 <- survreg(SurvObj ~  smoke + yschool + ybirth,
-                        bfeed, dist="exponential")
-expAIC[6] <- AIC(expreg_less5)
-summary(expreg_less5) # has highest p-val: smoke
-
-
-expreg_less6 <- survreg(SurvObj ~  yschool + ybirth,
-                        bfeed, dist="exponential")
-expAIC[7] <- AIC(expreg_less6)
-summary(expreg_less6) # has highest p-val: yschool
-
-expreg_less7 <- survreg(SurvObj ~ ybirth,
-                        bfeed, dist="exponential")
-expAIC[8] <- AIC(expreg_less7)
-summary(expreg_less7) 
-
-
-
-
-# Weibull parametric model
-
-# create vector of AIC values for Weibull
-WeibullAIC <- rep(0.0, 8)
-
-## include all parameters (diy backselection)
-
-Weibullreg_all <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
-              yschool + pc3mth, bfeed, dist="weibull")
-WeibullAIC[1] <- AIC(Weibullreg_all)
-summary(Weibullreg_all) # has highest p-val: pc3mth
-
-
-
-Weibullreg_less1 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
-                yschool, bfeed, dist="weibull")
-WeibullAIC[2] <- AIC(Weibullreg_less1)
-summary(Weibullreg_less1) # has highest p-val: agemth
-
-Weibullreg_less2 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + yschool + ybirth,
-                        bfeed, dist="weibull")
-WeibullAIC[3] <- AIC(Weibullreg_less2)
-summary(Weibullreg_less2) # has highest p-val: alcohol
-
-Weibullreg_less3 <- survreg(SurvObj ~ race  + poverty + smoke + yschool + ybirth,
-                        bfeed, dist="weibull")
-WeibullAIC[4] <- AIC(Weibullreg_less3)
-summary(Weibullreg_less3) # has highest p-val: poverty
-
-Weibullreg_less4 <- survreg(SurvObj ~ race + smoke + yschool + ybirth,
-                        bfeed, dist="weibull")
-WeibullAIC[5] <- AIC(Weibullreg_less4)
-summary(Weibullreg_less4) # has highest p-val: race
-
-Weibullreg_less5 <- survreg(SurvObj ~  smoke + yschool + ybirth,
-                        bfeed, dist="weibull")
-WeibullAIC[6] <- AIC(Weibullreg_less5)
-summary(Weibullreg_less5) # has highest p-val: smoke
-
-
-Weibullreg_less6 <- survreg(SurvObj ~  yschool + ybirth,
-                        bfeed, dist="weibull")
-WeibullAIC[7] <- AIC(Weibullreg_less6)
-summary(Weibullreg_less6) # has highest p-val: yschool
-
-Weibullreg_less7 <- survreg(SurvObj ~ ybirth,
-                        bfeed, dist="weibull")
-WeibullAIC[8] <- AIC(Weibullreg_less7)
-summary(Weibullreg_less7) 
-
-
-
-
-# lognormal parametric model
-
-# create vector of AIC values for lognormal
-lognormalAIC <- rep(0.0, 8)
-
-## include all parameters (diy backselection)
-
-lognormalreg_all <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
-              yschool + pc3mth, bfeed, dist="lognormal")
-lognormalAIC[1] <- AIC(lognormalreg_all)
-summary(lognormalreg_all) # has highest p-val: pc3mth
-
-
-
-lognormalreg_less1 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
-                yschool, bfeed, dist="lognormal")
-lognormalAIC[2] <- AIC(lognormalreg_less1)
-summary(lognormalreg_less1) # has highest p-val: agemth
-
-lognormalreg_less2 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + yschool + ybirth,
-                        bfeed, dist="lognormal")
-lognormalAIC[3] <- AIC(lognormalreg_less2)
-summary(lognormalreg_less2) # has highest p-val: alcohol
-
-lognormalreg_less3 <- survreg(SurvObj ~ race + poverty + smoke + yschool + ybirth,
-                        bfeed, dist="lognormal")
-lognormalAIC[4] <- AIC(lognormalreg_less3)
-summary(lognormalreg_less3) # has highest p-val: poverty
-
-lognormalreg_less4 <- survreg(SurvObj ~ race + smoke + yschool + ybirth,
-                        bfeed, dist="lognormal")
-lognormalAIC[5] <- AIC(lognormalreg_less4)
-summary(lognormalreg_less4) # has highest p-val: race
-
-lognormalreg_less5 <- survreg(SurvObj ~  smoke + yschool + ybirth,
-                        bfeed, dist="lognormal")
-lognormalAIC[6] <- AIC(lognormalreg_less5)
-summary(lognormalreg_less5) # has highest p-val: smoke
-
-
-lognormalreg_less6 <- survreg(SurvObj ~  yschool + ybirth,
-                        bfeed, dist="lognormal")
-lognormalAIC[7] <- AIC(lognormalreg_less6)
-summary(lognormalreg_less6) # has highest p-val: yschool
-
-lognormalreg_less7 <- survreg(SurvObj ~ ybirth,
-                        bfeed, dist="lognormal")
-lognormalAIC[8] <- AIC(lognormalreg_less7)
-summary(lognormalreg_less7) 
-
-
-
-
-
-
-
-
-library(My.stepwise)
-
-# create a variable list for stepwise selection of variables in models:
-my.variable.list <- c("race", 
-                      "poverty", "smoke", "alcohol",
-                      "agemth", "ybirth", "yschool", "pc3mth"
-                      )
-
-My.stepwise.coxph(Time = "duration", Status = "delta", variable.list = my.variable.list,
-                  data = bfeed_og, sle = 0.15, sls = 0.15)
-# best model
-
-```
-
-
-
-
-
-
-# Cox Proportional Hazards model of time-independent variables
-
-Cox model approach is a semi-parametric model useful with fixed-time covariates
-
-here is the cox model of the entire bfeed dataset:
-
-```{r}
-m1 <- coxph(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
-              yschool, data = bfeed) 
-summary(m1)
-
-# termplot(m1) # useful but long in rmd file
-
-cox.zph(m1)
-
-ggcoxdiagnostics(m1, type = "schoenfeld")
-
-#alternative code to above line  (I think)
-ggcoxzph(cox.zph(m1))
-```
-
-## Cross-Group Comparisons
-
-Kaplan Meier Curve of entire dataset combined:
-
-```{r}
+```{r KMcalc, echo=FALSE}
+#figS1prep
 # create survival object:
 km.as.one <- survfit(SurvObj ~ 1, data = bfeed)
 # summary(km.as.one)
@@ -1387,7 +1221,7 @@ km.by.race <- survfit(SurvObj ~ race, data = bfeed)
 
 km.by.poverty <- survfit(SurvObj ~ poverty, data = bfeed)
 
-km.by.education <- survfit(SurvObj ~ education, data = bfeed)
+km.by.education <- survfit(SurvObj ~ yschool, data = bfeed)
 
 km.by.smoke <- survfit(SurvObj ~ smoke, data = bfeed)
 
@@ -1400,10 +1234,10 @@ km.by.pc3mth <- survfit(SurvObj ~ pc3mth, data = bfeed)
 km.by.ybirth <- survfit(SurvObj ~ ybirth, data = bfeed)
 
 #KM plot combining all participants
-ggsurvplot(
+gg.all <- ggsurvplot(
    km.as.one,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
+   risk.table = F,        # show risk table.
    #pval = TRUE,              # show p-value of log-rank test.
    #conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1424,12 +1258,12 @@ ggsurvplot(
 )
 
 #KM curve according to race
-ggsurvplot(
+gg.race <- ggsurvplot(
    km.by.race,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
+   risk.table = F,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
-   pval.coord = c(120,80),   # location of pval
+   pval.coord = c(120,70),   # location of pval
    pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1450,12 +1284,12 @@ ggsurvplot(
 )
 
 #KM curve according to poverty
-ggsurvplot(
+gg.poverty <- ggsurvplot(
    km.by.poverty,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
+   risk.table = F,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
-   pval.coord = c(120,80),   # location of pval
+   pval.coord = c(120,70),   # location of pval
    pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1476,12 +1310,13 @@ ggsurvplot(
 )
 
 #KM curve according to education
-ggsurvplot(
+gg.yschool <- ggsurvplot(
    km.by.education,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
+   risk.table = F,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
-   pval.coord = c(120,80),   # location of pval
+   pval.coord = c(120,70),   # location of pval
+   legend = "none",
    pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1497,18 +1332,18 @@ ggsurvplot(
   log.rank.weights = "S1",   # Peto Peto test for log-rank test
   pval.method.coord = c(120,90), # location of p-value text
   pval.method.size = 3,      # p-val text size
-  title = "KM Curve - Education",
+  title = "KM Curve - yschool",
   fun = "pct"                #show survival function as percentage
 )
 
 
 #KM curve according to smoking
-ggsurvplot(
+gg.smoke <- ggsurvplot(
    km.by.smoke,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
+   risk.table = F,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
-   pval.coord = c(120,80),   # location of pval
+   pval.coord = c(120,70),   # location of pval
    pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1530,12 +1365,12 @@ ggsurvplot(
 
 
 #KM curve according to alcohol
-ggsurvplot(
+gg.alcohol <- ggsurvplot(
    km.by.alcohol,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
+   risk.table = F,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
-   pval.coord = c(120,80),   # location of pval
+   pval.coord = c(120,70),   # location of pval
    pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1556,12 +1391,13 @@ ggsurvplot(
 )
 
 #KM curve according to age of mother at birth of child
-ggsurvplot(
+gg.agemth <- ggsurvplot(
    km.by.agemth,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
-   pval = TRUE,              # show p-value of log-rank test.
-   pval.coord = c(120,80),   # location of pval
+   risk.table = F,        # show risk table.
+  legend = "none",
+    pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,70),   # location of pval
    pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1582,12 +1418,12 @@ ggsurvplot(
 )
 
 #KM curve according to prenatal care after 3rd month
-ggsurvplot(
+gg.pc3mth <- ggsurvplot(
    km.by.pc3mth,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
+   risk.table = F,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
-   pval.coord = c(120,80),   # location of pval
+   pval.coord = c(120,70),   # location of pval
    pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1608,12 +1444,13 @@ ggsurvplot(
 )
 
 #KM curve according to birth year
-ggsurvplot(
+gg.ybirth <- ggsurvplot(
    km.by.ybirth,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
+   risk.table = F,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
-   pval.coord = c(120,80),   # location of pval
+   legend = "none",
+   pval.coord = c(120,70),   # location of pval
    pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1634,37 +1471,25 @@ ggsurvplot(
 )
 ```
 
-\<!--\# It is in this context The prevalence of breastfeeding behaviors is lower Researchers and public health organizations have touted the benefits of breastfeeding for infants [cite][][]. Social determinants of health have profound impacts on life outcomes. There is a preponderance of evidence that childhood experiences significantly impact life trajectories. Improving child health has been a top priority for the World Health Organization for decades [cite]. Previous research has shown that the age at which a child stops breastfeeding has significant effects on later development [CITE]. An increased understanding of how to --\>
+```{r KMcurves, echo=FALSE, fig.cap="KM curves for all predictor variables", fig.height=9, fig.width=6}
+#figS1
+ggS1 <- list(
+  # gg.all,
+  gg.race,
+  gg.poverty,
+  gg.smoke,
+  gg.alcohol,
+  gg.agemth,
+  gg.ybirth,
+  gg.yschool,
+  gg.pc3mth
+)
+
+arrange_ggsurvplots(ggS1, ncol = 2, nrow = 4)
+
+```
 
 \newpage
-
-\beginsupplement
-
-# Supplemental Figures
-
-<!-- ## Proportional Hazard (PH) estimates for Exponential Model -->
-
-```{r, echo=FALSE}
-exp.aft.ph <- -coef(best.exp.model)/best.exp.model$scale
-#https://myweb.uiowa.edu/pbreheny/7210/f15/notes/10-15.pdf
-exp.aft.ph %>%
-  knitr::kable(digits=4,caption = "coefficients for PH exponential model", col.names = c( "value"))
-```
-
-<!-- ## Proportional Hazard (PH) estimates for Weibull Model -->
-
-```{r, echo=FALSE}
-Weibull.aft.ph <- -coef(best.Weibull.model)/best.Weibull.model$scale
-#https://myweb.uiowa.edu/pbreheny/7210/f15/notes/10-15.pdf
-Weibull.aft.ph %>%
-  knitr::kable(digits=4,caption = "coefficients for PH Weibull model", col.names = c( "value"))
-```
-
-```{r, echo=FALSE}
-# comparison of coefficient estimates across the parametric models
-
-```
-
 
 <!-- ## lognormal transformation of Duration of Breastfeeding -->
 
@@ -1682,9 +1507,944 @@ bfeed %>%
 
 \newpage
 
-## code used to create this report
+## Tables
+<!-- ## Proportional Hazard (PH) estimates for Exponential Model -->
+
+```{r expPH, echo=FALSE}
+#tableS1
+exp.aft.ph <- -coef(best.exp.model)/best.exp.model$scale
+#https://myweb.uiowa.edu/pbreheny/7210/f15/notes/10-15.pdf
+exp.aft.ph %>%
+  knitr::kable(digits=4,caption = "coefficients for PH exponential model", col.names = c( "value"))
+```
+
+<!-- ## Proportional Hazard (PH) estimates for Weibull Model -->
+
+```{r WeibullPH, echo=FALSE}
+#tableS2
+Weibull.aft.ph <- 
+  -coef(best.Weibull.model)/best.Weibull.model$scale
+#https://myweb.uiowa.edu/pbreheny/7210/f15/notes/10-15.pdf
+Weibull.aft.ph %>%
+  knitr::kable(digits=4,caption = "coefficients for PH Weibull model", col.names = c( "value"))
+```
+
+
+```{r parametrics, echo=FALSE}
+# comparison of coefficient estimates across the parametric models (table S3)
+all.param.coef <- tibble(
+  " " = names(best.exp.model$coefficients),
+  "Exponential" = best.exp.model$coefficients,
+  "Weibull" = best.Weibull.model$coefficients,
+  "Lognormal" = best.lognormal.model$coefficients)
+
+all.param.coef %>%
+  knitr::kable(digits=4,caption = "Comparison of parameter coefficients for parametric AFT models")
+```
+
+
+
+
+
+
+
+
+\newpage
+
+## Code used to create this report
+
+
+
+```{r, quietly=TRUE, eval=FALSE, echo=TRUE, warning=FALSE, message=FALSE}
+library(tidyverse) # package for data analysis
+library(ggsci) # for graph colors
+library(KMsurv) # package with data set
+library(survival) # package for survival analysis
+library(survminer) # for ggsurvplot viz
+library(rstatix) # package for piped stat tests
+
+data("bfeed") # load data set into R
+```
+
+```{r, eval=FALSE, echo=TRUE}
+# table 1
+var_names <- tibble(
+  c(1:ncol(bfeed)),
+  c(colnames(bfeed)),
+  c("duration of breastfeeding (weeks)",
+    "indicator of child weaning",
+    "race of mother",
+    "mother in poverty",
+    "mother smoked at birth of child",
+    "mother used alcohol at birth of child",
+    "age of mother at birth of child",
+    "year of birth",
+    "education level of mother (years of school)",
+    "prenatal care after 3rd month"
+    )
+)
+knitr::kable(var_names, 
+             col.names = c("No.", "Variable ID", "Variable definition"),
+             caption = "List of variable IDs and their definitions"
+             )
+```
+
+```{r, eval=FALSE, echo=TRUE}
+# data processing
+
+bfeed_og <- bfeed %>%
+  mutate(SurvObj = Surv(duration, delta == 1) )
+
+# raw data processing
+bfeed <- bfeed %>%
+  mutate(race = factor(
+              recode(race, "1" = "white", "2" = "black", "3"="other"),
+              levels = c("white", "black", "other")
+              ),
+         status = delta,
+         delta = factor(
+              recode(delta, "1" = "yes", "0" = "no"),
+              levels = c("no", "yes")
+              ),
+         poverty = factor(
+              recode(poverty, "1" = "yes", "0" = "no"),
+              levels = c("no", "yes")
+              ),
+         smoke = factor(
+              recode(smoke, "1" = "yes", "0" = "no"),
+              levels = c("no", "yes")
+              ),
+         alcohol = factor(
+              recode(alcohol, "1" = "yes", "0" = "no"),
+              levels = c("no", "yes")
+              ),
+         pc3mth = factor(
+              recode(pc3mth, "1" = "yes", "0" = "no"),
+              levels = c("no", "yes")
+              ),
+         #convert years of education to an ordered categorical variable
+         education = factor(
+           recode(
+                cut(yschool, 
+                      breaks = c(0,11.5, 12.5, max(yschool)),
+                         labels = F
+                    ),
+               "1" = "<HS", "2" = "HS", 
+                           "3" = ">HS"),
+           levels = c("<HS", "HS", ">HS")
+           
+           ),
+         ybirth = ybirth + 1900 , # making data more exact for visualization
+         SurvObj = Surv(duration, delta == "yes"), #add Survival Obj variable
+         race_o = case_when(
+          race == "other" ~ 1,
+          race != "other" ~ 0),
+         race_b = case_when(
+          race == "black" ~ 1,
+          race != "black" ~ 0)
+  )
+```
+
+```{r, eval=FALSE, echo=TRUE}
+#table 2
+bfeed %>%
+  select(-c(race_o, race_b, education, status)) %>%
+  head(n=5) %>%
+  knitr::kable(caption = "Time to cessation of breastfeeding data set")
+```
+
+```{r, eval=FALSE, echo=TRUE}
+n_censored <- bfeed %>%
+  filter(delta=="no") %>%
+  count() %>%
+  pull()
+```
+
+```{r, fig.cap = "Histograms of numerical variable distributions.", eval=FALSE, echo=TRUE}
+Fig1a
+fig1 <- bfeed %>% 
+  select(-c(status, SurvObj, race_o, race_b)) %>% # artificial duplicate variables
+  rename("Age of Mother at Birth" = agemth, # change names 
+         "Duration of Breastfeeding (weeks)" = duration,
+         "Breastfeeding Completed" = delta,
+         "Year Child was Born" = ybirth,
+         "Years of Schooling - Mother" = yschool,
+         "Race of Mother" = race,
+         "Poverty" = poverty,
+         "Alcohol" = alcohol,
+         "Prenatal Care after 3rd Month" = pc3mth,
+         "Years of Education - Mother" = yschool
+         ) %>%
+  select_if(is.numeric) %>%
+  gather() %>%    
+  ggplot(aes(value))+ 
+  geom_histogram(bins = 30)+ 
+  facet_wrap(~key, scales = "free") +
+  theme_minimal() +
+  scale_x_continuous(n.breaks = 10)+
+  labs(x=" ", y="Number of Participants") +
+  theme(plot.title = element_text(size = 12)) +
+  ggtitle("Distribution of numerical variables")
+```
+
+```{r eval=FALSE, echo=TRUE, fig.cap="Distributions of categorical and numerical variables comprising the data set.", fig.height=5, fig.width=6.5, warning=FALSE}
+#fig1b
+fig2 <- bfeed %>% 
+  select(-education) %>%
+  rename("Age of Mother at Birth" = agemth, # change names 
+         "Duration of Breastfeeding (weeks)" = duration,
+         "Breastfeeding Completed" = delta,
+         "Year Child was Born" = ybirth,
+         "Years of Schooling - Mother" = yschool,
+         "Race of Mother" = race,
+         "Poverty" = poverty,
+         "Alcohol" = alcohol,
+         "Prenatal Care after 3rd Month" = pc3mth,
+         "Years of Education - Mother" = yschool
+         ) %>%
+  select_if(negate(is.numeric)) %>%    
+  gather() %>%    
+  ggplot(aes((value)))+ 
+  geom_bar()+ 
+  facet_wrap(~key, scales = "free")+
+  theme_minimal() +
+  # scale_fill_grey() +
+  theme(legend.position = "none") +
+  ggtitle("Distribution of categorical variables") +
+  theme(plot.title = element_text(size = 12)) +
+  labs(x = "Participant Response", y = "Number of Participants")
+
+ggarrange(fig1, fig2, nrow =2)
+```
+
+```{r KMcurve_all_2, fig.cap="KM curve for all participants for duration of breastfeeding. Gray shaded region represents a pointwise 95% confidence interval for the survival curve. The symbol + corresponds to a censoring time. The number of participants still breastfeeding at a given number of weeks is shown below the survival curve plot.", eval=FALSE, echo=TRUE, warning=FALSE}
+#fig2
+# create survival object:
+km.as.one <- survfit(SurvObj ~ 1, data = bfeed)
+
+#KM plot combining all participants
+gg.km.as.one <- ggsurvplot(
+   km.as.one,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   risk.table = TRUE,        # show risk table.
+   #pval = TRUE,              # show p-value of log-rank test.
+   # conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   palette = "black",           # make combined curve black
+   xlab = "Time (weeks)",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 20.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "S1",   # Peto Peto test for log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  # title = "KM Curve - Duration of Breast Feeding",
+  legend = "none",
+  fun = "pct"                #show survival function as percentage
+)
+gg.km.as.one$plot <- gg.km.as.one$plot +
+  geom_vline(xintercept=26, color="red", linetype = "dashed") + # add 6mo marker (WHO recommendation)
+  geom_label(label="6 months", x=40, y = 75)
+gg.km.as.one
+
+# get 6 month survival time estimate
+pct6mo.all <- gg.km.as.one$data.survplot %>%
+  filter(time == 26) %>%
+  pull(surv)
+
+#upperbound 
+u6mo.all <- gg.km.as.one$data.survplot %>%
+  filter(time == 26) %>%
+  pull(upper)
+
+# lowerbound for est
+l6mo.all <- gg.km.as.one$data.survplot %>%
+  filter(time == 26) %>%
+  pull(lower)
+
+
+```
+
+```{r , eval=FALSE, echo=TRUE}
+#prep fig3
+km.by.smoke <- survfit(SurvObj ~ smoke, data = bfeed)
+
+#KM curve according to smoking
+gg.km.by.smoke <- ggsurvplot(
+   km.by.smoke,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "1",   # normal log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  # title = "KM Curve - Smoking",
+  fun = "pct"                #show survival function as percentage
+)
+
+gg.km.by.smoke$plot <- gg.km.by.smoke$plot +
+  geom_vline(xintercept=26, color="red", linetype = "dashed") + # add 6mo marker (WHO recommendation)
+  geom_label(label="6 months", x=40, y = 75)
+
+# get 6 month survival time estimate smoke
+pct6mo.smoke <- gg.km.by.smoke$data.survplot %>%
+  filter(time == 26) %>%
+  pull(surv)
+
+#upperbound 
+u6mo.smoke <- gg.km.by.smoke$data.survplot %>%
+  filter(time == 26) %>%
+  pull(upper)
+
+# lowerbound for est
+l6mo.smoke <- gg.km.by.smoke$data.survplot %>%
+  filter(time == 26) %>%
+  pull(lower)
+```
+
+```{r smoke_2, eval=FALSE, echo=TRUE, fig.cap="KM curve for duration of breastfeeding according to whether mother smoked when child was born. Shaded regions represents a pointwise 95% confidence interval for the survival curves. The symbol + corresponds to a censoring time. The number of participants still breastfeeding by group at a given number of weeks is shown below the survival curve plot."}
+#figure3
+gg.km.by.smoke
+```
+
+```{r, eval=FALSE, echo=TRUE}
+#table 3
+
+# calculate log-rank test p-values for each categorical variable
+
+# race
+lr_p_race <- pchisq(
+  survdiff(SurvObj ~ race, bfeed)$chisq,
+  length(survdiff(SurvObj ~ race, bfeed)$n)-1, lower.tail=F
+)
+
+# poverty
+lr_p_poverty <- pchisq(
+  survdiff(SurvObj ~ poverty, bfeed)$chisq,
+  length(survdiff(SurvObj ~ poverty, bfeed)$n)-1, lower.tail=F
+)
+
+# smoke
+lr_p_smoke <- pchisq(
+  survdiff(SurvObj ~ smoke, bfeed)$chisq,
+  length(survdiff(SurvObj ~ smoke, bfeed)$n)-1, lower.tail=F
+)
+
+# alcohol
+lr_p_alcohol <- pchisq(
+  survdiff(SurvObj ~ alcohol, bfeed)$chisq,
+  length(survdiff(SurvObj ~ alcohol, bfeed)$n)-1, lower.tail=F
+)
+
+# prenatal care after 3mo
+lr_p_pc3mth <- pchisq(
+  survdiff(SurvObj ~ pc3mth, bfeed)$chisq,
+  length(survdiff(SurvObj ~ pc3mth, bfeed)$n)-1, lower.tail=F
+)
+
+log_rank_pvals <- tibble(
+  "Variable ID" = c("race", "poverty", "smoke", "alcohol", "pc3mth"),
+  "p-value" = c(lr_p_race, lr_p_poverty, lr_p_smoke, lr_p_alcohol, lr_p_pc3mth)
+)
+
+log_rank_pvals %>%
+  add_significance("p-value") %>%
+  knitr::kable(caption = "p-values of log-rank test for difference in breastfeeding duration according to single variable",
+               label = "ns corresponds to a p-value greater than 0.05, * a p-value less than 0.05, and ** a p-value less than 0.01 for log-rank test for difference based on variable ID.")
+
+```
+
+```{r exponentialAIC_2, eval=FALSE, echo=TRUE}
+# prep for expo
+# exponential parametric model
+
+# create vector of AIC values for expo
+expAIC <- rep(0.0, 9)
+
+## include all parameters (diy backselection)
+
+expreg_all <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth + yschool + pc3mth, bfeed, dist="exponential")
+expAIC[1] <- AIC(expreg_all)
+# summary(expreg_all) # has highest p-val: pc3mth
+
+expreg_less1 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth + yschool, bfeed, dist="exponential")
+expAIC[2] <- AIC(expreg_less1)
+# summary(expreg_less1) # has highest p-val: agemth
+
+expreg_less2 <- survreg(SurvObj ~ race + 
+                          poverty + smoke + 
+                          alcohol + yschool + 
+                          ybirth, bfeed, dist="exponential")
+
+expAIC[3] <- AIC(expreg_less2)
+# summary(expreg_less2) # has highest p-val: alcohol
+
+expreg_less3 <- survreg(SurvObj ~ race  + 
+                          poverty + smoke + yschool + ybirth,
+                          bfeed, dist="exponential")
+expAIC[4] <- AIC(expreg_less3)
+# summary(expreg_less3) # has highest p-val: poverty
+
+expreg_less4 <- survreg(SurvObj ~ race + smoke + yschool + ybirth,
+                        bfeed, dist="exponential")
+expAIC[5] <- AIC(expreg_less4)
+# summary(expreg_less4) # has highest p-val: race
+
+expreg_less5 <- survreg(SurvObj ~  smoke + yschool + ybirth,
+                        bfeed, dist="exponential")
+expAIC[6] <- AIC(expreg_less5)
+# summary(expreg_less5) # has highest p-val: smoke
+
+
+expreg_less6 <- survreg(SurvObj ~  yschool + ybirth,
+                        bfeed, dist="exponential")
+expAIC[7] <- AIC(expreg_less6)
+# summary(expreg_less6) # has highest p-val: yschool
+
+expreg_less7 <- survreg(SurvObj ~ ybirth,
+                        bfeed, dist="exponential")
+expAIC[8] <- AIC(expreg_less7)
+# summary(expreg_less7) 
+
+expreg_less8 <- survreg(SurvObj ~ 1,
+                        bfeed, dist="exponential")
+expAIC[9] <- AIC(expreg_less8)
+# summary(expreg_less8) 
+```
+
+```{r exponential_2, eval=FALSE, echo=TRUE, fig.cap="Comparing KM curve for duration of breastfeeding according to mothers' race with exponential regression model."}
+#figure 4
+# predicted curves based on exponential best model
+pred.exp1 = predict(expreg_less4, newdata=list(race="white", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+pred.exp2 = predict(expreg_less4, newdata=list(race="black", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+pred.exp3 = predict(expreg_less4, newdata=list(race="other", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+
+# put preds together in tidy df
+df = data.frame(y=seq(99,1,by=-1), race_white=pred.exp1, race_black=pred.exp2, race_other = pred.exp3)
+df_long = gather(df, key= "race", value="time", -y)
+
+
+#km fit race
+km.by.race <- survfit(SurvObj ~ race, data = bfeed)
+
+#KM curve according to race
+gg.km.by.race.exp <- ggsurvplot(
+   km.by.race,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   # risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "1",   # Pval using log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  # title = "KM Curve - Race",
+  fun = "pct"                #show survival function as percentage
+    
+) 
+
+# KM curve plot for race adding survreg predictions
+gg.km.by.race.exp <- gg.km.by.race.exp$plot + geom_line(data=df_long, aes(x=time, y=y, group=race))
+gg.km.by.race.exp
+```
+
+```{r, eval=FALSE, echo=TRUE}
+#Table 4
+summary_expAIC <- tibble(
+  "# Parameters" = c(8:0),
+  "AIC" = expAIC, 
+  "Equation" = c(
+    "SurvObj ~ ybirth + yschool + ... + agemth + pc3mth",
+    "SurvObj ~ ybirth + yschool + ... + alcohol + agemth",
+    "SurvObj ~ ybirth + yschool + ... + poverty + alcohol",
+    "SurvObj ~ ybirth + yschool + smoke + race + poverty",
+    "SurvObj ~ ybirth + yschool + smoke + race", # lowest AIC
+    "SurvObj ~ ybirth + yschool + smoke",
+    "SurvObj ~ ybirth + yschool",
+    "SurvObj ~ ybirth",
+    "SurvObj ~ 1"
+  )
+)
+
+summary_expAIC %>%
+  knitr::kable(digits=5,caption="AIC of Backward selection of exponential survival model")
+```
+
+```{r, eval=FALSE, echo=TRUE}
+#Table 5
+summary_expreg <- summary(expreg_less4)
+
+best.exp.model <- expreg_less4
+
+summary_expreg$table %>%
+  knitr::kable(digits=4,caption = "Exponential Model: SurvObj ~ race + smoke + yschool + ybirth")#,caption="Exponential survival model with lowest AIC")
+```
+
+```{r WeibullAIC_2, eval=FALSE, echo=TRUE}
+#prep Weibull
+# Weibull parametric model
+
+# create vector of AIC values for Weibull
+WeibullAIC <- rep(0.0, 9)
+
+## include all parameters (diy backselection)
+
+Weibullreg_all <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
+              yschool + pc3mth, bfeed, dist="weibull")
+WeibullAIC[1] <- AIC(Weibullreg_all)
+# summary(Weibullreg_all) # has highest p-val: pc3mth
+
+Weibullreg_less1 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
+                yschool, bfeed, dist="weibull")
+WeibullAIC[2] <- AIC(Weibullreg_less1)
+# summary(Weibullreg_less1) # has highest p-val: agemth
+
+Weibullreg_less2 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + yschool + ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[3] <- AIC(Weibullreg_less2)
+# summary(Weibullreg_less2) # has highest p-val: alcohol
+
+Weibullreg_less3 <- survreg(SurvObj ~ race  + poverty + smoke + yschool + ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[4] <- AIC(Weibullreg_less3)
+# summary(Weibullreg_less3) # has highest p-val: poverty
+
+Weibullreg_less4 <- survreg(SurvObj ~ race + smoke + yschool + ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[5] <- AIC(Weibullreg_less4)
+# summary(Weibullreg_less4) # has highest p-val: race
+
+Weibullreg_less5 <- survreg(SurvObj ~  smoke + yschool + ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[6] <- AIC(Weibullreg_less5)
+# summary(Weibullreg_less5) # has highest p-val: smoke
+
+
+Weibullreg_less6 <- survreg(SurvObj ~  yschool + ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[7] <- AIC(Weibullreg_less6)
+# summary(Weibullreg_less6) # has highest p-val: yschool
+
+Weibullreg_less7 <- survreg(SurvObj ~ ybirth,
+                        bfeed, dist="weibull")
+WeibullAIC[8] <- AIC(Weibullreg_less7)
+# summary(Weibullreg_less7) 
+
+Weibullreg_less8 <- survreg(SurvObj ~ 1,
+                        bfeed, dist="weibull")
+WeibullAIC[9] <- AIC(Weibullreg_less8)
+# summary(Weibullreg_less8) 
+```
+
+```{r Weibull_2, eval=FALSE, echo=TRUE, fig.cap="Comparing KM curve for duration of breastfeeding according to mothers' race with the Weibull regression model."}
+# figure 5
+# predicted curves based on exponential best model
+pred.W1 = predict(Weibullreg_less4, newdata=list(race="white", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+pred.W2 = predict(Weibullreg_less4, newdata=list(race="black", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+pred.W3 = predict(Weibullreg_less4, newdata=list(race="other", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+
+# put preds together in tidy df
+df = data.frame(y=seq(99,1,by=-1), race_white=pred.W1, race_black=pred.W2, race_other = pred.W3)
+df_long = gather(df, key= "race", value="time", -y)
+
+
+#km fit race
+km.by.race <- survfit(SurvObj ~ race, data = bfeed)
+
+#KM curve according to race
+gg.km.by.race.Weibull <- ggsurvplot(
+   km.by.race,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   # risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "1",   # Pval using log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  # title = "KM Curve - Race",
+  fun = "pct"                #show survival function as percentage
+    
+) 
+
+# KM curve plot for race adding survreg predictions
+gg.km.by.race.Weibull$plot <- gg.km.by.race.Weibull$plot + geom_line(data=df_long, aes(x=time, y=y, group=race))
+gg.km.by.race.Weibull
+```
+
+```{r, eval=FALSE, echo=TRUE}
+# Table 6
+summary_WeibullAIC <- tibble(
+  "# Parameters" = c(8:0),
+  "AIC" = WeibullAIC, 
+  "Equation" = c(
+    "SurvObj ~ ybirth + yschool + ... + agemth + pc3mth",
+    "SurvObj ~ ybirth + yschool + ... + alcohol + agemth",
+    "SurvObj ~ ybirth + yschool + ... + poverty + alcohol",
+    "SurvObj ~ ybirth + yschool + smoke + race + poverty",
+    "SurvObj ~ ybirth + yschool + smoke + race", # lowest AIC
+    "SurvObj ~ ybirth + yschool + smoke",
+    "SurvObj ~ ybirth + yschool",
+    "SurvObj ~ ybirth",
+    "SurvObj ~ 1"
+  )
+)
+
+summary_WeibullAIC %>%
+  knitr::kable(digits=5,caption="AIC of Backward selection of Weibull survival model")
+```
+
+```{r, eval=FALSE, echo=TRUE}
+# Table7
+summary_Weibullreg <- summary(Weibullreg_less4)
+
+best.Weibull.model <- Weibullreg_less4
+
+summary_Weibullreg$table %>%
+  knitr::kable(digits=4,caption = "Weibull Model: SurvObj ~ race + smoke + yschool + ybirth")#,caption="Exponential survival model with lowest AIC")
+```
+
+```{r, eval=FALSE, echo=TRUE}
+#prep for lognorm
+# lognormal parametric model
+
+# create vector of AIC values for lognormal
+lognormalAIC <- rep(0.0, 9)
+
+## include all parameters (diy backselection)
+
+lognormalreg_all <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
+              yschool + pc3mth, bfeed, dist="lognormal")
+lognormalAIC[1] <- AIC(lognormalreg_all)
+# summary(lognormalreg_all) # has highest p-val: pc3mth
+
+
+lognormalreg_less1 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
+                yschool, bfeed, dist="lognormal")
+lognormalAIC[2] <- AIC(lognormalreg_less1)
+# summary(lognormalreg_less1) # has highest p-val: agemth
+
+lognormalreg_less2 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + yschool + ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[3] <- AIC(lognormalreg_less2)
+# summary(lognormalreg_less2) # has highest p-val: alcohol
+
+lognormalreg_less3 <- survreg(SurvObj ~ race + poverty + smoke + yschool + ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[4] <- AIC(lognormalreg_less3)
+# summary(lognormalreg_less3) # has highest p-val: poverty
+
+lognormalreg_less4 <- survreg(SurvObj ~ race + smoke + yschool + ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[5] <- AIC(lognormalreg_less4)
+# summary(lognormalreg_less4) # has highest p-val: race
+
+lognormalreg_less5 <- survreg(SurvObj ~  smoke + yschool + ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[6] <- AIC(lognormalreg_less5)
+# summary(lognormalreg_less5) # has highest p-val: smoke
+
+
+lognormalreg_less6 <- survreg(SurvObj ~  yschool + ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[7] <- AIC(lognormalreg_less6)
+# summary(lognormalreg_less6) # has highest p-val: yschool
+
+lognormalreg_less7 <- survreg(SurvObj ~ ybirth,
+                        bfeed, dist="lognormal")
+lognormalAIC[8] <- AIC(lognormalreg_less7)
+# summary(lognormalreg_less7) 
+
+lognormalreg_less8 <- survreg(SurvObj ~ 1,
+                        bfeed, dist="lognormal")
+lognormalAIC[9] <- AIC(lognormalreg_less8)
+# summary(lognormalreg_less8) 
+```
+
+```{r lognormal_2, eval=FALSE, echo=TRUE, fig.cap="Comparing KM curve for duration of breastfeeding according to mothers' race with the Weibull regression model."}
+#fig6
+# predicted curves based on exponential best model
+pred.lognormal1 = predict(lognormalreg_less4, newdata=list(race="white", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+pred.lognormal2 = predict(lognormalreg_less4, newdata=list(race="black", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+pred.lognormal3 = predict(lognormalreg_less4, newdata=list(race="other", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+
+# put preds together in tidy df
+df = data.frame(y=seq(99,1,by=-1), race_white=pred.lognormal1, race_black=pred.lognormal2, race_other = pred.lognormal3)
+df_long = gather(df, key= "race", value="time", -y)
+
+
+#km fit race
+km.by.race <- survfit(SurvObj ~ race, data = bfeed)
+
+#KM curve according to race
+gg.km.by.race.lognormal <- ggsurvplot(
+   km.by.race,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   # risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "1",   # Pval using log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  # title = "KM Curve - Race",
+  fun = "pct"                #show survival function as percentage
+    
+) 
+
+# KM curve plot for race adding survreg predictions
+gg.km.by.race.lognormal$plot <- gg.km.by.race.lognormal$plot + geom_line(data=df_long, aes(x=time, y=y, group=race))
+gg.km.by.race.lognormal
+```
+
+```{r, eval=FALSE, echo=TRUE}
+#table8
+summary_lognormalAIC <- tibble(
+  "# Parameters" = c(8:0),
+  "AIC" = lognormalAIC, 
+  "Equation" = c(
+    "SurvObj ~ ybirth + yschool + ... + agemth + pc3mth",
+    "SurvObj ~ ybirth + yschool + ... + alcohol + agemth",
+    "SurvObj ~ ybirth + yschool + ... + poverty + alcohol",
+    "SurvObj ~ ybirth + yschool + smoke + race + poverty",
+    "SurvObj ~ ybirth + yschool + smoke + race", # lowest AIC
+    "SurvObj ~ ybirth + yschool + smoke",
+    "SurvObj ~ ybirth + yschool",
+    "SurvObj ~ ybirth",
+    "SurvObj ~ 1"
+  )
+)
+
+summary_lognormalAIC %>%
+  knitr::kable(digits=5,caption="AIC of Backward selection of lognormal survival model")
+```
+
+```{r, eval=FALSE, echo=TRUE}
+#table9
+summary_lognormalreg <- summary(lognormalreg_less4)
+
+best.lognormal.model <- lognormalreg_less4
+
+summary_lognormalreg$table %>%
+  knitr::kable(digits=4,caption = "Lognormal Model: SurvObj ~ race + smoke + yschool + ybirth")#,caption="Exponential survival model with lowest AIC")
+```
+
+```{r, eval=FALSE, echo=TRUE}
+#table10
+lognormalAIC <- round(lognormalAIC,0)
+lognormalAIC[5] <- paste("\\color{red}{",round(lognormalAIC[5], 2), "}")
+
+AIC_all <- tibble(
+  "# Parameters" = c(8:0),
+  "Exponential" = round(expAIC,0),
+  "Weibull" = round(WeibullAIC,0),
+  "Lognormal" = (lognormalAIC),
+  "Equation" = c(
+    "SurvObj ~ ybirth + yschool + ... + agemth + pc3mth",
+    "SurvObj ~ ybirth + yschool + ... + alcohol + agemth",
+    "SurvObj ~ ybirth + yschool + ... + poverty + alcohol",
+    "SurvObj ~ ybirth + yschool + smoke + race + poverty",
+    "SurvObj ~ ybirth + yschool + smoke + race", # lowest AIC
+    "SurvObj ~ ybirth + yschool + smoke",
+    "SurvObj ~ ybirth + yschool",
+    "SurvObj ~ ybirth",
+    "SurvObj ~ 1"
+  )
+)
+
+AIC_all %>%
+  knitr::kable(digits=4,
+               caption = "AIC values across parametric models")
+```
 
 ```{r, eval=FALSE}
+# create variable list for stepwise selection of variables in models:
+my.variable.list <- c("race", "poverty", "smoke", "alcohol",
+                      "agemth", "ybirth", "yschool", "pc3mth")
+
+# run the stepwise selection
+My.stepwise::My.stepwise.coxph(Time = "duration", 
+                               Status = "delta", 
+                               variable.list = my.variable.list, 
+                               data = bfeed, 
+                               sle = 0.15, sls = 0.15)
+# best model:
+"duration ~ smoke + race + ybirth + yschool + poverty"
+```
+
+```{r, eval=FALSE, echo=TRUE}
+# output in Rmd file
+coxph.best.model <- coxph(SurvObj ~ race + poverty + smoke + ybirth + yschool, data = bfeed) 
+
+summary(coxph.best.model)
+```
+
+```{r coxPH_2, warning=FALSE, eval=FALSE, echo=TRUE, fig.cap="Comparing KM curve for duration of breastfeeding according to mothers' race with Cox PH model predictions."}
+# predicted curves based on CoxPH best model
+#fig7
+
+race_df <- with(bfeed,
+               data.frame(sex = rep("male",3), 
+                          race = c("white", "black", "other"),
+                          ybirth = rep(mean(ybirth, na.rm = TRUE), 3),
+                          yschool = rep(mean(yschool, na.rm = TRUE), 3),
+                          smoke = rep("no",3),
+                          poverty = rep("no",3)
+                          )
+               )
+# race_df
+
+km.cox.fit <- survfit(coxph.best.model, newdata = race_df)
+
+# put preds together in tidy df
+df = data.frame(y=seq(99,1,by=-1), race_white=pred.exp1, race_black=pred.exp2, race_other = pred.exp3)
+df_long = gather(df, key= "race", value="time", -y)
+
+
+#KM curve according to race
+gg.km.by.race.cox <- ggsurvplot(
+   km.cox.fit,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   # risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "1",   # Pval using log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  # title = "KM Curve - Race",
+  fun = "pct"                #show survival function as percentage
+    
+) 
+
+# KM curve plot for race adding survreg predictions
+gg.km.by.race.cox <- gg.km.by.race.cox$plot + geom_line(data=df_long, aes(x=time, y=y, group=race))
+gg.km.by.race.cox
+```
+
+```{r, eval=FALSE, echo=TRUE}
+#table 11 prep
+explanatory = c("race", "poverty", "smoke", "alcohol",
+                      "agemth", "ybirth", "yschool", "pc3mth")
+dependent = "Surv(duration, delta)"
+bfeed_og %>%
+    mutate(
+      race = as.factor(race),
+      poverty = as.factor(poverty),
+      smoke = as.factor(smoke),
+      alcohol = as.factor(alcohol),
+      pc3mth = as.factor(pc3mth)
+    ) %>%
+    finalfit::finalfit(dependent, explanatory,
+                       explanatory_multi = 
+                         c("smoke", "race", "ybirth", "yschool", "poverty")
+                       ) -> t
+
+colnames(t)[3] <- "Count (%)"
+colnames(t)[2] <- "Group"
+colnames(t)[1] <- "Duration"
+
+t <- tibble(t) %>% 
+  remove_rownames() %>%
+  mutate(Group = c("white", "black", "other", "no", "yes","no", "yes","no", "yes", "Mean (SD)","Mean (SD)","Mean (SD)","no","yes")) 
+
+```
+
+```{r, eval=FALSE, echo=TRUE}
+#table 11
+t %>% knitr::kable(digits=4, caption = "Hazard Ratios (HR) for Cox PH model of time-independent variables")
+```
+
+```{r, eval=FALSE, echo=TRUE, eval=FALSE}
+# create variable list for stepwise selection of variables in models:
+my.variable.list <- c("race", "poverty", "smoke", "alcohol",
+                      "agemth", "ybirth", "yschool", "pc3mth")
+
+# run the stepwise selection
+My.stepwise::My.stepwise.coxph(Time = "duration", Status = "delta", variable.list = my.variable.list, data = bfeed_og, sle = 0.15, sls = 0.15)
+# best Cox PH model:
+"duration ~ smoke + race + ybirth + yschool + poverty"
+```
+
+```{r, eval=FALSE, echo=TRUE}
+# termplot(m1) # useful but long in rmd file
+#table12
+cox.zph(coxph.best.model)$table%>%
+  knitr::kable(digits=4, caption = "Test of Proprtional Hazards Assumption of Cox Regression Model")
+```
+
+```{r, eval=FALSE, echo=TRUE, fig.cap="Schoenfield plot of residuals for Cox proportional hazards assumption", fig.height=7}
+# Figure 8
+
+#alternative code to above line 
+ggcoxzph(cox.zph(coxph.best.model), font.main = 10, caption = "Test for Proportional Hazards")
+```
+
+
+```{r KMcalc_2, eval=FALSE, echo=TRUE}
+#figS1prep
 # create survival object:
 km.as.one <- survfit(SurvObj ~ 1, data = bfeed)
 # summary(km.as.one)
@@ -1693,7 +2453,7 @@ km.by.race <- survfit(SurvObj ~ race, data = bfeed)
 
 km.by.poverty <- survfit(SurvObj ~ poverty, data = bfeed)
 
-km.by.education <- survfit(SurvObj ~ education, data = bfeed)
+km.by.education <- survfit(SurvObj ~ yschool, data = bfeed)
 
 km.by.smoke <- survfit(SurvObj ~ smoke, data = bfeed)
 
@@ -1706,10 +2466,10 @@ km.by.pc3mth <- survfit(SurvObj ~ pc3mth, data = bfeed)
 km.by.ybirth <- survfit(SurvObj ~ ybirth, data = bfeed)
 
 #KM plot combining all participants
-ggsurvplot(
+gg.all <- ggsurvplot(
    km.as.one,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
+   risk.table = F,        # show risk table.
    #pval = TRUE,              # show p-value of log-rank test.
    #conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1725,17 +2485,17 @@ ggsurvplot(
   log.rank.weights = "S1",   # Peto Peto test for log-rank test
   pval.method.coord = c(120,90), # location of p-value text
   pval.method.size = 3,      # p-val text size
-  title = "KM Curve - Duration of Breast Feeding",
+  # title = "KM Curve - Duration of Breast Feeding",
   fun = "pct"                #show survival function as percentage
 )
 
 #KM curve according to race
-ggsurvplot(
+gg.race <- ggsurvplot(
    km.by.race,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
+   risk.table = F,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
-   pval.coord = c(120,80),   # location of pval
+   pval.coord = c(120,70),   # location of pval
    pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1756,12 +2516,12 @@ ggsurvplot(
 )
 
 #KM curve according to poverty
-ggsurvplot(
+gg.poverty <- ggsurvplot(
    km.by.poverty,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
+   risk.table = F,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
-   pval.coord = c(120,80),   # location of pval
+   pval.coord = c(120,70),   # location of pval
    pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1782,12 +2542,13 @@ ggsurvplot(
 )
 
 #KM curve according to education
-ggsurvplot(
+gg.yschool <- ggsurvplot(
    km.by.education,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
+   risk.table = F,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
-   pval.coord = c(120,80),   # location of pval
+   pval.coord = c(120,70),   # location of pval
+   legend = "none",
    pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1803,18 +2564,18 @@ ggsurvplot(
   log.rank.weights = "S1",   # Peto Peto test for log-rank test
   pval.method.coord = c(120,90), # location of p-value text
   pval.method.size = 3,      # p-val text size
-  title = "KM Curve - Education",
+  title = "KM Curve - yschool",
   fun = "pct"                #show survival function as percentage
 )
 
 
 #KM curve according to smoking
-ggsurvplot(
+gg.smoke <- ggsurvplot(
    km.by.smoke,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
+   risk.table = F,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
-   pval.coord = c(120,80),   # location of pval
+   pval.coord = c(120,70),   # location of pval
    pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1836,12 +2597,12 @@ ggsurvplot(
 
 
 #KM curve according to alcohol
-ggsurvplot(
+gg.alcohol <- ggsurvplot(
    km.by.alcohol,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
+   risk.table = F,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
-   pval.coord = c(120,80),   # location of pval
+   pval.coord = c(120,70),   # location of pval
    pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1862,12 +2623,13 @@ ggsurvplot(
 )
 
 #KM curve according to age of mother at birth of child
-ggsurvplot(
+gg.agemth <- ggsurvplot(
    km.by.agemth,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
-   pval = TRUE,              # show p-value of log-rank test.
-   pval.coord = c(120,80),   # location of pval
+   risk.table = F,        # show risk table.
+  legend = "none",
+    pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,70),   # location of pval
    pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1888,12 +2650,12 @@ ggsurvplot(
 )
 
 #KM curve according to prenatal care after 3rd month
-ggsurvplot(
+gg.pc3mth <- ggsurvplot(
    km.by.pc3mth,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
+   risk.table = F,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
-   pval.coord = c(120,80),   # location of pval
+   pval.coord = c(120,70),   # location of pval
    pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1914,12 +2676,13 @@ ggsurvplot(
 )
 
 #KM curve according to birth year
-ggsurvplot(
+gg.ybirth <- ggsurvplot(
    km.by.ybirth,               # survfit object with calculated statistics.
    data = bfeed,             # data used to fit survival curves.
-   risk.table = TRUE,        # show risk table.
+   risk.table = F,        # show risk table.
    pval = TRUE,              # show p-value of log-rank test.
-   pval.coord = c(120,80),   # location of pval
+   legend = "none",
+   pval.coord = c(120,70),   # location of pval
    pval.method = TRUE,        # show type of pval shown
    conf.int = TRUE,          # show confidence intervals for 
                              # point estimates of survival curves.
@@ -1938,10 +2701,65 @@ ggsurvplot(
   title = "KM Curve - Birth Year",
   fun = "pct"                #show survival function as percentage
 )
+
 ```
 
-```{r fig.cap="correlation between birth year and duration of breastfeeding"}
+```{r KMcurves_2, eval=FALSE, echo=TRUE, fig.cap="KM curves for all predictor variables", fig.height=9, fig.width=6}
+#figS1
+ggS1 <- list(
+  # gg.all,
+  gg.race,
+  gg.poverty,
+  gg.smoke,
+  gg.alcohol,
+  gg.agemth,
+  gg.ybirth,
+  gg.yschool,
+  gg.pc3mth
+)
+
+arrange_ggsurvplots(ggS1, ncol = 2, nrow = 4)
+
+```
+
+```{r, eval=FALSE, echo=TRUE, fig.cap="Distribution of natural log tranformed breastfeeding duration alongside normal distribution $N(2.5, 1.1)$ (grey)"}
 bfeed %>%
-  ggplot(aes(x=ybirth, y=duration, color = delta)) +
-  geom_point()+ geom_smooth(method = "lm")
+  mutate(lognormduration = log(duration)) %>%
+  ggplot(aes(x=lognormduration)) +
+  geom_density() +
+  theme_minimal() +
+  labs(x="ln(weeks of breastfeeding)", y="density") +
+  ggtitle("lognormal distribution of breastfeeding duration") +
+  stat_function(fun = dnorm, args = list(2.5, 1.1), color = "gray")
+
+```
+
+```{r expPH_2, eval=FALSE, echo=TRUE}
+#tableS1
+exp.aft.ph <- -coef(best.exp.model)/best.exp.model$scale
+#https://myweb.uiowa.edu/pbreheny/7210/f15/notes/10-15.pdf
+exp.aft.ph %>%
+  knitr::kable(digits=4,caption = "coefficients for PH exponential model", col.names = c( "value"))
+```
+
+```{r WeibullPH_2, eval=FALSE, echo=TRUE}
+#tableS2
+Weibull.aft.ph <- 
+  -coef(best.Weibull.model)/best.Weibull.model$scale
+#https://myweb.uiowa.edu/pbreheny/7210/f15/notes/10-15.pdf
+Weibull.aft.ph %>%
+  knitr::kable(digits=4,caption = "coefficients for PH Weibull model", col.names = c( "value"))
+```
+
+
+```{r parametrics_2, eval=FALSE, echo=TRUE}
+# comparison of coefficient estimates across the parametric models (table S3)
+all.param.coef <- tibble(
+  " " = names(best.exp.model$coefficients),
+  "Exponential" = best.exp.model$coefficients,
+  "Weibull" = best.Weibull.model$coefficients,
+  "Lognormal" = best.lognormal.model$coefficients)
+
+all.param.coef %>%
+  knitr::kable(digits=4,caption = "Comparison of parameter coefficients for parametric AFT models")
 ```
