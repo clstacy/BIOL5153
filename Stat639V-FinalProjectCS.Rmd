@@ -455,7 +455,7 @@ $$ and $$
 S(t) = e^{-\lambda t}
 $$ where $h(t)$ is the hazard function and $S(t)$ is the survival function. These are the AFT parameterizations of the exponential model. Note that the the hazard is a constant $\lambda$.
 
-#### Assumptions of the exponential survival model 
+#### Assumptions of the exponential survival model \
 
 The key assumption of the exponential survival model are that the the hazard rate is constant, derived from the memoryless property of the exponential distribution. Based on what is known about cessation of breastfeeding, this would not seem likely to be a valid assumption; however, figure 4 shows the exponential model provides a reasonable fit to the data. Trends between the different racial groups correspond to regression outputs below showing similar survival for these three groups.
 
@@ -562,7 +562,7 @@ gg.km.by.race.exp <- gg.km.by.race.exp$plot + geom_line(data=df_long, aes(x=time
 gg.km.by.race.exp
 ```
 
-#### Goodness of fit 
+#### Goodness of fit \
 
 Parametric models such as the exponential model allow for multivariate analysis. Given this, parameter selection is needed to find the best combination of parameters to predict or characterize survival. A backwards selection approach is utilized here to select parameters, in which all predictor variables were included in the model, the Akaike Information Criterion (AIC) for the model was recorded, and then the least significant parameter was dropped from the model until no parameters remain. The results of this process are in Table 4 below. This approach selected a model with four variables: race, smoking, years of education, and year child was born.
 
@@ -587,7 +587,7 @@ summary_expAIC %>%
   knitr::kable(digits=5,caption="AIC of Backward selection of exponential survival model")
 ```
 
-#### Parameter Estimates 
+#### Parameter Estimates \
 
 The parameter estimates for the best fit exponential model are shown in Table 5. We see p-values below the 0.05 threshold for all parameters except for where race of the mother is black has a p-value of 0.0928.
 
@@ -600,7 +600,7 @@ summary_expreg$table %>%
   knitr::kable(digits=4,caption = "Exponential Model: SurvObj ~ race + smoke + yschool + ybirth")#,caption="Exponential survival model with lowest AIC")
 ```
 
-The AFT interpretation of this model suggests that black mothers average duration of breast feeding may only be $e^{-0.173}$ = `r toString(round(exp(-.173),2))` of that of white mothers (p-value = 0.093). For mothers whose race is classified as "other", the average duration of breast feeding is $e^{-0.310}$ = `r toString(round(exp(-.310),2))` of white mothers. Mothers who reported smoking at time of child birth had `r toString(round(exp(-.267),2))` shorter breast feeding duration compared to non-smokers. On the other hand, every year of additional education the mother had attained corresponded to a $e^{0.05}$ = `r toString(round(exp(.05),2))`. In other words, mothers showed a 5% increase in average duration of breast feeding for each additional year of schooling they completed. There also appeared to be a significant trend of child birth year effecting the duration of breastfeeding. In this model, each year later that the child was born resulted in reduction by a factor of `r toString(round(exp(-.0794),2))` in average breast feeding time.
+The AFT interpretation of this model suggests that black mothers average duration of breast feeding may only be $e^{-0.173}$ = `r toString(round(exp(-.173),2))` of that of white mothers (p-value = 0.093). For mothers whose race is classified as "other", the average duration of breast feeding is $e^{-0.310}$ = `r toString(round(exp(-.310),2))` of white mothers. Mothers who reported smoking at time of child birth had `r toString(round(exp(-.267),2))` shorter breast feeding duration compared to non-smokers. On the other hand, every year of additional education the mother had attained corresponded to a $e^{0.05}$ = `r toString(round(exp(.05),2))`. In other words, mothers showed a 5% increase in average duration of breast feeding for each additional year of schooling they completed, holding all other parameters constant. There also appeared to be a significant trend of child birth year effecting the duration of breastfeeding. In this model, each year later that the child was born resulted in reduction by a factor of `r toString(round(exp(-.0794),2))` in average breast feeding time.
 
 As mentioned above, the exponential model has a unique characteristic that it can be described as an AFT model or as a PH model. By dividing the negative of the coefficients of the AFT model in Table 5 by its scale parameter (1 in the case of the exponential model), one can find the proportional hazards for each variable, shown in Table S?.
 
@@ -971,7 +971,7 @@ Note that the HR depends only on $\beta$ and amount of increase in $X$, not time
 
 ### Goodness of Fit
 
-In order to optimize the Cox model fit, an iterative forward-backwards stepwise selection approach was utilized via the `My.stepwise.coxph` function of the `My.stepwise` package. The significance level for entry and significance level for stay were both set to 0.15 for the fitting procedure. The code used for the resulting best model from this process is shown below. This approach selected a model with four variables: race, smoking, years of education, and year child was born.
+In order to optimize the Cox model fit, an iterative forward-backwards stepwise selection approach was utilized via the `My.stepwise.coxph` function of the `My.stepwise` package. The significance level for entry and significance level for stay were both set to 0.15 for the fitting procedure. The code used for the resulting best model from this process is shown below. This approach selected a model with five variables: race, smoking, years of education, year child was born, and poverty. This model has one more variable than the parametric models above. The newly included variable is whether the mother is considered living in poverty.
 
 Code for stepwise selection of Cox PH model:
 ```{r, eval=FALSE}
@@ -989,7 +989,20 @@ My.stepwise::My.stepwise.coxph(Time = "duration",
 "duration ~ smoke + race + ybirth + yschool + poverty"
 ```
 
-```{r}
+
+
+
+The output of the `coxph` function from the `survival` package for the step-wise selected CoxPH model is shown below:
+
+```{r, echo=FALSE}
+coxph.best.model <- coxph(SurvObj ~ race + poverty + smoke + ybirth + yschool, data = bfeed) 
+
+summary(coxph.best.model)
+```
+
+From this output, we see that the p-values `Pr(>|z|)` is significantly less than the threshold significance level of $\alpha = 0.05$ except for the indicator variable of race being black, which has a p-value of 0.065. The global statistical significance tests of the model show significant p-values $(p \leq 8 \times 10^{-8})$, indicating the overall test is a reasonable fit for the data.
+
+```{r, echo=FALSE}
 
 explanatory = c("race", "poverty", "smoke", "alcohol",
                       "agemth", "ybirth", "yschool", "pc3mth")
@@ -999,17 +1012,30 @@ bfeed_og %>%
       race = as.factor(race),
       poverty = as.factor(poverty),
       smoke = as.factor(smoke),
-      alcohol = as.factor(alcohol)
+      alcohol = as.factor(alcohol),
+      pc3mth = as.factor(pc3mth)
     ) %>%
-    finalfit::finalfit(dependent, explanatory) -> t
+    finalfit::finalfit(dependent, explanatory,
+                       explanatory_multi = 
+                         c("smoke", "race", "ybirth", "yschool", "poverty")
+                       ) -> t
 
-t %>% knitr::kable()
+colnames(t)[2] <- "group"
+colnames(t)[1] <- "Duration"
+
+t <- data.frame(t) %>% 
+  remove_rownames() %>%
+  mutate(group = c("white", "black", "other", "no", "yes","no", "yes","no", "yes", "Mean (SD)","Mean (SD)","Mean (SD)","no","yes")) 
+
 ```
-
-#TODO: table above looks really good! change around the second column of t to make names pretty, read through tutorial website on how to make it a bit prettier, then include it here in the paper! Make sure to set the reduced model with explanatory_multi = c() to get the optimized model from above to be the multi() output.
 
 ### Parameter Estimates
 
+The estimated hazard ratios for each parameter included in the final CoxPH model are shown in Figure X below. We see that [...]
+
+```{r, echo=FALSE}
+t %>% knitr::kable()
+```
 
 
 ```{r, echo=FALSE}
@@ -1019,21 +1045,14 @@ my.variable.list <- c("race", "poverty", "smoke", "alcohol",
 
 # run the stepwise selection
 My.stepwise::My.stepwise.coxph(Time = "duration", Status = "delta", variable.list = my.variable.list, data = bfeed_og, sle = 0.15, sls = 0.15)
-# best model:
+# best Cox PH model:
 "duration ~ smoke + race + ybirth + yschool + poverty"
 
 coxph.full.model <- coxph(SurvObj ~ race + poverty + smoke + ybirth + yschool, data = bfeed) 
 
 summary(coxph.full.model)
 
-# termplot(m1) # useful but long in rmd file
 
-cox.zph(coxph.full.model)
-
-ggcoxdiagnostics(coxph.full.model, type = "schoenfeld")
-
-#alternative code to above line  (I think)
-ggcoxzph(cox.zph(coxph.full.model))
 ```
 
 
@@ -1047,12 +1066,23 @@ a multiplicative relationship between the predictors and the hazard (as opposed 
 
 a constant hazard ratio over time.
 
+```{r, echo=FALSE}
+# termplot(m1) # useful but long in rmd file
+
+cox.zph(coxph.full.model)
+
+ggcoxdiagnostics(coxph.full.model, type = "schoenfeld")
+
+#alternative code to above line  (I think)
+ggcoxzph(cox.zph(coxph.full.model))
+```
+
 
 ### Predictions and Validations
 
 # Discussion
 
-(e.g., strengths and shortcomings of your model, and possible improvements)
+<!-- (e.g., strengths and shortcomings of your model, and possible improvements) -->
 
 weaknesses:
 
@@ -1061,6 +1091,8 @@ As the backward paramter selection in Table 4 shows, birth year was the most sig
 The approach to data collection for this study relies on accurate recall and participant truthfulness. Given that mothers' choices around raising their child are often stigmatized and human recall of previous events is suboptimal, the data is likely imperfect.
 
 The proportion of this data that is censored is relatively small, only about 3% of the total sample. In this case it is possible that alternative approaches such as the Mann-Whitney U test would be useful, but the ability of survival analysis to estimate risk can be exceptionally useful.
+
+A significant improvement to this analysis would be first splitting the data into a training and testing dataset, in order to better validate the accuracy of the models and correct for potential overfitting of the data.
 
 # Conclusion
 
