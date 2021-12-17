@@ -256,7 +256,7 @@ $$
  1 & t < t_1 \\
  \prod_{t \geq t_i} [1 - \frac{d_i}{Y_i}] & t \geq t_1 \\
  \end{cases}
-$$ 
+$$
 
 where $1 \leq d_i \leq Y_i$ with $t_i$ representing the distinct time at which breastfeeding ceased, $Y_i$ representing the number of individuals still breastfeeding at time $t_i$, and $d_i$ is the number of individuals who stopped breastfeeding at time $t_i$.
 
@@ -374,7 +374,9 @@ gg.km.by.smoke
 ```
 
 \vspace{-3truemm}
-#### Log-rank test\
+
+#### Log-rank test 
+
 \
 \vspace{-5truemm}
 
@@ -439,8 +441,7 @@ Given that earlier ages of stopping breastfeeding are considered biologically mo
 
 ## Parametric Survival Estimates
 
-Parametric modelling is a powerful tool for analyzing a wide variety. Linear regression is perhaps the most widely known parametric regression model in the scientific research community. Parametric models also exist for analyzing time-to-event data such as time to cessation of breastfeeding discussed here. Moving beyond univariate analyses, parametric survival models allow for description of numerical and multivariate models. There are several models that exist for modeling time-to-event data. Three parametric models will be fit to the data: the exponential, Weibull, and lognormal models. The exponential and Weibull models are interesting in that they can utilize either the accelerated failure time (AFT) assumption or the proportional hazards (PH) assumption for describing survival data. To summarize briefly, proportional hazards assumes that the hazard ratio for any two individuals is constant over time while the AFT model assumes that the effects of covariates
-are fixed and multiplicative by the acceleration factor on the time scale of $t$. The commonality across these parametric models is that they assume the outcome follows some known distribution.
+Parametric modelling is a powerful tool for analyzing a wide variety. Linear regression is perhaps the most widely known parametric regression model in the scientific research community. Parametric models also exist for analyzing time-to-event data such as time to cessation of breastfeeding discussed here. Moving beyond univariate analyses, parametric survival models allow for description of numerical and multivariate models. There are several models that exist for modeling time-to-event data. Three parametric models will be fit to the data: the exponential, Weibull, and lognormal models. The exponential and Weibull models are interesting in that they can utilize either the accelerated failure time (AFT) assumption or the proportional hazards (PH) assumption for describing survival data. To summarize briefly, proportional hazards assumes that the hazard ratio for any two individuals is constant over time while the AFT model assumes that the effects of covariates are fixed and multiplicative by the acceleration factor on the time scale of $t$. The commonality across these parametric models is that they assume the outcome follows some known distribution.
 
 <!-- (e.g., assumptions, statistical models, parameter estimations, goodness-of-fit test, cross-group comparisons, predictions and validations, etc) -->
 
@@ -450,15 +451,11 @@ The exponential model is a less complicated model because its function is time-i
 
 $$
 h(t) = \lambda
-$$
-and
-$$
+$$ and $$
 S(t) = e^{-\lambda t}
-$$
-where $h(t)$ is the hazard function and $S(t)$ is the survival function. These are the AFT parameterizations of the exponential model. Note that the the hazard is a constant $\lambda$.
+$$ where $h(t)$ is the hazard function and $S(t)$ is the survival function. These are the AFT parameterizations of the exponential model. Note that the the hazard is a constant $\lambda$.
 
-
-#### Assumptions of the exponential survival model\
+#### Assumptions of the exponential survival model 
 
 The key assumption of the exponential survival model are that the the hazard rate is constant, derived from the memoryless property of the exponential distribution. Based on what is known about cessation of breastfeeding, this would not seem likely to be a valid assumption; however, figure 4 shows the exponential model provides a reasonable fit to the data. Trends between the different racial groups correspond to regression outputs below showing similar survival for these three groups.
 
@@ -565,7 +562,7 @@ gg.km.by.race.exp <- gg.km.by.race.exp$plot + geom_line(data=df_long, aes(x=time
 gg.km.by.race.exp
 ```
 
-#### Goodness of fit\
+#### Goodness of fit 
 
 Parametric models such as the exponential model allow for multivariate analysis. Given this, parameter selection is needed to find the best combination of parameters to predict or characterize survival. A backwards selection approach is utilized here to select parameters, in which all predictor variables were included in the model, the Akaike Information Criterion (AIC) for the model was recorded, and then the least significant parameter was dropped from the model until no parameters remain. The results of this process are in Table 4 below. This approach selected a model with four variables: race, smoking, years of education, and year child was born.
 
@@ -590,10 +587,9 @@ summary_expAIC %>%
   knitr::kable(digits=5,caption="AIC of Backward selection of exponential survival model")
 ```
 
+#### Parameter Estimates 
 
-#### Parameter Estimates\
-
-The parameter estimates for the best fit exponential model are shown in Table 5. We see p-values below the 0.05 threshold for all parameters except for where race of the mother is black has a p-value of than 0.0928.
+The parameter estimates for the best fit exponential model are shown in Table 5. We see p-values below the 0.05 threshold for all parameters except for where race of the mother is black has a p-value of 0.0928.
 
 ```{r, echo=FALSE}
 summary_expreg <- summary(expreg_less4)
@@ -604,13 +600,9 @@ summary_expreg$table %>%
   knitr::kable(digits=4,caption = "Exponential Model: SurvObj ~ race + smoke + yschool + ybirth")#,caption="Exponential survival model with lowest AIC")
 ```
 
-The AFT interpretation of this model suggests that black mothers average duration of breast feeding may only be $e^{-0.173}$ = `r toString(round(exp(-.173),2))` of that of white mothers (p-value = 0.093). For mothers whose race is classified as "other", the average duration of breast feeding is $e^{-0.310}$ = `r toString(round(exp(-.310),2))` of white mothers. Mothers who reported smoking at time of child birth had `r toString(round(exp(-.267),2))` shorter breast feeding duration compared to non-smokers. On the other hand, every year of additional education the mother had attained corresponded to a $e^{0.05}$ = `r toString(round(exp(.05),2))`. In other words, mothers 5% increase in average duration of breast feeding for each additional year of schooling they completed. There also appeared to be a significant trend of child birth year effecting the duration of breastfeeding. In this model, each year later that the child was born resulted in reduction by a factor of `r toString(round(exp(-.267),2))` in average breast feeding time. 
+The AFT interpretation of this model suggests that black mothers average duration of breast feeding may only be $e^{-0.173}$ = `r toString(round(exp(-.173),2))` of that of white mothers (p-value = 0.093). For mothers whose race is classified as "other", the average duration of breast feeding is $e^{-0.310}$ = `r toString(round(exp(-.310),2))` of white mothers. Mothers who reported smoking at time of child birth had `r toString(round(exp(-.267),2))` shorter breast feeding duration compared to non-smokers. On the other hand, every year of additional education the mother had attained corresponded to a $e^{0.05}$ = `r toString(round(exp(.05),2))`. In other words, mothers showed a 5% increase in average duration of breast feeding for each additional year of schooling they completed. There also appeared to be a significant trend of child birth year effecting the duration of breastfeeding. In this model, each year later that the child was born resulted in reduction by a factor of `r toString(round(exp(-.0794),2))` in average breast feeding time.
 
 As mentioned above, the exponential model has a unique characteristic that it can be described as an AFT model or as a PH model. By dividing the negative of the coefficients of the AFT model in Table 5 by its scale parameter (1 in the case of the exponential model), one can find the proportional hazards for each variable, shown in Table S?.
-
-
-
-
 
 ### Weibull
 
@@ -618,14 +610,11 @@ The Weibull model is a generalization of the exponential model that is widely us
 
 $$
 h(t) = \alpha \lambda t^{\alpha -1}
-$$
-and
-$$
+$$ and $$
 S(t) = e^{-\lambda t^\alpha}
-$$
-where $h(t)$ is the hazard function and $S(t)$ is the survival function. The shape parameter $\alpha$ can be thought of as a baseline log-hazard, while $\lambda$ is the rate parameter as in the exponential distribution. These are the AFT parameterizations of the Weibull model. Note that the the hazard is monotonic for this model. When $\alpha=1$, the Weibull model is the exponential model.
+$$ where $h(t)$ is the hazard function and $S(t)$ is the survival function. The shape parameter $\alpha$ can be thought of as a baseline log-hazard, while $\lambda$ is the rate parameter as in the exponential distribution. These are the AFT parameterizations of the Weibull model. Note that the the hazard is monotonic for this model. When $\alpha=1$, the Weibull model is the exponential model.
 
-#### Assumptions of the Weibull survival model\
+#### Assumptions of the Weibull survival model 
 
 One assumption of the Weibull survival model is that the the hazard rate is monotonic. Additionally, when working as an AFT model, the differences between groups should be able to be represented by only an acceleration in aging by a constant. Part of this is that KM curves should not cross, an assumption that is reasonably held in this data set. Figure 5 shows the Weibull model provides a fit to the data comparable to that of the exponential model above. Trends between the different racial groups correspond to regression outputs below showing similar survival for these three groups.
 
@@ -730,8 +719,7 @@ gg.km.by.race.Weibull$plot <- gg.km.by.race.Weibull$plot + geom_line(data=df_lon
 gg.km.by.race.Weibull
 ```
 
-
-#### Goodness of fit \
+#### Goodness of fit 
 
 The same backwards selection approach is utilized here as the exponential model to select parameters and compare AIC scores. The results of this process are in Table 6 below. The Weibull model also selected the model with the same four variables: race, smoking, years of education, and year child was born.
 
@@ -756,10 +744,9 @@ summary_WeibullAIC %>%
   knitr::kable(digits=5,caption="AIC of Backward selection of Weibull survival model")
 ```
 
+#### Parameter Estimates 
 
-#### Parameter Estimates\
-
-The parameter estimates for the best fit Weibull model are shown in Table 7. We see p-values below the 0.05 threshold for all parameters except for where race of the mother is black has a p-value of than 0.0936.
+The parameter estimates for the best fit Weibull model are shown in Table 7. We see p-values below the 0.05 threshold for all parameters except for where race of the mother is black has a p-value of 0.0936.
 
 ```{r, echo=FALSE}
 summary_Weibullreg <- summary(Weibullreg_less4)
@@ -770,38 +757,29 @@ summary_Weibullreg$table %>%
   knitr::kable(digits=4,caption = "Weibull Model: SurvObj ~ race + smoke + yschool + ybirth")#,caption="Exponential survival model with lowest AIC")
 ```
 
-The parameter estimates for the Weibull model are extremely similar to the parameters of the exponential distribution, which one would expect given the log(scale) parameter for the fit is very close to zero corresponding to $\alpha$ value very close to one. The Weibull model can also be described as an AFT model or as a PH model.  Given these values are very similar to those of the exponential model, these values have not been included in this analysis.
+The parameter estimates for the Weibull model are extremely similar to the parameters of the exponential distribution, which one would expect given the log(scale) parameter for the fit is very close to zero corresponding to $\alpha$ value very close to one. The Weibull model can also be described as an AFT model or as a PH model. Given these values are very similar to those of the exponential model, these values have not been included in this analysis.
 
-The finding that the generalization of the exponential distribution, the Weibull, closely matches the results of the exponential itself supports that the constant hazard assumption of the exponential is close to the optimal monotonic hazard function to fit the data. 
-
+The finding that the generalization of the exponential distribution, the Weibull, closely matches the results of the exponential itself supports that the constant hazard assumption of the exponential is close to the optimal monotonic hazard function to fit the data.
 
 ### Lognormal
 
-
-
-
-
-
-COPIED: ######
-The Weibull model is a generalization of the exponential model that is widely used in survival analysis. The hazard and survival functions for this model is
+The lognormal model is useful for modeling data with a hump-shaped hazard curve. This shape of hazard curve is not the most common; however, the lognormal model is a very useful model for such scenarios. The hazard and survival functions for $X \sim lognormal(\mu,\sigma)$ the lognormal model are
 
 $$
-h(t) = \alpha \lambda t^{\alpha -1}
+S(t) = Pr(T > t) = Pr(ln(X) > ln(X)) = 1 - \Phi(\frac{ln(x) - \mu}{\sigma})
+$$ 
+
+and 
+
 $$
-and
-$$
-S(t) = e^{-\lambda t^\alpha}
-$$
-where $h(t)$ is the hazard function and $S(t)$ is the survival function. The shape parameter $\alpha$ can be thought of as a baseline log-hazard, while $\lambda$ is the rate parameter as in the exponential distribution. These are the AFT parameterizations of the Weibull model. Note that the the hazard is monotonic for this model. When $\alpha=1$, the Weibull model is the exponential model.
-####################
+h(t) = \frac{(\frac{1}{x\sigma})\phi(\frac{ln(x)}{\sigma})}{\Phi(\frac{-ln(x)}{\sigma})}
+$$ with $x > 0, \sigma > 0$. Here $h(t)$ the hazard function and $S(t)$ the survival function. Here $\phi$ represents the probability density function of the normal distribution while $\Phi$ is the cumulative distribution function of the normal distribution. The distribution of $ln(X) \sim N(\mu,\sigma)$ with mean $\mu$ and standard deviation $\sigma$.
 
+#### Assumptions of the lognormal survival model \
 
+The lognormal survival model assumes that the time-to-event variable is lognormally distributed. The duration variable of the breastfeeding data set is fairly well represented by a normal distribution following log-transformation (Supplementary Figure S1). As an AFT model, differences between groups should be able to be modelled as accerlated time. Figure 5 shows the lognormal model provides a fit to the data qualitatively similar to the other parametric models above. Trends between the different racial groups correspond to regression outputs below showing similar survival for these three groups.
 
-#### Assumptions of the lognormal survival model\
-
-```{r}
-
-
+```{r, echo=FALSE}
 # lognormal parametric model
 
 # create vector of AIC values for lognormal
@@ -812,97 +790,201 @@ lognormalAIC <- rep(0.0, 9)
 lognormalreg_all <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
               yschool + pc3mth, bfeed, dist="lognormal")
 lognormalAIC[1] <- AIC(lognormalreg_all)
-summary(lognormalreg_all) # has highest p-val: pc3mth
+# summary(lognormalreg_all) # has highest p-val: pc3mth
 
 
 lognormalreg_less1 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
                 yschool, bfeed, dist="lognormal")
 lognormalAIC[2] <- AIC(lognormalreg_less1)
-summary(lognormalreg_less1) # has highest p-val: agemth
+# summary(lognormalreg_less1) # has highest p-val: agemth
 
 lognormalreg_less2 <- survreg(SurvObj ~ race + poverty + smoke + alcohol + yschool + ybirth,
                         bfeed, dist="lognormal")
 lognormalAIC[3] <- AIC(lognormalreg_less2)
-summary(lognormalreg_less2) # has highest p-val: alcohol
+# summary(lognormalreg_less2) # has highest p-val: alcohol
 
 lognormalreg_less3 <- survreg(SurvObj ~ race + poverty + smoke + yschool + ybirth,
                         bfeed, dist="lognormal")
 lognormalAIC[4] <- AIC(lognormalreg_less3)
-summary(lognormalreg_less3) # has highest p-val: poverty
+# summary(lognormalreg_less3) # has highest p-val: poverty
 
 lognormalreg_less4 <- survreg(SurvObj ~ race + smoke + yschool + ybirth,
                         bfeed, dist="lognormal")
 lognormalAIC[5] <- AIC(lognormalreg_less4)
-summary(lognormalreg_less4) # has highest p-val: race
+# summary(lognormalreg_less4) # has highest p-val: race
 
 lognormalreg_less5 <- survreg(SurvObj ~  smoke + yschool + ybirth,
                         bfeed, dist="lognormal")
 lognormalAIC[6] <- AIC(lognormalreg_less5)
-summary(lognormalreg_less5) # has highest p-val: smoke
+# summary(lognormalreg_less5) # has highest p-val: smoke
 
 
 lognormalreg_less6 <- survreg(SurvObj ~  yschool + ybirth,
                         bfeed, dist="lognormal")
 lognormalAIC[7] <- AIC(lognormalreg_less6)
-summary(lognormalreg_less6) # has highest p-val: yschool
+# summary(lognormalreg_less6) # has highest p-val: yschool
 
 lognormalreg_less7 <- survreg(SurvObj ~ ybirth,
                         bfeed, dist="lognormal")
 lognormalAIC[8] <- AIC(lognormalreg_less7)
-summary(lognormalreg_less7) 
+# summary(lognormalreg_less7) 
 
 lognormalreg_less8 <- survreg(SurvObj ~ 1,
                         bfeed, dist="lognormal")
 lognormalAIC[9] <- AIC(lognormalreg_less8)
-summary(lognormalreg_less8) 
+# summary(lognormalreg_less8) 
 ```
 
+```{r lognormal, echo=FALSE, fig.cap="Comparing KM curve for duration of breastfeeding according to mothers' race with the Weibull regression model."}
+# predicted curves based on exponential best model
+pred.lognormal1 = predict(lognormalreg_less4, newdata=list(race="white", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+pred.lognormal2 = predict(lognormalreg_less4, newdata=list(race="black", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
+pred.lognormal3 = predict(lognormalreg_less4, newdata=list(race="other", smoke = "no", yschool=12, ybirth=1982),type="quantile",p=seq(.01,.99,by=.01))
 
-#### Parameter Estimates\
+# put preds together in tidy df
+df = data.frame(y=seq(99,1,by=-1), race_white=pred.lognormal1, race_black=pred.lognormal2, race_other = pred.lognormal3)
+df_long = gather(df, key= "race", value="time", -y)
 
-#### goodness of fit\
 
-#### Predictions and Validations\
+#km fit race
+km.by.race <- survfit(SurvObj ~ race, data = bfeed)
 
-```{r deleteme, echo=FALSE}
-# if I have time, I want to overlay KM curves with the parametric curves for each.
+#KM curve according to race
+gg.km.by.race.lognormal <- ggsurvplot(
+   km.by.race,               # survfit object with calculated statistics.
+   data = bfeed,             # data used to fit survival curves.
+   # risk.table = TRUE,        # show risk table.
+   pval = TRUE,              # show p-value of log-rank test.
+   pval.coord = c(120,80),   # location of pval
+   pval.method = TRUE,        # show type of pval shown
+   conf.int = TRUE,          # show confidence intervals for 
+                             # point estimates of survival curves.
+   xlim = c(0,200),          # present narrower X axis, but not affect
+                             # survival estimates.
+   xlab = "Time in weeks",   # customize X axis label.
+   break.time.by = 20,       # break X axis in time intervals by 500.
+   ggtheme = theme_minimal(),# customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = FALSE,  # show bars instead of names in text annotations
+                             # in legend of risk table
+  # palette = "uchicago",      # change colors to be pretty
+  log.rank.weights = "1",   # Pval using log-rank test
+  pval.method.coord = c(120,90), # location of p-value text
+  pval.method.size = 3,      # p-val text size
+  # title = "KM Curve - Race",
+  fun = "pct"                #show survival function as percentage
+    
+) 
 
-# tmp2 <- survreg(SurvObj ~ smoke, bfeed, dist="lognormal")
-# 
-# 
-# surv <- seq(.99,0.01, -.01)
-# t <- predict(tmp2, type = "quantile", p = 1-surv, newdata=data.frame(
-#                  smoke = levels(bfeed$smoke)
-#                ))
-# 
-# newdat <- data.frame(
-#                  smoke = levels(bfeed$smoke)
-#                )
-# surv_wide <- cbind(newdat,t)
-# surv_long<- surv_wide %>% pivot_longer(-smoke, names_to = "surv_id", values_to="time") %>%
-#   mutate(surv = surv[as.numeric(surv_id)],
-#          upper = NA,
-#          lower=NA,
-#          std.err = NA,
-#          strata=NA) %>%
-#   as.data.frame()
-# 
-# ggsurvplot_df(surv_long, surv.geom=geom_line,
-#               color="smoke")
-
+# KM curve plot for race adding survreg predictions
+gg.km.by.race.lognormal$plot <- gg.km.by.race.lognormal$plot + geom_line(data=df_long, aes(x=time, y=y, group=race))
+gg.km.by.race.lognormal
 ```
+
+#### Goodness of fit \
+
+The same backwards selection approach is utilized here as the above models to select parameters and compare AIC scores. The results of this process are in Table 8 below. The lognormal model with the lowest AIC score had the same four variables: race, smoking, years of education, and year child was born.
+
+```{r, echo=FALSE}
+summary_lognormalAIC <- tibble(
+  "# Parameters" = c(8:0),
+  "AIC" = lognormalAIC, 
+  "Equation" = c(
+    "SurvObj ~ ybirth + yschool + ... + agemth + pc3mth",
+    "SurvObj ~ ybirth + yschool + ... + alcohol + agemth",
+    "SurvObj ~ ybirth + yschool + ... + poverty + alcohol",
+    "SurvObj ~ ybirth + yschool + smoke + race + poverty",
+    "SurvObj ~ ybirth + yschool + smoke + race", # lowest AIC
+    "SurvObj ~ ybirth + yschool + smoke",
+    "SurvObj ~ ybirth + yschool",
+    "SurvObj ~ ybirth",
+    "SurvObj ~ 1"
+  )
+)
+
+summary_lognormalAIC %>%
+  knitr::kable(digits=5,caption="AIC of Backward selection of lognormal survival model")
+```
+
+#### Parameter Estimates \
+
+The parameter estimates for the best fit lognormal model are shown in Table 9. We see p-values below the 0.05 threshold for all parameters except for where race of the mother is black has a p-value of 0.2062.
+
+```{r, echo=FALSE}
+summary_lognormalreg <- summary(lognormalreg_less4)
+
+best.lognormal.model <- lognormalreg_less4
+
+summary_lognormalreg$table %>%
+  knitr::kable(digits=4,caption = "Lognormal Model: SurvObj ~ race + smoke + yschool + ybirth")#,caption="Exponential survival model with lowest AIC")
+```
+
+The AFT interpretation of this lognormal model suggests that black mothers average duration of breast feeding may only be $e^{-0.1485}$ = `r toString(round(exp(-0.1485),2))` of that of white mothers, less of a difference than predicted by the previous models. For mothers whose race is classified as "other", the average duration of breast feeding is $e^{-0.2717}$ = `r toString(round(exp(-0.2717),2))` of white mothers, slightly less than the difference predicted from the above models. Mothers who reported smoking at time of child birth had `r toString(round(exp(-0.2252),2))` shorter breast feeding duration compared to non-smokers according to this model. On the other hand, every year of additional education the mother had attained corresponded to a $e^{0.0884}$ = `r toString(round(exp(0.0884),2))`. In other words, mothers showed around a **9%** increase in average duration of breast feeding for each additional year of schooling they completed. There also appeared to be a significant trend of child birth year effecting the duration of breastfeeding. In this model, each year later that the child was born resulted in reduction by a factor of `r toString(round(exp(-.0735),2))` in average breast feeding time. Unlike the exponential and Weibull models above, the exponential model can only work as a AFT model.
+
+#### Comparison of Parametric Models \
+
+The results of the different parametric models converged on similar results for the best group of predictors and coefficients for those predictors. While any of the models would be reasonable approximations for modeling, it is possible to compare AIC values for all of the models to see which model is optimal. In Table 10 it can be seen that the model with the lowest AIC value among those tested is the lognormal model utilizing the year of birth, years of mother education, smoking, and race to predict duration of breastfeeding. 
+
+```{r, echo=FALSE}
+lognormalAIC <- round(lognormalAIC,0)
+lognormalAIC[5] <- paste("\\color{red}{",round(lognormalAIC[5], 2), "}")
+
+AIC_all <- tibble(
+  "# Parameters" = c(8:0),
+  "Exponential" = round(expAIC,0),
+  "Weibull" = round(WeibullAIC,0),
+  "Lognormal" = (lognormalAIC),
+  "Equation" = c(
+    "SurvObj ~ ybirth + yschool + ... + agemth + pc3mth",
+    "SurvObj ~ ybirth + yschool + ... + alcohol + agemth",
+    "SurvObj ~ ybirth + yschool + ... + poverty + alcohol",
+    "SurvObj ~ ybirth + yschool + smoke + race + poverty",
+    "SurvObj ~ ybirth + yschool + smoke + race", # lowest AIC
+    "SurvObj ~ ybirth + yschool + smoke",
+    "SurvObj ~ ybirth + yschool",
+    "SurvObj ~ ybirth",
+    "SurvObj ~ 1"
+  )
+)
+
+AIC_all %>%
+  knitr::kable(digits=4,
+               caption = "AIC values across parametric models")
+```
+
+While this model is ideal, we can see in Table S3 that the parameter estimates across the 3 models are highly similar. In theory, these models have the benefit of allowing for predicting survival beyond the times shown in this study. In the context of breastfeeding; however, the time of greatest interest is the first 6 months of life so this aspect of parametric models is not as useful in this scenario. Furthermore, the baseline hazard functions are by definition parametric in these models, so if the data do not closely match any of these distributions, a non-parametric baseline hazard functions would better elucidate patterns in the data. 
+
 
 ## Cox Proportional Hazards Model
 
-In contrast to the parametric models above, the Cox PH model is semi-parametric. The baseline hazard of the model is nonparametric
+In contrast to the parametric models above, the Cox PH model is semi-parametric. The baseline hazard of the model is nonparametric. While the parametric models above fit the data reasonably well, it is worth comparing their findings to that of perhaps the gold standard of time-to-event analysis: the Cox Proportional Hazards model, specifically this model will be the Cox PH model of time-independent variables. The general hazard function for p predictors is
 
-[(e.g., assumptions, statistical models, parameter estimations, goodness-of-fit test, cross-group comparisons, predictions and validations, etc)]
+$$
+h(t, X, \beta) = h_0(t)\times e^{\beta_1X_1 + \beta_2X_2 + ... + \beta_pX_p}
+$$
+where $h(t)$ is the hazard function, $h_0(t)$ is the non-parametric baseline hazard function, $beta_i$ is the coefficients for the $i^{th}$ predictor $X_i$. In the context of this dataset, $X_1$ could be the smoking variable, where $x_1 = 0$ is nonsmoking and $x_1=1$ is smoking, the effect of this variable on the hazard function would then be determined by $beta_1$. When working with proportional hazards, the hazard ratio (HR) is a useful tool. The hazard ratio is defined as
+$$
+HR(t, x_1,x_2) = \frac{h(t,X=1,\beta)}{h(t,X=0,\beta)} = \frac{h_0(t)\Gamma(X=1,\beta)}{h_0(t)\Gamma(X=0,\beta)} = \frac{\Gamma(X=1,\beta)}{\Gamma(X=0,\beta)} = e^{\beta}
+$$
 
-### goodness of fit
+Note that the HR depends only on $\beta$ and amount of increase in $X$, not time nor the baseline hazard. A hazard ratio close to one means the variable has little effect on survival, while an HR > 1 corresponds to an increased risk of event occurence. An HR value close to zero means the factor increases time until the event.
+
+### Goodness of Fit
+
+
 
 ### Parameter Estimates
 
 ### Assumptions of the Cox PH survival model
+
+There are several important assumptions for appropriate use of the Cox proportional hazards regression model, including:
+
+independence of survival times between distinct individuals in the sample,
+    
+a multiplicative relationship between the predictors and the hazard (as opposed to a linear one as was the case with multiple linear regression analysis, discussed in more detail below), and
+
+a constant hazard ratio over time.
+
 
 ### Predictions and Validations
 
@@ -1120,7 +1202,7 @@ m1 <- coxph(SurvObj ~ race + poverty + smoke + alcohol + agemth + ybirth +
               yschool, data = bfeed) 
 summary(m1)
 
-termplot(m1)
+# termplot(m1) # useful but long in rmd file
 
 cox.zph(m1)
 
@@ -1390,23 +1472,16 @@ ggsurvplot(
 )
 ```
 
+\<!--\# It is in this context The prevalence of breastfeeding behaviors is lower Researchers and public health organizations have touted the benefits of breastfeeding for infants [cite][][]. Social determinants of health have profound impacts on life outcomes. There is a preponderance of evidence that childhood experiences significantly impact life trajectories. Improving child health has been a top priority for the World Health Organization for decades [cite]. Previous research has shown that the age at which a child stops breastfeeding has significant effects on later development [CITE]. An increased understanding of how to --\>
 
-
-\<!--\# It is in this context
-The prevalence of breastfeeding behaviors is lower
-Researchers and public health organizations have touted the benefits of breastfeeding for infants [cite][][].
-Social determinants of health have profound impacts on life outcomes.
-There is a preponderance of evidence that childhood experiences significantly impact life trajectories. Improving child health has been a top priority for the World Health Organization for decades [cite].
-Previous research has shown that the age at which a child stops breastfeeding has significant effects on later development [CITE]. An increased understanding of how to --\>
+\newpage
 
 \beginsupplement
 
-
-
 # Supplemental Figures
 
+<!-- ## Proportional Hazard (PH) estimates for Exponential Model -->
 
-## Proportional Hazard (PH) estimates for Exponential Model
 ```{r, echo=FALSE}
 exp.aft.ph <- -coef(best.exp.model)/best.exp.model$scale
 #https://myweb.uiowa.edu/pbreheny/7210/f15/notes/10-15.pdf
@@ -1414,7 +1489,8 @@ exp.aft.ph %>%
   knitr::kable(digits=4,caption = "coefficients for PH exponential model", col.names = c( "value"))
 ```
 
-## Proportional Hazard (PH) estimates for Weibull Model
+<!-- ## Proportional Hazard (PH) estimates for Weibull Model -->
+
 ```{r, echo=FALSE}
 Weibull.aft.ph <- -coef(best.Weibull.model)/best.Weibull.model$scale
 #https://myweb.uiowa.edu/pbreheny/7210/f15/notes/10-15.pdf
@@ -1422,7 +1498,13 @@ Weibull.aft.ph %>%
   knitr::kable(digits=4,caption = "coefficients for PH Weibull model", col.names = c( "value"))
 ```
 
-## lognormal transformation of Duration of Breastfeeding
+```{r, echo=FALSE}
+# comparison of coefficient estimates across the parametric models
+
+```
+
+
+<!-- ## lognormal transformation of Duration of Breastfeeding -->
 
 ```{r, echo=FALSE, fig.cap="Distribution of natural log tranformed breastfeeding duration alongside normal distribution $N(2.5, 1.1)$ (grey)"}
 bfeed %>%
@@ -1435,6 +1517,8 @@ bfeed %>%
   stat_function(fun = dnorm, args = list(2.5, 1.1), color = "gray")
 
 ```
+
+\newpage
 
 ## code used to create this report
 
