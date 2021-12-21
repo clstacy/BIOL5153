@@ -171,7 +171,7 @@ n_censored <- bfeed %>%
 In this data set, a total of `r toString(n_censored)` mothers were still breastfeeding their infant at the time of their final data collection interview. Most of these censoring events occurred in the final year(s) of the study, when time from birth to final interview was significantly less than the nearly 10 years from birth of child to final interview of the earliest participants in the study. The compiled dataset does not contain any information about possible patient drop-out or missed interviews.
 
 ```{r, fig.cap = "Histograms of numerical variable distributions.", echo=FALSE}
-Fig1a
+# Fig1a
 fig1 <- bfeed %>% 
   select(-c(status, SurvObj, race_o, race_b)) %>% # artificial duplicate variables
   rename("Age of Mother at Birth" = agemth, # change names 

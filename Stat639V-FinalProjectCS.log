@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2021.10.22)  17 DEC 2021 14:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2022/dev) (preloaded format=pdflatex 2021.10.22)  17 DEC 2021 14:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -577,7 +577,7 @@ File: Stat639V-FinalProjectCS_files/figure-latex/exponential-1.pdf Graphic file
  (type pdf)
 <use Stat639V-FinalProjectCS_files/figure-latex/exponential-1.pdf>
 Package pdftex.def Info: Stat639V-FinalProjectCS_files/figure-latex/exponential
--1.pdf  used on input line 633.
+-1.pdf  used on input line 639.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 [10 <./Stat639V-FinalProjectCS_files/figure-latex/exponential-1.pdf>] [11]
 <Stat639V-FinalProjectCS_files/figure-latex/Weibull-1.pdf, id=252, 469.755pt x 
@@ -586,7 +586,7 @@ File: Stat639V-FinalProjectCS_files/figure-latex/Weibull-1.pdf Graphic file (ty
 pe pdf)
 <use Stat639V-FinalProjectCS_files/figure-latex/Weibull-1.pdf>
 Package pdftex.def Info: Stat639V-FinalProjectCS_files/figure-latex/Weibull-1.p
-df  used on input line 764.
+df  used on input line 770.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 [12 <./Stat639V-FinalProjectCS_files/figure-latex/Weibull-1.pdf>] [13]
 <Stat639V-FinalProjectCS_files/figure-latex/lognormal-1.pdf, id=281, 469.755pt 
@@ -595,20 +595,20 @@ File: Stat639V-FinalProjectCS_files/figure-latex/lognormal-1.pdf Graphic file (
 type pdf)
 <use Stat639V-FinalProjectCS_files/figure-latex/lognormal-1.pdf>
 Package pdftex.def Info: Stat639V-FinalProjectCS_files/figure-latex/lognormal-1
-.pdf  used on input line 887.
+.pdf  used on input line 893.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 [14 <./Stat639V-FinalProjectCS_files/figure-latex/lognormal-1.pdf>]
-Overfull \hbox (17.24507pt too wide) in alignment at lines 990--995
+Overfull \hbox (17.24507pt too wide) in alignment at lines 996--1001
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (17.24507pt too wide) in alignment at lines 995--999
+Overfull \hbox (17.24507pt too wide) in alignment at lines 1001--1005
  [] [] [] [] [] 
  []
 
 
-Overfull \hbox (17.24507pt too wide) in alignment at lines 999--1016
+Overfull \hbox (17.24507pt too wide) in alignment at lines 1005--1022
  [] [] [] [] [] 
  []
 
@@ -619,7 +619,7 @@ File: Stat639V-FinalProjectCS_files/figure-latex/coxPH-1.pdf Graphic file (type
  pdf)
 <use Stat639V-FinalProjectCS_files/figure-latex/coxPH-1.pdf>
 Package pdftex.def Info: Stat639V-FinalProjectCS_files/figure-latex/coxPH-1.pdf
-  used on input line 1141.
+  used on input line 1147.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 [17] [18 <./Stat639V-FinalProjectCS_files/figure-latex/coxPH-1.pdf>] [19]
 <Stat639V-FinalProjectCS_files/figure-latex/unnamed-chunk-24-1.pdf, id=344, 469
@@ -628,7 +628,7 @@ File: Stat639V-FinalProjectCS_files/figure-latex/unnamed-chunk-24-1.pdf Graphic
  file (type pdf)
 <use Stat639V-FinalProjectCS_files/figure-latex/unnamed-chunk-24-1.pdf>
 Package pdftex.def Info: Stat639V-FinalProjectCS_files/figure-latex/unnamed-chu
-nk-24-1.pdf  used on input line 1274.
+nk-24-1.pdf  used on input line 1280.
 (pdftex.def)             Requested size: 469.75386pt x 505.88875pt.
 [20] [21 <./Stat639V-FinalProjectCS_files/figure-latex/unnamed-chunk-24-1.pdf>]
 [22] [23] [24]
@@ -638,16 +638,16 @@ File: Stat639V-FinalProjectCS_files/figure-latex/KMcurves-1.pdf Graphic file (t
 ype pdf)
 <use Stat639V-FinalProjectCS_files/figure-latex/KMcurves-1.pdf>
 Package pdftex.def Info: Stat639V-FinalProjectCS_files/figure-latex/KMcurves-1.
-pdf  used on input line 1483.
+pdf  used on input line 1489.
 (pdftex.def)             Requested size: 433.63878pt x 650.45818pt.
 pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
 s been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1484 ...n{KM curves for all predictor variables}
+l.1490 ...n{KM curves for all predictor variables}
                                                   
 
-LaTeX Warning: Float too large for page by 23.9726pt on input line 1485.
+LaTeX Warning: Float too large for page by 23.9726pt on input line 1491.
 
 [25] [26 <./Stat639V-FinalProjectCS_files/figure-latex/KMcurves-1.pdf>]
 <Stat639V-FinalProjectCS_files/figure-latex/unnamed-chunk-25-1.pdf, id=418, 469
@@ -656,50 +656,105 @@ File: Stat639V-FinalProjectCS_files/figure-latex/unnamed-chunk-25-1.pdf Graphic
  file (type pdf)
 <use Stat639V-FinalProjectCS_files/figure-latex/unnamed-chunk-25-1.pdf>
 Package pdftex.def Info: Stat639V-FinalProjectCS_files/figure-latex/unnamed-chu
-nk-25-1.pdf  used on input line 1491.
+nk-25-1.pdf  used on input line 1497.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 pdfTeX warning (ext4): destination with the same identifier (name{figure.2}) ha
 s been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1493 ...mal distribution \(N(2.5, 1.1)\) (grey)}
+l.1499 ...mal distribution \(N(2.5, 1.1)\) (grey)}
                                                   pdfTeX warning (ext4): destin
 ation with the same identifier (name{figure.2}) has been already used, duplicat
 e ignored
 <to be read again> 
                    \relax 
-l.1493 ...mal distribution \(N(2.5, 1.1)\) (grey)}
+l.1499 ...mal distribution \(N(2.5, 1.1)\) (grey)}
                                                    [27 <./Stat639V-FinalProject
 CS_files/figure-latex/unnamed-chunk-25-1.pdf>]pdfTeX warning (ext4): destinatio
 n with the same identifier (name{table.1}) has been already used, duplicate ign
 ored
 <to be read again> 
                    \relax 
-l.1501 \begin{longtable}[]{@{}lr@{}}
+l.1507 \begin{longtable}[]{@{}lr@{}}
                                     pdfTeX warning (ext4): destination with the
  same identifier (name{table.2}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1520 \begin{longtable}[]{@{}lr@{}}
+l.1526 \begin{longtable}[]{@{}lr@{}}
                                     pdfTeX warning (ext4): destination with the
  same identifier (name{table.3}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.1539 \begin{longtable}[]{@{}lrrr@{}}
-                                       [28] [29] (./Stat639V-FinalProjectCS.aux
-)
+l.1545 \begin{longtable}[]{@{}lrrr@{}}
+                                       [28] [29] [30] [31]
+Underfull \vbox (badness 3009) detected at line 1850
+ []
+
+[32] [33]
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 1915.
+
+LaTeX Font Warning: Font shape `T1/lmtt/bx/it' in size <10> not available
+(Font)              Font shape `T1/lmtt/b/sl' tried instead on input line 1915.
+
+
+[34]
+Underfull \vbox (badness 3009) detected at line 2014
+ []
+
+[35] [36] [37]
+Underfull \vbox (badness 3009) detected at line 2181
+ []
+
+[38] [39] [40] [41] [42]
+Underfull \vbox (badness 3009) detected at line 2478
+ []
+
+[43] [44]
+Underfull \vbox (badness 10000) detected at line 2778
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 2778
+ []
+
+[45]
+Underfull \vbox (badness 10000) detected at line 2778
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 2778
+ []
+
+[46]
+Underfull \vbox (badness 10000) detected at line 2778
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 2778
+ []
+
+[47]
+Underfull \vbox (badness 10000) detected at line 2778
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 2778
+ []
+
+[48] [49] [50] (./Stat639V-FinalProjectCS.aux)
 Package rerunfilecheck Info: File `Stat639V-FinalProjectCS.out' has not changed
 .
 (rerunfilecheck)             Checksum: 299EC4C3EE6BEE35A070B7BB7E8F84CD;3650.
  ) 
 Here is how much of TeX's memory you used:
- 11465 strings out of 480539
- 170189 string characters out of 5901807
- 491169 words of memory out of 5000000
- 28756 multiletter control sequences out of 15000+600000
- 453616 words of font info for 68 fonts, out of 8000000 for 9000
+ 11492 strings out of 480539
+ 170415 string characters out of 5901807
+ 533406 words of memory out of 5000000
+ 28760 multiletter control sequences out of 15000+600000
+ 454254 words of font info for 70 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 60i,7n,66p,513b,435s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,7n,66p,624b,435s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/Users/clstacy/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/Use
 rs/clstacy/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/Users/clst
 acy/Library/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/Users/clstacy
@@ -718,13 +773,13 @@ type1/public/lm/lmr17.pfb></Users/clstacy/Library/TinyTeX/texmf-dist/fonts/type
 lic/lm/lmr7.pfb></Users/clstacy/Library/TinyTeX/texmf-dist/fonts/type1/public/l
 m/lmri10.pfb></Users/clstacy/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/l
 msy10.pfb></Users/clstacy/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy
-7.pfb></Users/clstacy/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.p
-fb></Users/clstacy/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtti10.pfb
->
-Output written on Stat639V-FinalProjectCS.pdf (29 pages, 634414 bytes).
+7.pfb></Users/clstacy/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtko10.
+pfb></Users/clstacy/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb
+></Users/clstacy/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
+Output written on Stat639V-FinalProjectCS.pdf (50 pages, 712063 bytes).
 PDF statistics:
- 544 PDF objects out of 1000 (max. 8388607)
- 455 compressed objects within 5 object streams
- 143 named destinations out of 1000 (max. 500000)
+ 645 PDF objects out of 1000 (max. 8388607)
+ 532 compressed objects within 6 object streams
+ 164 named destinations out of 1000 (max. 500000)
  243 words of extra memory for PDF output out of 10000 (max. 10000000)
 
