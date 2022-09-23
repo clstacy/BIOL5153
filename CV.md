@@ -23,26 +23,40 @@ email:
 
 Currently
 --------------------
-I'm studying at the intersection of Cell and Molecular Biology and Statistics at the [University of Arkansas](http://www.uark.edu/). I'm currently developing quantitative techniques and an integrative workflow for quantifying virulence of host-virus interactions across domains of life. My work involves a synergy of techniques including agent and constraint based modeling of infection, Bayesian (Gaussian Process Regression) and Machine Learning techniques to quantify, classify, and predict effects of virus-host interactions.
+I am a graduate student in Cell and Molecular Biology and Statistics at the [University of Arkansas](http://www.uark.edu/). I'm currently developing bioinformatic pipelines for CRISPR forward genetic screen studies of the stress response in wild strains of yeast. My work involves bioinformatic pipeline construction and operation, bulk RNA-seq analysis, and statistical analyses for advanced forward genetic screen experimental designs.
 
 
 Employment
 --------------------
 
-__Since 2020__
-:   *Graduate Research Assistant for the [Ceballos Research Lab](https://ceballoslab.uark.edu/)*
+__Since 2021__
+:   *Graduate Research Assistant for [The Lewis Lab](https://thelewislab.com/)*
     (Fayetteville, AR. United States).
-* Researching novel approaches for quantifying host-virus interactions of non-lytic viruses. 
 
-* I analyze virus-induced temporal phenotypic changes of the host to quantify virulence. 
+* Currently implementing an nf-core compatible MAGeCK analysis pipeline tailored to CRISPR-based forward genetic screens for understanding stress in yeast.
 
-* Co-authored two papers introducing and applying techniques for differentiation virus-induced growth changes. 
+* Analyzed RNA-seq data from over 100 samples in a non-model organism with Nextflow bioinformatic workflow manager.
 
-* Gaussian process modeling techniques, MLP Classifiers, convolutional and recurrent neural networks, dynamic flux-balance analysis of stressed systems and agent-based simulation techniques
+* Improved GO annotations to facilitate enrichment analysis of above data via functional annotation mapping.
+
+* Constructed GFP-RFP mutant reporter construction and validation.
+
+* Validation of stress-responsive induction of reporters via operation of benchtop flow cytometer and subsequent custom analysis and visualizaiton pipeline.
+
+* Excellence in teaching: Mean course evaluation score my students provide for Principles of Biology labs: 4.8/5
+
 
 __2019-2020__
 :   *Laboratory Technician for the [Ceballos Research Lab](https://ceballoslab.uark.edu/)*
     (Fayetteville, AR. United States).
+
+* Researched novel approaches for quantifying host-virus interactions of non-lytic viruses. 
+
+* Analyzed virus-induced temporal phenotypic changes of the host to quantify virulence. 
+
+* Co-authored two papers introducing and applying techniques for differentiation virus-induced growth changes. 
+
+* Utilized aussian process modeling techniques, MLP Classifiers, convolutional and recurrent neural networks, dynamic flux-balance analysis of stressed systems and agent-based simulation techniques
 
 * Operated state-of-the-art Fast Protein Liquid Chromatography (FPLC) machine 
 
@@ -99,7 +113,10 @@ __Since 2020__
 :   *PhD in Cell and Molecular Biology at the University of Arkansas*
     (Fayetteville, AR. United States).
     
-* Distinguished Doctoral Fellow
+* PhD Candidate - August, 2022
+
+* Distinguished Doctoral Fellow - 2020
+
 
 
 __Since 2020__
@@ -154,22 +171,33 @@ Open Source Contributions
 * R package for Weighted Spectral Difference calculation on Far UV Circular Dichroism data across temperature gradients
     * https://github.com/clstacy/WeightedSpectralDifference
 
-Technical Skills
+Technical Skills - Experienced
 ------------------------
 
 * R
+* Nextflow (groovy)
 * Julia
 * Python
+* RegEx
+* Unix
+
+
+Technical Skills - Familiar
+------------------------
+
 * TensorFlow
 * sklearn
 * MATLAB
-* Stan
-* RegEx
+* JAGS
 * COBRA (Flux Balance Analysis package, not the discontinued programming language)
+* Geneious
 
-Areas of Expertise
+Areas of Interest
 ------------------------
 
+* NGS Data Analysis
+* RNA-seq
+* CRISPRko analysis
 * Data Visualization
 * Statistics
 * Bayesian Regression
@@ -180,5 +208,5 @@ Areas of Expertise
 
 ----
 
-> <clstacy@uark.edu> • +479-238-3926 • 25 years old\
+> <clstacy@uark.edu> • +479-238-3926 • 27 years old\
 >  Fayetteville, AR
