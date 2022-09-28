@@ -1,142 +1,176 @@
----
-output:
-  pdf_document: default
-  html_document: default
----
-Carson Stacy
-=========================
+# Carson Stacy
 
-----
+------------------------------------------------------------------------
 
->  Cell and Molecular Biology and Data Science
->  <div id="webaddress">
-email: 
-<a href="mailto:clstacy@uark.edu">clstacy@uark.edu</a>
-| github:
-<i class="fa fa-github"></i> <a href="http://github.com/clstacy">clstacy</a>
-| twitter:
-<i class="fa fa-twitter"></i> <a href="http://twitter.com/carsonlstacy">carsonlstacy</a>
-</div>
+> Cell and Molecular Biology and Data Science
+>
+> ::: {#webaddress}
+> email: <a href="mailto:clstacy@uark.edu">clstacy\@uark.edu</a> \|
+> github: <i class="fa fa-github"></i>
+> <a href="http://github.com/clstacy">clstacy</a> \| twitter:
+> <i class="fa fa-twitter"></i>
+> <a href="http://twitter.com/carsonlstacy">carsonlstacy</a>
+> :::
 
-----
+------------------------------------------------------------------------
 
+## Currently
 
-Currently
---------------------
-I am a graduate student in Cell and Molecular Biology and Statistics at the [University of Arkansas](http://www.uark.edu/). I'm currently developing bioinformatic pipelines for CRISPR forward genetic screen studies of the stress response in wild strains of yeast. My work involves bioinformatic pipeline construction and operation, bulk RNA-seq analysis, and statistical analyses for advanced forward genetic screen experimental designs.
+I am a graduate student in Cell and Molecular Biology and Statistics at
+the [University of Arkansas](http://www.uark.edu/). I'm currently
+developing bioinformatic pipelines for CRISPR forward genetic screen
+studies of the stress response in wild strains of yeast. My work
+involves bioinformatic pipeline construction and operation, bulk RNA-seq
+analysis, and statistical analyses for advanced forward genetic screen
+experimental designs.
 
+## Employment
 
-Employment
---------------------
+**Since 2021**
 
-__Since 2021__
-:   *Graduate Research Assistant for [The Lewis Lab](https://thelewislab.com/)*
-    (Fayetteville, AR. United States).
+:   *Graduate Research Assistant for [The Lewis
+    Lab](https://thelewislab.com/)* (Fayetteville, AR. United States).
 
-* Currently implementing an nf-core compatible MAGeCK analysis pipeline tailored to CRISPR-based forward genetic screens for understanding stress in yeast.
+-   Currently implementing an nf-core compatible MAGeCK analysis
+    pipeline tailored to CRISPR-based forward genetic screens for
+    understanding stress in yeast.
 
-* Analyzed RNA-seq data from over 100 samples in a non-model organism with Nextflow bioinformatic workflow manager.
+-   Analyzed RNA-seq data from over 100 samples in a non-model organism
+    with Nextflow bioinformatic workflow manager.
 
-* Improved GO annotations to facilitate enrichment analysis of above data via functional annotation mapping.
+-   Improved GO annotations to facilitate enrichment analysis of above
+    data via functional annotation mapping.
 
-* Constructed GFP-RFP mutant reporter construction and validation.
+-   Constructed GFP-RFP mutant reporter construction and validation.
 
-* Validation of stress-responsive induction of reporters via operation of benchtop flow cytometer and subsequent custom analysis and visualizaiton pipeline.
+-   Validation of stress-responsive induction of reporters via operation
+    of benchtop flow cytometer and subsequent custom analysis and
+    visualizaiton pipeline.
 
-* Excellence in teaching: Mean course evaluation score my students provide for Principles of Biology labs: 4.8/5
+-   Excellence in teaching: Mean course evaluation score my students
+    provide for Principles of Biology labs: 4.8/5
 
+**2019-2020**
 
-__2019-2020__
-:   *Laboratory Technician for the [Ceballos Research Lab](https://ceballoslab.uark.edu/)*
-    (Fayetteville, AR. United States).
+:   *Laboratory Technician for the [Ceballos Research
+    Lab](https://ceballoslab.uark.edu/)* (Fayetteville, AR. United
+    States).
 
-* Researched novel approaches for quantifying host-virus interactions of non-lytic viruses. 
+-   Researched novel approaches for quantifying host-virus interactions
+    of non-lytic viruses.
 
-* Analyzed virus-induced temporal phenotypic changes of the host to quantify virulence. 
+-   Analyzed virus-induced temporal phenotypic changes of the host to
+    quantify virulence.
 
-* Co-authored two papers introducing and applying techniques for differentiation virus-induced growth changes. 
+-   Co-authored two papers introducing and applying techniques for
+    differentiation virus-induced growth changes.
 
-* Utilized aussian process modeling techniques, MLP Classifiers, convolutional and recurrent neural networks, dynamic flux-balance analysis of stressed systems and agent-based simulation techniques
+-   Utilized aussian process modeling techniques, MLP Classifiers,
+    convolutional and recurrent neural networks, dynamic flux-balance
+    analysis of stressed systems and agent-based simulation techniques
 
-* Operated state-of-the-art Fast Protein Liquid Chromatography (FPLC) machine 
+-   Operated state-of-the-art Fast Protein Liquid Chromatography (FPLC)
+    machine
 
-* Created a SOP for use and maintenance of device including automated buffer making, ion exchange, and size exclusion best-practices. 
+-   Created a SOP for use and maintenance of device including automated
+    buffer making, ion exchange, and size exclusion best-practices.
 
-* Maintained lab supplies and handled ordering for the lab. I implemented a proof-of-concept neuron tracing and counting algorithm to be used by a PhD student. 
+-   Maintained lab supplies and handled ordering for the lab. I
+    implemented a proof-of-concept neuron tracing and counting algorithm
+    to be used by a PhD student.
 
-* Used the software Geneious for primer design, phylogenetic analysis of novel genomes to assist graduate and undergraduate research projects in the lab. 
+-   Used the software Geneious for primer design, phylogenetic analysis
+    of novel genomes to assist graduate and undergraduate research
+    projects in the lab.
 
-* Used protein databank tools and molecular dynamics protein modeling tools to predict sub-unit interactions of engineered protein complex.
+-   Used protein databank tools and molecular dynamics protein modeling
+    tools to predict sub-unit interactions of engineered protein
+    complex.
 
-__2019 (6 months)__
+**2019 (6 months)**
+
 :   *Athletic Tutor for University of Arkansas Athletics Program*
     (Fayetteville, AR. United States).
-    
-* Lead individual and small group tutoring sessions for General and Organic Chemistry I and II, Biochemistry I, Biochemistry II, Introduction to Biochemistry, Principles of Biology,  Anatomy and Physiology, Calculus I, and Principles of Statistics.
 
+-   Lead individual and small group tutoring sessions for General and
+    Organic Chemistry I and II, Biochemistry I, Biochemistry II,
+    Introduction to Biochemistry, Principles of Biology, Anatomy and
+    Physiology, Calculus I, and Principles of Statistics.
 
-__2017-2018__
-:   *Peace Corps Volunteer High School Chemistry Teacher*
-    (Kolahun, Lofa County. Liberia).
+**2017-2018**
 
-* Worked as first and only chemistry teacher in only high school in Kolahun district of Liberia since 2004. Designed and led interactive lesson plans for over 1200 students for 2 years (grades 10-12). 
+:   *Peace Corps Volunteer High School Chemistry Teacher* (Kolahun, Lofa
+    County. Liberia).
 
-* Created exam questions for each grade and compiled a question generator for future use.
+-   Worked as first and only chemistry teacher in only high school in
+    Kolahun district of Liberia since 2004. Designed and led interactive
+    lesson plans for over 1200 students for 2 years (grades 10-12).
 
-* Engaged in capacity building by training other interested science teachers in fundamental chemistry concepts and ways to teach them. 
+-   Created exam questions for each grade and compiled a question
+    generator for future use.
 
-* Provided resources and practice teaching chemistry courses to student teacher in order to continue after my departure. 
+-   Engaged in capacity building by training other interested science
+    teachers in fundamental chemistry concepts and ways to teach them.
 
-* Co-lead Girls Club of Kolahun in promotion of gender equity. Introduced indigenous language component to malaria education program at local health clinic. 
+-   Provided resources and practice teaching chemistry courses to
+    student teacher in order to continue after my departure.
 
-* Grassroots soccer volunteer and mentor. 
+-   Co-lead Girls Club of Kolahun in promotion of gender equity.
+    Introduced indigenous language component to malaria education
+    program at local health clinic.
 
-* Collaborated with local NGO to train local students to lead age-appropriate critical thinking workshops for children identified as disadvantaged.
+-   Grassroots soccer volunteer and mentor.
 
-__2014-2017__
-:   *Supplemental Instruction Leader (Chemistry) for CLASS+ at University of Arkansas* 
-    (Fayetteville, AR. United States).
+-   Collaborated with local NGO to train local students to lead
+    age-appropriate critical thinking workshops for children identified
+    as disadvantaged.
 
-* Lead small group drill sessions to promote student success in first year chemistry courses ranging from Fundamentals of Chemistry to Honors Chemistry II. 
+**2014-2017**
 
-* Designed and facilitated interactive lesson plans. 
+:   *Supplemental Instruction Leader (Chemistry) for CLASS+ at
+    University of Arkansas* (Fayetteville, AR. United States).
 
-* Served as an SI leader mentor advising and co-leading yearly trainings for SI leaders on campus. 
+-   Lead small group drill sessions to promote student success in first
+    year chemistry courses ranging from Fundamentals of Chemistry to
+    Honors Chemistry II.
 
-* Focused on increasing interactivity in lessons and promoting gender equitable teaching approaches.
+-   Designed and facilitated interactive lesson plans.
 
+-   Served as an SI leader mentor advising and co-leading yearly
+    trainings for SI leaders on campus.
 
-Education
----------
+-   Focused on increasing interactivity in lessons and promoting gender
+    equitable teaching approaches.
 
-__Since 2020__
+## Education
+
+**Since 2020**
+
 :   *PhD in Cell and Molecular Biology at the University of Arkansas*
     (Fayetteville, AR. United States).
-    
-* PhD Candidate - August, 2022
 
-* Distinguished Doctoral Fellow - 2020
+-   PhD Candidate - August, 2022
 
+-   Distinguished Doctoral Fellow - 2020
 
+**Since 2020**
 
-__Since 2020__
 :   *MS in Statistics and Analytics at the University of Arkansas*
     (Fayetteville, AR. United States).
 
-* Concentration in Statistics
+-   Concentration in Statistics
 
+**2013-2017**
 
-__2013-2017__
-:   *BS in Anthropology at the University of Arkansas*
-    (Fayetteville, AR. United States).
-    
-* Honors College Graduate
+:   *BS in Anthropology at the University of Arkansas* (Fayetteville,
+    AR. United States).
 
-* GPA: 4.0
+-   Honors College Graduate
 
+-   GPA: 4.0
 
-Honors and Awards
-------------------------
+## Honors and Awards
+
 2021 - **Ford Foundation Predoctoral Fellow Honorable Mention**
 
 2019 - **Distinguished Doctoral Fellow** at the University of Arkansas
@@ -145,68 +179,83 @@ Honors and Awards
 
 2015 - **Alpha Epsilon Delta Honor Society Volunteer Coordinator**
 
+## Publications
 
-Publications
-------------------------
+**2021**
 
-__2021__
-:    Ceballos, R. M., & __Stacy, C. L.__ (2021). Quantifying relative virulence: when mumax fails and AUC alone just is not enough. Journal of General Virology, 102(1), 001515.
+:   Ceballos, R. M., & **Stacy, C. L.** (2021). Quantifying relative
+    virulence: when mumax fails and AUC alone just is not enough.
+    Journal of General Virology, 102(1), 001515.
 
-__2020__
-:    Ceballos, R. M., Drummond, C. G., __Stacy, C. L.__, Padilla-Crespo, E., & Stedman, K. M. (2020). Host-dependent differences in replication strategy of the Sulfolobus spindle-shaped virus strain SSV9 (aka, SSVK1): infection profiles in hosts of the family Sulfolobaceae. Frontiers in microbiology, 11, 1218.
+**2020**
 
+:   Ceballos, R. M., Drummond, C. G., **Stacy, C. L.**, Padilla-Crespo,
+    E., & Stedman, K. M. (2020). Host-dependent differences in
+    replication strategy of the Sulfolobus spindle-shaped virus strain
+    SSV9 (aka, SSVK1): infection profiles in hosts of the family
+    Sulfolobaceae. Frontiers in microbiology, 11, 1218.
 
-Presentations
-------------------------
+## Presentations
 
-__2020__
-:    Analytical Approaches for Characterizing Relative Virulence in Non-Lytic Viral Systems: Using Sulfolobus Spindle-shaped Viruses (SSVs) to Illustrate the Utility of Parametric Gompertzian and Non-Parametric Gaussian Regression Models. __Carson L. Stacy__ and Ruben M. Ceballos. Annual Meeting of the Microbiology Society 2020. (Edinburgh, Scotland, UK) [poster accepted and abstract published; meeting cancelled due to the COVID-19 pandemic]
+**2020**
 
-__2015__
-:    Effect of Lifestyle Physical Activity and Western Diet on Genes Controlling Mitochondrial Translation. __Carson L. Stacy__, David E. Lee, Jacob L. Brown, Megan E. Rosa, Jordyn N. Henry, Lemuel A. Brown, Richard A. Perry, Jr., Tyrone A. Washington, Nicholas P. Greene. Central States ACSM Regional Meeting 2015, International Journal of Exercise Science Conference Proceedings.
+:   Analytical Approaches for Characterizing Relative Virulence in
+    Non-Lytic Viral Systems: Using Sulfolobus Spindle-shaped Viruses
+    (SSVs) to Illustrate the Utility of Parametric Gompertzian and
+    Non-Parametric Gaussian Regression Models. **Carson L. Stacy** and
+    Ruben M. Ceballos. Annual Meeting of the Microbiology Society 2020.
+    (Edinburgh, Scotland, UK) [poster accepted and abstract published;
+    meeting cancelled due to the COVID-19 pandemic]
 
+**2015**
 
-Open Source Contributions
-------------------------
-* R package for Weighted Spectral Difference calculation on Far UV Circular Dichroism data across temperature gradients
-    * https://github.com/clstacy/WeightedSpectralDifference
+:   Effect of Lifestyle Physical Activity and Western Diet on Genes
+    Controlling Mitochondrial Translation. **Carson L. Stacy**, David E.
+    Lee, Jacob L. Brown, Megan E. Rosa, Jordyn N. Henry, Lemuel A.
+    Brown, Richard A. Perry, Jr., Tyrone A. Washington, Nicholas P.
+    Greene. Central States ACSM Regional Meeting 2015, International
+    Journal of Exercise Science Conference Proceedings.
 
-Technical Skills - Experienced
-------------------------
+## Open Source Contributions
 
-* R
-* Nextflow (groovy)
-* Julia
-* Python
-* RegEx
-* Unix
+-   R package for Weighted Spectral Difference calculation on Far UV
+    Circular Dichroism data across temperature gradients
+    -   <https://github.com/clstacy/WeightedSpectralDifference>
 
+## Technical Skills - Experienced
 
-Technical Skills - Familiar
-------------------------
+-   R
+-   Nextflow (groovy)
+-   Julia
+-   Python
+-   RegEx
+-   Unix
 
-* TensorFlow
-* sklearn
-* MATLAB
-* JAGS
-* COBRA (Flux Balance Analysis package, not the discontinued programming language)
-* Geneious
+## Technical Skills - Familiar
 
-Areas of Interest
-------------------------
+-   TensorFlow
+-   sklearn
+-   MATLAB
+-   JAGS
+-   COBRA (Flux Balance Analysis package, not the discontinued
+    programming language)
+-   Geneious
 
-* NGS Data Analysis
-* RNA-seq
-* CRISPRko analysis
-* Data Visualization
-* Statistics
-* Bayesian Regression
-* Machine Learning
-* Biological Simulation
-* Time Series Analysis
-* Experimental Design
+## Areas of Interest
 
-----
+-   NGS Data Analysis
+-   RNA-seq
+-   CRISPRko analysis
+-   Data Visualization
+-   Statistics
+-   Bayesian Regression
+-   Machine Learning
+-   Biological Simulation
+-   Time Series Analysis
+-   Experimental Design
 
-> <clstacy@uark.edu> • +479-238-3926 • 27 years old\
->  Fayetteville, AR
+------------------------------------------------------------------------
+
+> [clstacy\@uark.edu](mailto:clstacy@uark.edu){.email} • +479-238-3926 •
+> 27 years old\
+> Fayetteville, AR
